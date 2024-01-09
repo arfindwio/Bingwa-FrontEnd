@@ -50,12 +50,14 @@ export const CardKelasSaya = ({
       <div className="flex flex-col gap-4 bg-white px-4 py-3">
         <div className="flex justify-between">
           <div className="text-lg font-bold text-primary">{category}</div>
-          <div className="flex items-center gap-1">
-            <div className="text-yellow-700">
-              <FaStar />
+          {rating === undefined || rating === null ? null : (
+            <div className="flex items-center gap-1">
+              <div className="text-yellow-700">
+                <FaStar />
+              </div>
+              <div className="font-bold">{rating}</div>
             </div>
-            <div className="font-bold">{rating}4.9</div>
-          </div>
+          )}
         </div>
         <div className="flex flex-col">
           <div className="font-semibold text-slate-800">{title}</div>
@@ -86,13 +88,20 @@ export const CardKelasSaya = ({
               color="#22c55e"
               className="hidden md:flex lg:flex"
             />
-            <div className="text-sm font-semibold text-primary">{duration}</div>
+            <div className="text-sm font-semibold text-primary">
+              {duration} Minute
+            </div>
           </div>
         </div>
         <div className="flex w-full items-center justify-between gap-2">
           <TbProgressCheck size={20} color="#22c55e" />
           <div className="flex w-full">
-            <Progress value={progress} size="lg" label={true} color="blue" />
+            <Progress
+              value={progress * 100}
+              size="lg"
+              label={true}
+              color="blue"
+            />
           </div>
         </div>
       </div>
