@@ -73,7 +73,7 @@ export const DetailKelas = () => {
         }
 
         if (!isPremium) {
-          await dispatch(postEnrollmentsAction(paymentCourseId));
+          await dispatch(postEnrollmentsAction(storeDetailCourses.id));
           showSuccessToast("Berhasil Enrollments Course");
           navigate("/kelas-saya");
         }
@@ -158,7 +158,7 @@ export const DetailKelas = () => {
               <div className="flex items-center gap-1">
                 <IoTime size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeDetailCourses?.duration}
+                  {storeDetailCourses?.totalDuration} Minute
                 </div>
               </div>
             </div>
