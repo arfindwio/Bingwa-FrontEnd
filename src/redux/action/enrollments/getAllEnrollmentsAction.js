@@ -5,7 +5,7 @@ export const getAllEnrollmentsAction = () => (dispatch) => {
   reduxGetAllEnrollments()
     .then((result) => {
       dispatch(setCourseEnroll(result.data.data.enrollments));
-      return result.data.data.enrollments.course;
+      return result.data.data.enrollments;
     })
     .catch((err) => {
       console.error("reduxAllEnrollments", err);

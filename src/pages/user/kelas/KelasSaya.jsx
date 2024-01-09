@@ -15,39 +15,31 @@ import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
-import { getUserProfileAction } from "../../../redux/action/auth/getUserProfileAction";
-import { getCoursesMeAction } from "../../../redux/action/courses/getCoursesMeAction";
+// import { getUserProfileAction } from "../../../redux/action/auth/getUserProfileAction";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const KelasSaya = () => {
-  const storeCoursesEnroll = useSelector((state) => state.dataCourses.me);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
   const [filterStatus, setFilterStatus] = useState("All");
   const handleFilterChange = (status) => {
     setFilterStatus(status);
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
-  const getCourses = async () => {
-    await dispatch(getCoursesMeAction());
-  };
-
-  const getUser = async () => {
-    await dispatch(getUserProfileAction());
-  };
-
   useEffect(() => {
-    getCourses();
-    getUser();
-  }, []);
+    dispatch(getAllEnrollmentsAction());
+    // dispatch(getUserProfileAction());
+  }, [dispatch]);
 
   // Search Feature
   const [searchInput, setSearchInput] = useState("");
@@ -59,10 +51,6 @@ export const KelasSaya = () => {
       navigate(`/pilih-kelas?search=${searchInput}`);
     }
   };
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => setOpen(!open);
 
   return (
     <>
@@ -145,35 +133,35 @@ export const KelasSaya = () => {
               {/* Main Content */}
               <div className="grid w-full grid-cols-1 gap-6 py-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* Card Item */}
-                {storeCoursesEnroll === null ? (
+                {storeEnrollments === null ? (
                   <CardCoursesSkeleton />
                 ) : (
-                  storeCoursesEnroll
+                  storeEnrollments
                     .filter((value) => {
                       if (filterStatus === "All") return true;
                       if (filterStatus === "In Progress")
-                        return (
-                          value.enrollment.progres > 0 &&
-                          value.enrollment.progres < 100
-                        );
+                        return value.progres >= 0 && value.progres < 100;
                       if (filterStatus === "Completed")
-                        return value.enrollment.progres >= 100;
+                        return value.progres >= 100;
                       return false;
                     })
-                    .map((value) => (
-                      <CardKelasSaya
-                        key={value.id}
-                        courseId={value.id}
-                        image={value.courseImg}
-                        category={value.category.categoryName}
-                        title={value.courseName}
-                        author={value.mentor}
-                        level={value.level}
-                        modul={value.modul}
-                        duration={value.duration}
-                        progress={value.enrollment.progres}
-                      />
-                    ))
+                    .map((value) => {
+                      return (
+                        <CardKelasSaya
+                          key={value.courseId}
+                          courseId={value.courseId}
+                          image={value.course.courseImg}
+                          category={value.course.category.categoryName}
+                          title={value.course.courseName}
+                          author={value.course.mentor}
+                          level={value.course.level}
+                          modul={value.course.modul}
+                          duration={value.course.totalDuration}
+                          progress={value.progres}
+                          rating={value.course.averageRating}
+                        />
+                      );
+                    })
                 )}
               </div>
             </div>

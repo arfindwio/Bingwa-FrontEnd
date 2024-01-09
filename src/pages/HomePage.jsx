@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { useMediaQuery } from "react-responsive";
 
 // Images
@@ -22,7 +22,6 @@ import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 import { getUserProfileAction } from "../redux/action/auth/getUserProfileAction";
 import { getAllCategoriesAction } from "../redux/action/categories/getAllCategoriesAction";
 import { getAllCoursesAction } from "../redux/action/courses/getAllCoursesAction";
-import { getGoogleLoginAction } from "../redux/action/auth/getGoogleLoginAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../utils/cookie";
@@ -30,13 +29,8 @@ import { CookieStorage, CookiesKeys } from "../utils/cookie";
 export const HomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const [showAllCourses, setShowAllCourses] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  // Get Token from Google Login
-  const urlParams = new URLSearchParams(location.search);
-  const authTokenValue = urlParams.get("authToken");
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -52,17 +46,12 @@ export const HomePage = () => {
     dispatch(getAllCoursesAction());
   };
 
-  const getUserGoogleLogin = () => {
-    dispatch(getGoogleLoginAction(authTokenValue));
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     getUserProfile();
-    getUserGoogleLogin();
     getCategories();
     getCourses();
   }, [dispatch]);
@@ -181,6 +170,7 @@ export const HomePage = () => {
                       selectedCategory === "All" ||
                       value.category.categoryName === selectedCategory,
                   )
+                  .slice(0, 6)
                   .map((value) => (
                     <CardKursus
                       key={value.id}
@@ -191,7 +181,7 @@ export const HomePage = () => {
                       author={value.mentor}
                       level={value.level}
                       modul={value.modul}
-                      duration={value.duration}
+                      duration={value.totalDuration}
                       price={value.price}
                       courseId={value.id}
                       isPremium={value.isPremium}
@@ -226,7 +216,7 @@ export const HomePage = () => {
                     author={value.mentor}
                     level={value.level}
                     modul={value.modul}
-                    duration={value.duration}
+                    duration={value.totalDuration}
                     price={value.price}
                     courseId={value.id}
                     isPremium={value.isPremium}
