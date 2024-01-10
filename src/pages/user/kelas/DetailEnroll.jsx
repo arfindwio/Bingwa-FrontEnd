@@ -36,8 +36,9 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 export const DetailEnroll = () => {
   const navigate = useNavigate();
   const storeDetailCoursesEnroll = useSelector(
-    (state) => state.dataCourses.enroll,
+    (state) => state.enrollments.enrollCourseId.enrollment,
   );
+  console.log(storeDetailCoursesEnroll);
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
   const [open, setOpen] = React.useState(false);
@@ -92,45 +93,46 @@ export const DetailEnroll = () => {
               </div>
             </div>
           </div>
-
           {/* Container Desc Kelas */}
           <div className="flex flex-col gap-3">
             <div className="flex justify-between">
               <div className="text-xl font-bold text-primary">
-                {storeDetailCoursesEnroll?.category?.categoryName}
+                {storeDetailCoursesEnroll?.course?.category?.categoryName}
               </div>
               <div className="flex items-center gap-1">
                 <div className="text-yellow-700">
                   <FaStar />
                 </div>
                 <div className="text-lg font-bold">
-                  {storeDetailCoursesEnroll?.averageRating}4.9
+                  {storeDetailCoursesEnroll?.course?.averageRating}
                 </div>
               </div>
             </div>
             <div className="flex flex-col">
               <div className="text-xl font-bold">
-                {storeDetailCoursesEnroll?.courseName}
+                {storeDetailCoursesEnroll?.course?.courseName}
               </div>
-              <div className="text-lg">{storeDetailCoursesEnroll?.mentor}</div>
+              <div className="text-lg">
+                {storeDetailCoursesEnroll?.course?.mentor}
+              </div>
             </div>
             <div className="flex gap-4 md:gap-10 lg:gap-10">
               <div className="flex items-center gap-1">
                 <RiShieldStarLine size={20} color="#22c55e" />
                 <div className="text-sm font-semibold text-primary">
-                  {storeDetailCoursesEnroll?.level}
+                  {storeDetailCoursesEnroll?.course?.level}
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <LiaBookSolid size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeDetailCoursesEnroll?.modul} Modul
+                  {storeDetailCoursesEnroll?.course?.modul} Modul
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <IoTime size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeDetailCoursesEnroll?.duration}
+                  {storeDetailCoursesEnroll?.course?.totalDuration} Minute
                 </div>
               </div>
             </div>
@@ -138,7 +140,7 @@ export const DetailEnroll = () => {
           <div
             className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white"
             onClick={() =>
-              window.open(storeDetailCoursesEnroll?.forumURL, "_blank")
+              window.open(storeDetailCoursesEnroll?.course?.forumURL, "_blank")
             }
           >
             <div className="font-semibold">Join Grup Telegram</div>
@@ -146,13 +148,12 @@ export const DetailEnroll = () => {
               <HiChatAlt2 size={20} />
             </div>
           </div>
-
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
             <div
               className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
               style={{
-                backgroundImage: `url(${storeDetailCoursesEnroll?.courseImg})`,
+                backgroundImage: `url(${storeDetailCoursesEnroll?.course?.courseImg})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -161,7 +162,10 @@ export const DetailEnroll = () => {
                 <FaCirclePlay
                   size={60}
                   onClick={() =>
-                    window.open(storeDetailCoursesEnroll?.videoURL, "_blank")
+                    window.open(
+                      storeDetailCoursesEnroll?.course?.videoURL,
+                      "_blank",
+                    )
                   }
                 />
               </div>
@@ -172,7 +176,7 @@ export const DetailEnroll = () => {
               <div className="flex flex-col gap-2">
                 <h1 className="text-xl font-bold">Tentang Kelas</h1>
                 <p className="text-slate-600">
-                  {storeDetailCoursesEnroll?.aboutCourse}
+                  {storeDetailCoursesEnroll?.course?.aboutCourse}
                 </p>
               </div>
 
@@ -180,7 +184,7 @@ export const DetailEnroll = () => {
               <div className="flex flex-col gap-2">
                 <h1 className="text-xl font-bold">Kelas Ini Ditujukan Untuk</h1>
                 <ol className="list-decimal pl-4">
-                  <li>{storeDetailCoursesEnroll?.targetAudience}</li>
+                  <li>{storeDetailCoursesEnroll?.course?.targetAudience}</li>
                 </ol>
               </div>
             </div>
@@ -201,24 +205,24 @@ export const DetailEnroll = () => {
                   className="hidden md:hidden lg:flex"
                 />
                 <div className="rounded-3xl bg-primary px-3 py-1 font-semibold text-white">
-                  {storeDetailCoursesEnroll?.enrollment?.progres}% Completed
+                  {storeDetailCoursesEnroll?.progres * 100}% Completed
                 </div>
               </div>
             </div>
 
             {/* Chapter */}
-            {storeDetailCoursesEnroll.chapter.map((chapter, index) => (
+            {storeDetailCoursesEnroll?.course?.chapter.map((chapter, index) => (
               <div key={index} className="flex flex-col gap-4">
                 <div className="flex justify-between gap-10">
                   <h2 className="w-3/4 font-semibold text-primary">
                     Chapter {index + 1} - {chapter.name}
                   </h2>
                   <h2 className="w-1/4 text-end font-semibold text-blue">
-                    {chapter.duration}
+                    {chapter.duration} Minute
                   </h2>
                 </div>
                 {/* Lesson List */}
-                {chapter.lesson.map((lesson, lessonIndex) => (
+                {chapter?.lesson.map((lesson, lessonIndex) => (
                   <div
                     key={lessonIndex}
                     className="flex items-center justify-between"
@@ -230,13 +234,13 @@ export const DetailEnroll = () => {
                       <p className="font-medium">{lesson.lessonName}</p>
                     </div>
                     <div
-                      className={`cursor-pointer text-green ${
-                        lesson.tracking[0]?.status ? "text-slate-500" : ""
-                      }`}
-                      onClick={() =>
-                        !lesson.tracking[0]?.status &&
-                        handleTrackings(lesson.id)
-                      }
+                    // className={`cursor-pointer text-green ${
+                    // lesson.tracking[0]?.status ? "text-slate-500" : ""
+                    // }`}
+                    // onClick={() =>
+                    //   !lesson.tracking[0]?.status &&
+                    //   handleTrackings(lesson.id)
+                    // }
                     >
                       <FaCirclePlay size={25} />
                     </div>
@@ -264,23 +268,23 @@ export const DetailEnroll = () => {
                 className="hidden md:hidden lg:flex"
               />
               <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                {storeDetailCoursesEnroll?.enrollment?.progres}% Completed
+                {storeDetailCoursesEnroll?.progres}% Completed
               </div>
             </div>
           </div>
 
           {/* Chapter */}
-          {storeDetailCoursesEnroll.chapter.map((chapter, index) => (
+          {storeDetailCoursesEnroll?.course?.chapter.map((chapter, index) => (
             <div key={index} className="flex flex-col gap-4">
               <div className="flex justify-between px-2 pt-6 text-lg">
                 <h2 className="font-bold text-primary">Chapter {index + 1}</h2>
                 <h2 className="font-bold text-blue">{chapter.duration}</h2>
               </div>
               <h2 className="text-center font-bold text-black">
-                {chapter.name}
+                {chapter?.name}
               </h2>
               {/* Lesson List */}
-              {chapter.lesson.map((lesson, lessonIndex) => (
+              {chapter?.lesson.map((lesson, lessonIndex) => (
                 <div
                   key={lessonIndex}
                   className="flex items-center justify-between"
@@ -292,12 +296,12 @@ export const DetailEnroll = () => {
                     <p className="font-semibold">{lesson.lessonName}</p>
                   </div>
                   <div
-                    className={`cursor-pointer text-green ${
-                      lesson.tracking[0]?.status ? "text-slate-500" : ""
-                    }`}
-                    onClick={() =>
-                      !lesson.tracking[0]?.status && handleTrackings(lesson.id)
-                    }
+                  // className={`cursor-pointer text-green ${
+                  //   lesson.tracking[0]?.status ? "text-slate-500" : ""
+                  // }`}
+                  // onClick={() =>
+                  //   !lesson.tracking[0]?.status && handleTrackings(lesson.id)
+                  // }
                   >
                     <FaCirclePlay size={25} />
                   </div>

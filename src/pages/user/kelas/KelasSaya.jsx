@@ -19,6 +19,8 @@ import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
+// Redux reducer
+
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
