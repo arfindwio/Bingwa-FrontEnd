@@ -10,7 +10,7 @@ import { IoTime } from "react-icons/io5";
 import { TbProgressCheck } from "react-icons/tb";
 
 // Redux Actions
-import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getEnrollmentsByCourseIdAction";
+import { getEnrollmentsByCourseIdAction } from "../../../redux/action/enrollments/getEnrollmentsByCourseIdAction";
 
 // Material Tailwind
 import { Progress } from "@material-tailwind/react";
@@ -31,7 +31,7 @@ export const CardKelasSaya = ({
   const dispatch = useDispatch();
 
   const handleCardClick = () => {
-    dispatch(getAllEnrollmentsAction(courseId));
+    dispatch(getEnrollmentsByCourseIdAction(courseId));
     navigate(`/detail-course/${courseId}`);
   };
 

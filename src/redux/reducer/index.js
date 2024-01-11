@@ -12,7 +12,7 @@ import courseSlice from "./courses/courseSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
 import PaymentSlice from "./payment/PaymentSlice";
 import getNotificationsSlice from "./notifications/getNotificationsSlice";
-import getTrackingsSlice from "./TrackingsSlice";
+import getTrackingsSlice from "./trackings/TrackingsSlice";
 import paymentSlice from "./admin/payments/paymentSlice";
 
 export default combineReducers({
