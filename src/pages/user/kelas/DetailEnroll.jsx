@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // Components
@@ -28,22 +28,43 @@ import { TbProgressCheck } from "react-icons/tb";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 
 // Services
-import { reduxPutTrackings } from "../../../services/Tracking";
+import { reduxPutTrackings } from "../../../services/trackings/Tracking";
+
+// Redux Action
+import { getEnrollmentsByCourseIdAction } from "../../../redux/action/enrollments/getEnrollmentsByCourseIdAction";
+import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const DetailEnroll = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { courseId } = useParams();
+
   const storeDetailCoursesEnroll = useSelector(
     (state) => state.enrollments.enrollCourseId.enrollment,
   );
-  console.log(storeDetailCoursesEnroll);
+
+  const storeTrackingsCourseEnroll = useSelector(
+    (state) => state.trackings.trackingsCourseId.allTrackings,
+  );
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
-  const [open, setOpen] = React.useState(false);
+  const [videoLink, setVideoLink] = useState(null);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const token = CookieStorage.get(CookiesKeys.AuthToken);
+
+  const getAllData = () => {
+    dispatch(getTrackingByCourseId(courseId));
+    dispatch(getEnrollmentsByCourseIdAction(courseId));
+  };
+
+  useEffect(() => {
+    getAllData();
+  }, [dispatch]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,11 +74,12 @@ export const DetailEnroll = () => {
     return <LoadingSpinner />;
   }
 
-  const handleTrackings = async (lessonId) => {
+  const handleTrackings = async (lessonId, videoUrl) => {
     const loadingToastId = showLoadingToast("Loading ...");
 
     try {
       await reduxPutTrackings(lessonId);
+      setVideoLink(videoUrl.split("https://youtu.be/")[1]);
       toast.dismiss(loadingToastId);
       showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
     } catch (error) {
@@ -100,12 +122,18 @@ export const DetailEnroll = () => {
                 {storeDetailCoursesEnroll?.course?.category?.categoryName}
               </div>
               <div className="flex items-center gap-1">
-                <div className="text-yellow-700">
-                  <FaStar />
-                </div>
-                <div className="text-lg font-bold">
-                  {storeDetailCoursesEnroll?.course?.averageRating}
-                </div>
+                {storeDetailCoursesEnroll?.course?.averageRating === null ||
+                storeDetailCoursesEnroll?.course?.averageRating ===
+                  undefined ? null : (
+                  <>
+                    <div className="text-yellow-700">
+                      <FaStar />
+                    </div>
+                    <div className="text-lg font-bold">
+                      {storeDetailCoursesEnroll?.course?.averageRating}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex flex-col">
@@ -150,26 +178,41 @@ export const DetailEnroll = () => {
           </div>
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
-            <div
-              className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
-              style={{
-                backgroundImage: `url(${storeDetailCoursesEnroll?.course?.courseImg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <div className="cursor-pointer rounded-full bg-white p-1 text-primary">
-                <FaCirclePlay
-                  size={60}
-                  onClick={() =>
-                    window.open(
-                      storeDetailCoursesEnroll?.course?.videoURL,
-                      "_blank",
-                    )
-                  }
-                />
+            {videoLink === null || videoLink === undefined ? (
+              <div
+                className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
+                style={{
+                  backgroundImage: `url(${storeDetailCoursesEnroll?.course?.courseImg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="cursor-pointer rounded-full bg-white p-1 text-primary">
+                  <FaCirclePlay
+                    size={60}
+                    onClick={() =>
+                      window.open(
+                        storeDetailCoursesEnroll?.course?.videoURL,
+                        "_blank",
+                      )
+                    }
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className="relative h-0 overflow-hidden rounded-2xl"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe
+                  title="YouTube Video"
+                  className="absolute left-0 top-0 h-full w-full"
+                  src={`https://www.youtube.com/embed/${videoLink}`}
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
 
             <div className="flex flex-col gap-3">
               {/* Tentang Kelas */}
@@ -222,30 +265,42 @@ export const DetailEnroll = () => {
                   </h2>
                 </div>
                 {/* Lesson List */}
-                {chapter?.lesson.map((lesson, lessonIndex) => (
-                  <div
-                    key={lessonIndex}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex w-full items-center gap-4">
-                      <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-semibold">
-                        {lessonIndex + 1}
-                      </p>
-                      <p className="font-medium">{lesson.lessonName}</p>
-                    </div>
+                {chapter?.lesson.map((lesson, lessonIndex) => {
+                  const trackingData = storeTrackingsCourseEnroll.find(
+                    (tracking) => {
+                      return tracking.lessonId === lesson.id;
+                    },
+                  );
+
+                  return (
                     <div
-                    // className={`cursor-pointer text-green ${
-                    // lesson.tracking[0]?.status ? "text-slate-500" : ""
-                    // }`}
-                    // onClick={() =>
-                    //   !lesson.tracking[0]?.status &&
-                    //   handleTrackings(lesson.id)
-                    // }
+                      key={lessonIndex}
+                      className="flex items-center justify-between"
                     >
-                      <FaCirclePlay size={25} />
+                      <div
+                        className="flex w-full cursor-pointer items-center gap-4"
+                        onClick={() =>
+                          handleTrackings(lesson.id, lesson.videoURL)
+                        }
+                      >
+                        <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-semibold">
+                          {lessonIndex + 1}
+                        </p>
+                        <p className="font-medium">{lesson.lessonName}</p>
+                      </div>
+                      <div
+                        className={`cursor-pointer  ${
+                          trackingData.status ? "text-slate-500" : "text-green"
+                        }`}
+                        onClick={() =>
+                          handleTrackings(lesson.id, lesson.videoURL)
+                        }
+                      >
+                        <FaCirclePlay size={25} />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -284,29 +339,41 @@ export const DetailEnroll = () => {
                 {chapter?.name}
               </h2>
               {/* Lesson List */}
-              {chapter?.lesson.map((lesson, lessonIndex) => (
-                <div
-                  key={lessonIndex}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex w-full items-center gap-4">
-                    <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                      {lessonIndex + 1}
-                    </p>
-                    <p className="font-semibold">{lesson.lessonName}</p>
-                  </div>
+              {chapter?.lesson.map((lesson, lessonIndex) => {
+                const trackingData = storeTrackingsCourseEnroll.filter(
+                  (tracking) => {
+                    return tracking.lessonId === lesson.id;
+                  },
+                );
+                return (
                   <div
-                  // className={`cursor-pointer text-green ${
-                  //   lesson.tracking[0]?.status ? "text-slate-500" : ""
-                  // }`}
-                  // onClick={() =>
-                  //   !lesson.tracking[0]?.status && handleTrackings(lesson.id)
-                  // }
+                    key={lessonIndex}
+                    className="flex items-center justify-between"
                   >
-                    <FaCirclePlay size={25} />
+                    <div
+                      className="flex w-full cursor-pointer items-center gap-4"
+                      onClick={() =>
+                        handleTrackings(lesson.id, lesson.videoURL)
+                      }
+                    >
+                      <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                        {lessonIndex + 1}
+                      </p>
+                      <p className="font-semibold">{lesson.lessonName}</p>
+                    </div>
+                    <div
+                      className={`cursor-pointer ${
+                        trackingData.status ? "text-slate-500" : "text-green"
+                      }`}
+                      onClick={() =>
+                        handleTrackings(lesson.id, lesson.videoURL)
+                      }
+                    >
+                      <FaCirclePlay size={25} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </DialogBody>

@@ -27,8 +27,6 @@ export const API_ENDPOINT = {
   GET_ALL_COURSES: "/courses", // [GET] Get All Courses
   UPDATE_COURSE: "/courses", // [PUT] Update Course by ID
   CREATE_COURSE: "/courses", // [POST] Create Course
-  GET_COURSE_ME: "/courses/me", // [GET] Get All Course Me
-  GET_COURSE_ME_ID: "/courses/{courseId}/me", // [GET] Get Detail Course Me By ID
   GET_COURSE: "/courses", // [GET] Get Course by ID
   DELETE_COURSE: "/courses", // [DELETE] Delete Course by ID
 
@@ -69,7 +67,12 @@ export const API_ENDPOINT = {
   UPDATE_NOTIFICATIONS: "/notifications/markAsRead", // [PUT] Update Notification by Authentication
 
   // TRACKINGS
+  /* 
+  /trackings/{courseId} [GET] get Trackings by Course ID
+  /trackings/{lessonId} [PUT] put Trackings by Lesson ID
+  */
   UPDATE_TRACKINGS: "/trackings", // [PUT] Update Trackings
+  TRACKING: "/trackings",
 
   // PAYMENTS
   GET_ALL_PAYMENTS: "/payments", // [GET] Get All Payment

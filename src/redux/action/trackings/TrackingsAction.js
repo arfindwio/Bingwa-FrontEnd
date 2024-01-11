@@ -1,5 +1,5 @@
-import { reduxPutTrackings } from "../../services/Tracking";
-import { setTrackings } from "../reducer/TrackingsSlice";
+import { reduxPutTrackings } from "../../../services/Tracking";
+import { setTrackings } from "../../reducer/TrackingsSlice";
 
 export const putTrackingsAction = () => (dispatch) => {
   reduxPutTrackings()
