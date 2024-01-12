@@ -13,7 +13,7 @@ export const getEnrollmentsByCourseIdAction =
       dispatch(setEnrollByCourseId(result.data.data));
       return result;
     } catch (err) {
-      console.error("reduxGetEnrollmentById", err);
+      // console.error("reduxGetEnrollmentById", err);
     } finally {
       dispatch(endLoading());
     }

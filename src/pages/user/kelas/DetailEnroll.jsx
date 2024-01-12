@@ -33,6 +33,7 @@ import { reduxPutTrackings } from "../../../services/trackings/Tracking";
 // Redux Action
 import { getEnrollmentsByCourseIdAction } from "../../../redux/action/enrollments/getEnrollmentsByCourseIdAction";
 import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
+import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/getAllLessonsByCourseId";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
@@ -50,17 +51,17 @@ export const DetailEnroll = () => {
   const storeTrackingsCourseEnroll = useSelector(
     (state) => state.trackings.trackingsCourseId.allTrackings,
   );
+
+  const storeLessonsCourseId = useSelector(
+    (state) => state.lessons.lessonsCourseId.lessons,
+  );
+
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
   const [videoLink, setVideoLink] = useState(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const token = CookieStorage.get(CookiesKeys.AuthToken);
-
-  const getAllData = () => {
-    dispatch(getTrackingByCourseId(courseId));
-    dispatch(getEnrollmentsByCourseIdAction(courseId));
-  };
 
   useEffect(() => {
     getAllData();
@@ -69,6 +70,12 @@ export const DetailEnroll = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const getAllData = () => {
+    dispatch(getTrackingByCourseId(courseId));
+    dispatch(getAllLessonsByCourseIdAction(courseId));
+    dispatch(getEnrollmentsByCourseIdAction(courseId));
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -154,7 +161,7 @@ export const DetailEnroll = () => {
               <div className="flex items-center gap-1">
                 <LiaBookSolid size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeDetailCoursesEnroll?.course?.modul} Modul
+                  {storeLessonsCourseId?.length} Modul
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -267,9 +274,7 @@ export const DetailEnroll = () => {
                 {/* Lesson List */}
                 {chapter?.lesson.map((lesson, lessonIndex) => {
                   const trackingData = storeTrackingsCourseEnroll.find(
-                    (tracking) => {
-                      return tracking.lessonId === lesson.id;
-                    },
+                    (tracking) => tracking.lessonId === lesson.id,
                   );
 
                   return (
@@ -283,14 +288,14 @@ export const DetailEnroll = () => {
                           handleTrackings(lesson.id, lesson.videoURL)
                         }
                       >
-                        <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-semibold">
+                        <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
                           {lessonIndex + 1}
                         </p>
-                        <p className="font-medium">{lesson.lessonName}</p>
+                        <p className="font-semibold">{lesson.lessonName}</p>
                       </div>
                       <div
-                        className={`cursor-pointer  ${
-                          trackingData.status ? "text-slate-500" : "text-green"
+                        className={`cursor-pointer ${
+                          trackingData?.status ? "text-slate-500" : "text-green"
                         }`}
                         onClick={() =>
                           handleTrackings(lesson.id, lesson.videoURL)
@@ -340,11 +345,10 @@ export const DetailEnroll = () => {
               </h2>
               {/* Lesson List */}
               {chapter?.lesson.map((lesson, lessonIndex) => {
-                const trackingData = storeTrackingsCourseEnroll.filter(
-                  (tracking) => {
-                    return tracking.lessonId === lesson.id;
-                  },
+                const trackingData = storeTrackingsCourseEnroll.find(
+                  (tracking) => tracking.lessonId === lesson.id,
                 );
+
                 return (
                   <div
                     key={lessonIndex}
@@ -363,7 +367,7 @@ export const DetailEnroll = () => {
                     </div>
                     <div
                       className={`cursor-pointer ${
-                        trackingData.status ? "text-slate-500" : "text-green"
+                        trackingData?.status ? "text-slate-500" : "text-green"
                       }`}
                       onClick={() =>
                         handleTrackings(lesson.id, lesson.videoURL)
