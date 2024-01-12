@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Components
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { CardDetail } from "../../../assets/components/cards/CardDetail";
-import { showErrorToast, showSuccessToast } from "../../../helper/ToastHelper";
+
+// Helper
+import {
+  showLoadingToast,
+  showErrorToast,
+  showSuccessToast,
+} from "../../../helper/ToastHelper";
 import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
 // Icons
@@ -20,9 +27,17 @@ import { HiChatAlt2 } from "react-icons/hi";
 import { FaCirclePlay } from "react-icons/fa6";
 import { BiSolidLock } from "react-icons/bi";
 import { FaArrowCircleRight } from "react-icons/fa";
+import { TbProgressCheck } from "react-icons/tb";
+
+// Service
+import { reduxPutTrackings } from "../../../services/trackings/Tracking";
 
 // Redux Actions
 import { postEnrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
+import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/getAllLessonsByCourseId";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
+import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
+import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
 
 // Material Tailwind Components
 import {
@@ -38,20 +53,50 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 export const DetailKelas = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [paymentCourseId, setPaymentCourseId] = useState(null);
+  const { courseId } = useParams();
 
+  const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
+  const storeLessonsCourseId = useSelector(
+    (state) => state.lessons.lessonsCourseId.lessons,
+  );
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeTrackingsCourseEnroll = useSelector(
+    (state) => state.trackings.trackingsCourseId.allTrackings,
+  );
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
-  const [open, setOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [paymentCourseId, setPaymentCourseId] = useState(null);
+  const [videoLink, setVideoLink] = useState(null);
+
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
+  const enrollmentData = storeEnrollments.find((enrollCourse) => {
+    return enrollCourse.courseId === Number(courseId);
+  });
+
+  const selectedCourse =
+    enrollmentData === undefined || enrollmentData === null
+      ? storeDetailCourses
+      : enrollmentData.course;
+
+  useEffect(() => {
+    getAllData();
+  }, [dispatch]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const getAllData = () => {
+    dispatch(getDetailCoursesAction(courseId));
+    dispatch(getAllLessonsByCourseIdAction(courseId));
+    dispatch(getTrackingByCourseId(courseId));
+    dispatch(getAllEnrollmentsAction);
+  };
 
   const handleDetail = () => {
     handleDialogOpen();
@@ -85,6 +130,19 @@ export const DetailKelas = () => {
     } catch (err) {
       console.error("Error during enrollment:", err);
       showErrorToast("Pendaftaran gagal. Silakan coba lagi.");
+    }
+  };
+
+  const handleTrackings = async (lessonId, videoUrl) => {
+    const loadingToastId = showLoadingToast("Loading ...");
+
+    try {
+      await reduxPutTrackings(lessonId);
+      setVideoLink(videoUrl.split("https://youtu.be/")[1]);
+      toast.dismiss(loadingToastId);
+      showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
+    } catch (error) {
+      console.error("Error handling trackings:", error);
     }
   };
 
@@ -128,12 +186,17 @@ export const DetailKelas = () => {
                 {storeDetailCourses?.category?.categoryName}
               </div>
               <div className="flex items-center gap-1">
-                <div className="text-yellow-700">
-                  <FaStar />
-                </div>
-                <div className="text-lg font-bold">
-                  {storeDetailCourses?.averageRating}4.9
-                </div>
+                {storeDetailCourses.averageRating === null ||
+                storeDetailCourses.averageRating === undefined ? null : (
+                  <>
+                    <div className="text-yellow-700">
+                      <FaStar />
+                    </div>
+                    <div className="text-lg font-bold">
+                      {storeDetailCourses.averageRating}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex flex-col">
@@ -152,7 +215,7 @@ export const DetailKelas = () => {
               <div className="flex items-center gap-1">
                 <LiaBookSolid size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeDetailCourses?.modul} Modul
+                  {storeLessonsCourseId.length} Modul
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -172,11 +235,38 @@ export const DetailKelas = () => {
 
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
-            <div className="my-4 flex h-[20rem] items-center justify-center rounded-2xl bg-slate-300">
-              <div className="cursor-pointer text-primary">
-                <FaCirclePlay size={60} onClick={handleDialogOpen} />
+            {videoLink === null || videoLink === undefined ? (
+              <div
+                className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
+                style={{
+                  backgroundImage: `url(${storeDetailCourses.courseImg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="cursor-pointer rounded-full bg-white p-1 text-primary">
+                  <FaCirclePlay
+                    size={60}
+                    onClick={() =>
+                      window.open(storeDetailCourses.videoURL, "_blank")
+                    }
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className="relative h-0 overflow-hidden rounded-2xl"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe
+                  title="YouTube Video"
+                  className="absolute left-0 top-0 h-full w-full"
+                  src={`https://www.youtube.com/embed/${videoLink}`}
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
 
             <div className="flex flex-col gap-3">
               {/* Tentang Kelas */}
@@ -206,43 +296,96 @@ export const DetailKelas = () => {
             <div className="flex justify-between">
               <h1 className="text-xl font-bold">Materi Belajar</h1>
               <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-                <div
-                  className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                  onClick={handleEnrollCourse}
-                >
-                  Buy Course
-                </div>
+                {enrollmentData === undefined || enrollmentData === null ? (
+                  <div
+                    className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                    onClick={handleEnrollCourse}
+                  >
+                    {storeDetailCourses.isPremium
+                      ? "Buy Course"
+                      : "Enroll Course"}
+                  </div>
+                ) : (
+                  <>
+                    <TbProgressCheck
+                      size={30}
+                      color="#22c55e"
+                      className="hidden md:hidden lg:flex"
+                    />
+                    <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                      {enrollmentData.progres * 100}% Completed
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
             {/* Chapter */}
-            {storeDetailCourses.chapter.map((chapter, index) => (
+            {selectedCourse.chapter.map((chapter, index) => (
               <div key={index} className="flex flex-col gap-4">
                 <div className="flex justify-between gap-10">
                   <h2 className="font-semibold text-primary">
                     Chapter {index + 1} - {chapter.name}
                   </h2>
                   <h2 className="font-semibold text-blue">
-                    {chapter.duration}
+                    {chapter.duration} Minute
                   </h2>
                 </div>
                 {/* Lesson List */}
-                {chapter.lesson.map((lesson, lessonIndex) => (
-                  <div
-                    key={lessonIndex}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex w-full items-center gap-4">
-                      <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                        {lessonIndex + 1}
-                      </p>
-                      <p className="font-semibold">{lesson.lessonName}</p>
+                {chapter.lesson.map((lesson, lessonIndex) => {
+                  const trackingData = storeTrackingsCourseEnroll.find(
+                    (tracking) => tracking.lessonId === lesson.id,
+                  );
+                  return (
+                    <div
+                      key={lessonIndex}
+                      className="flex items-center justify-between"
+                    >
+                      <div
+                        className={`flex w-full ${
+                          enrollmentData === undefined ||
+                          enrollmentData === null
+                            ? ""
+                            : "cursor-pointer"
+                        } items-center gap-4`}
+                        onClick={
+                          enrollmentData === undefined ||
+                          enrollmentData === null
+                            ? null
+                            : () => handleTrackings(lesson.id, lesson.videoURL)
+                        }
+                      >
+                        <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                          {lessonIndex + 1}
+                        </p>
+                        <p className="font-semibold">{lesson.lessonName}</p>
+                      </div>
+                      <div
+                        className={`${
+                          enrollmentData === undefined ||
+                          enrollmentData === null
+                            ? "text-slate-500"
+                            : trackingData?.status
+                              ? "cursor-pointer text-slate-500"
+                              : "cursor-pointer text-green"
+                        }`}
+                        onClick={
+                          enrollmentData === undefined ||
+                          enrollmentData === null
+                            ? null
+                            : () => handleTrackings(lesson.id, lesson.videoURL)
+                        }
+                      >
+                        {enrollmentData === undefined ||
+                        enrollmentData === null ? (
+                          <BiSolidLock size={25} />
+                        ) : (
+                          <FaCirclePlay size={25} />
+                        )}
+                      </div>
                     </div>
-                    <div className="text-slate-500">
-                      <BiSolidLock size={25} />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -261,7 +404,7 @@ export const DetailKelas = () => {
             Selangkah lagi menuju
           </h1>
           <h1 className="text-lg font-semibold text-primary">
-            Course Kebanggan Anda
+            Course Kebanggaan Anda
           </h1>
         </DialogHeader>
         <DialogBody className="w-full text-sm">
@@ -303,17 +446,32 @@ export const DetailKelas = () => {
           <div className="flex justify-between py-4">
             <h1 className="text-xl font-bold">Materi Belajar</h1>
             <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-              <div
-                className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                onClick={handleEnrollCourse}
-              >
-                Buy Course
-              </div>
+              {enrollmentData === undefined || enrollmentData === null ? (
+                <div
+                  className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                  onClick={handleEnrollCourse}
+                >
+                  {storeDetailCourses.isPremium
+                    ? "Buy Course"
+                    : "Enroll Course"}
+                </div>
+              ) : (
+                <>
+                  <TbProgressCheck
+                    size={30}
+                    color="#22c55e"
+                    className="hidden md:hidden lg:flex"
+                  />
+                  <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                    {enrollmentData.progres * 100}% Completed
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
           {/* Chapter */}
-          {storeDetailCourses.chapter.map((chapter, index) => (
+          {selectedCourse.chapter.map((chapter, index) => (
             <div key={index} className="flex flex-col gap-4">
               <div className="flex justify-between px-2 pt-6 text-lg">
                 <h2 className="font-bold text-primary">Chapter {index + 1}</h2>
@@ -323,22 +481,62 @@ export const DetailKelas = () => {
                 {chapter.name}
               </h2>
               {/* Lesson List */}
-              {chapter.lesson.map((lesson, lessonIndex) => (
-                <div
-                  key={lessonIndex}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex w-full items-center gap-4">
-                    <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                      {lessonIndex + 1}
-                    </p>
-                    <p className="font-semibold">{lesson.lessonName}</p>
+              {chapter.lesson.map((lesson, lessonIndex) => {
+                const trackingData = storeTrackingsCourseEnroll.find(
+                  (tracking) => {
+                    console.log("tracking", tracking.lessonId);
+                    console.log("lesson", lesson.id);
+                    return tracking.lessonId === lesson.id;
+                  },
+                );
+
+                console.log(trackingData);
+                return (
+                  <div
+                    key={lessonIndex}
+                    className="flex items-center justify-between"
+                  >
+                    <div
+                      className={`flex w-full ${
+                        enrollmentData === undefined || enrollmentData === null
+                          ? ""
+                          : "cursor-pointer"
+                      }items-center gap-4`}
+                      onClick={
+                        enrollmentData === undefined || enrollmentData === null
+                          ? null
+                          : () => handleTrackings(lesson.id, lesson.videoURL)
+                      }
+                    >
+                      <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                        {lessonIndex + 1}
+                      </p>
+                      <p className="font-semibold">{lesson.lessonName}</p>
+                    </div>
+                    <div
+                      className={`${
+                        enrollmentData === undefined || enrollmentData === null
+                          ? "text-slate-500"
+                          : trackingData?.status
+                            ? "cursor-pointer text-slate-500"
+                            : "cursor-pointer text-green"
+                      }`}
+                      onClick={
+                        enrollmentData === undefined || enrollmentData === null
+                          ? null
+                          : () => handleTrackings(lesson.id, lesson.videoURL)
+                      }
+                    >
+                      {enrollmentData === undefined ||
+                      enrollmentData === null ? (
+                        <BiSolidLock size={25} />
+                      ) : (
+                        <FaCirclePlay size={25} />
+                      )}
+                    </div>
                   </div>
-                  <div className="text-slate-500">
-                    <BiSolidLock size={25} />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </DialogBody>

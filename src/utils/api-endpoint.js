@@ -38,13 +38,13 @@ export const API_ENDPOINT = {
   DELETE_CHAPTER: "/chapters/{chapterId}", // [DELETE] Delete Chapter by ID
 
   // LESSONS
-  GET_ALL_LESSONS: "/lessons", // [GET] Get All Lessons
-  CREATE_LESSON: "/lessons", // [POST] Create Lesson
-  SEARCH_LESSON: "/lessons/filter", // [GET] Search Lesson
-  GET_LESSON: "/lessons/{lessonId}", // [GET] Get Lesson by ID
-  UPDATE_LESSON: "/lessons/{lesssonId}", // [PUT] Update Lesson by ID
-  DELETE_LESSON: "/lessons/{lesssonId}", // [DELETE] Delete Lesson by ID
-  GET_LESSON_BY_COURSE: "/lessons/{courseId}/course", // [GET] Get Lesson by Course
+  // /lessons [GET] Get All Lessons
+  // /lessons [POST] Create Lesson
+  // /lessons/{courseId}[GET] Get Lesson by Course
+  // /lessons/{lessonId} [GET] Get Lesson by ID
+  // /lessons/{lesssonId} [PUT] Update Lesson by ID
+  // /lessons/{lesssonId} [DELETE] Delete Lesson by ID
+  LESSONS: "/lessons",
 
   // ENROLLMENTS
   GET_ALL_ENROLLMENTS: "/enrollments", // [GET] Get All Enrollments
@@ -67,12 +67,10 @@ export const API_ENDPOINT = {
   UPDATE_NOTIFICATIONS: "/notifications/markAsRead", // [PUT] Update Notification by Authentication
 
   // TRACKINGS
-  /* 
-  /trackings/{courseId} [GET] get Trackings by Course ID
-  /trackings/{lessonId} [PUT] put Trackings by Lesson ID
-  */
+  // /trackings/{courseId} [GET] get Trackings by Course ID
+  // /trackings/{lessonId} [PUT] put Trackings by Lesson ID
   UPDATE_TRACKINGS: "/trackings", // [PUT] Update Trackings
-  TRACKING: "/trackings",
+  TRACKINGS: "/trackings",
 
   // PAYMENTS
   GET_ALL_PAYMENTS: "/payments", // [GET] Get All Payment
