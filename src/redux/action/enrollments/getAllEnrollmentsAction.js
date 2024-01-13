@@ -1,7 +1,7 @@
 import { reduxGetAllEnrollments } from "../../../services/enrollments/getAllEnrollments";
 import { setCourseEnroll } from "../../reducer/enrollments/EnrollmentsSlice";
 
-export const getAllEnrollmentsAction = () => (dispatch) => {
+export const getAllEnrollmentsAction = () => async (dispatch) => {
   reduxGetAllEnrollments()
     .then((result) => {
       dispatch(setCourseEnroll(result.data.data.enrollments));
