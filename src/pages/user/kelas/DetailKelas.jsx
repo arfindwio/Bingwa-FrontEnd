@@ -60,9 +60,11 @@ export const DetailKelas = () => {
     (state) => state.lessons.lessonsCourseId.lessons,
   );
   const storeEnrollments = useSelector((state) => state.enrollments.course);
+
   const storeTrackingsCourseEnroll = useSelector(
     (state) => state.trackings.trackingsCourseId.allTrackings,
   );
+
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -78,8 +80,11 @@ export const DetailKelas = () => {
     return enrollCourse.courseId === Number(courseId);
   });
 
-  const selectedCourse =
-    enrollmentData === undefined || enrollmentData === null
+  console.log(enrollmentData);
+
+  const selectedCourse = !token
+    ? storeDetailCourses
+    : enrollmentData === undefined || enrollmentData === null
       ? storeDetailCourses
       : enrollmentData.course;
 
@@ -94,8 +99,8 @@ export const DetailKelas = () => {
   const getAllData = () => {
     dispatch(getDetailCoursesAction(courseId));
     dispatch(getAllLessonsByCourseIdAction(courseId));
-    dispatch(getTrackingByCourseId(courseId));
-    dispatch(getAllEnrollmentsAction);
+    dispatch(getAllEnrollmentsAction());
+    if (token) dispatch(getTrackingByCourseId(courseId));
   };
 
   const handleDetail = () => {
@@ -120,7 +125,7 @@ export const DetailKelas = () => {
         if (!isPremium) {
           await dispatch(postEnrollmentsAction(storeDetailCourses.id));
           showSuccessToast("Berhasil Enrollments Course");
-          navigate("/kelas-saya");
+          window.location.reload();
         }
       }
 
@@ -296,7 +301,7 @@ export const DetailKelas = () => {
             <div className="flex justify-between">
               <h1 className="text-xl font-bold">Materi Belajar</h1>
               <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-                {enrollmentData === undefined || enrollmentData === null ? (
+                {!token ? (
                   <div
                     className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                     onClick={handleEnrollCourse}
@@ -307,14 +312,27 @@ export const DetailKelas = () => {
                   </div>
                 ) : (
                   <>
-                    <TbProgressCheck
-                      size={30}
-                      color="#22c55e"
-                      className="hidden md:hidden lg:flex"
-                    />
-                    <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                      {enrollmentData.progres * 100}% Completed
-                    </div>
+                    {enrollmentData === undefined || enrollmentData === null ? (
+                      <div
+                        className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                        onClick={handleEnrollCourse}
+                      >
+                        {storeDetailCourses.isPremium
+                          ? "Buy Course"
+                          : "Enroll Course"}
+                      </div>
+                    ) : (
+                      <>
+                        <TbProgressCheck
+                          size={30}
+                          color="#22c55e"
+                          className="hidden md:hidden lg:flex"
+                        />
+                        <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                          {enrollmentData.progres * 100}% Completed
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>
@@ -343,16 +361,21 @@ export const DetailKelas = () => {
                     >
                       <div
                         className={`flex w-full ${
-                          enrollmentData === undefined ||
-                          enrollmentData === null
+                          !token
                             ? ""
-                            : "cursor-pointer"
+                            : enrollmentData === undefined ||
+                                enrollmentData === null
+                              ? ""
+                              : "cursor-pointer"
                         } items-center gap-4`}
                         onClick={
-                          enrollmentData === undefined ||
-                          enrollmentData === null
+                          !token
                             ? null
-                            : () => handleTrackings(lesson.id, lesson.videoURL)
+                            : enrollmentData === undefined ||
+                                enrollmentData === null
+                              ? null
+                              : () =>
+                                  handleTrackings(lesson.id, lesson.videoURL)
                         }
                       >
                         <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
@@ -362,22 +385,29 @@ export const DetailKelas = () => {
                       </div>
                       <div
                         className={`${
-                          enrollmentData === undefined ||
-                          enrollmentData === null
+                          !token
                             ? "text-slate-500"
-                            : trackingData?.status
-                              ? "cursor-pointer text-slate-500"
-                              : "cursor-pointer text-green"
+                            : enrollmentData === undefined ||
+                                enrollmentData === null
+                              ? "text-slate-500"
+                              : trackingData.status
+                                ? "cursor-pointer text-slate-500"
+                                : "cursor-pointer text-green"
                         }`}
                         onClick={
-                          enrollmentData === undefined ||
-                          enrollmentData === null
+                          !token
                             ? null
-                            : () => handleTrackings(lesson.id, lesson.videoURL)
+                            : enrollmentData === undefined ||
+                                enrollmentData === null
+                              ? null
+                              : () =>
+                                  handleTrackings(lesson.id, lesson.videoURL)
                         }
                       >
-                        {enrollmentData === undefined ||
-                        enrollmentData === null ? (
+                        {!token ? (
+                          <BiSolidLock size={25} />
+                        ) : enrollmentData === undefined ||
+                          enrollmentData === null ? (
                           <BiSolidLock size={25} />
                         ) : (
                           <FaCirclePlay size={25} />
@@ -446,7 +476,7 @@ export const DetailKelas = () => {
           <div className="flex justify-between py-4">
             <h1 className="text-xl font-bold">Materi Belajar</h1>
             <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-              {enrollmentData === undefined || enrollmentData === null ? (
+              {!token ? (
                 <div
                   className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                   onClick={handleEnrollCourse}
@@ -456,16 +486,29 @@ export const DetailKelas = () => {
                     : "Enroll Course"}
                 </div>
               ) : (
-                <>
-                  <TbProgressCheck
-                    size={30}
-                    color="#22c55e"
-                    className="hidden md:hidden lg:flex"
-                  />
-                  <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                    {enrollmentData.progres * 100}% Completed
-                  </div>
-                </>
+                <div>
+                  {enrollmentData === undefined || enrollmentData === null ? (
+                    <div
+                      className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                      onClick={handleEnrollCourse}
+                    >
+                      {storeDetailCourses.isPremium
+                        ? "Buy Course"
+                        : "Enroll Course"}
+                    </div>
+                  ) : (
+                    <>
+                      <TbProgressCheck
+                        size={30}
+                        color="#22c55e"
+                        className="hidden md:hidden lg:flex"
+                      />
+                      <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                        {enrollmentData.progres * 100}% Completed
+                      </div>
+                    </>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -483,14 +526,9 @@ export const DetailKelas = () => {
               {/* Lesson List */}
               {chapter.lesson.map((lesson, lessonIndex) => {
                 const trackingData = storeTrackingsCourseEnroll.find(
-                  (tracking) => {
-                    console.log("tracking", tracking.lessonId);
-                    console.log("lesson", lesson.id);
-                    return tracking.lessonId === lesson.id;
-                  },
+                  (tracking) => tracking.lessonId === lesson.id,
                 );
 
-                console.log(trackingData);
                 return (
                   <div
                     key={lessonIndex}
@@ -498,14 +536,20 @@ export const DetailKelas = () => {
                   >
                     <div
                       className={`flex w-full ${
-                        enrollmentData === undefined || enrollmentData === null
+                        !token
                           ? ""
-                          : "cursor-pointer"
+                          : enrollmentData === undefined ||
+                              enrollmentData === null
+                            ? ""
+                            : "cursor-pointer"
                       }items-center gap-4`}
                       onClick={
-                        enrollmentData === undefined || enrollmentData === null
+                        !token
                           ? null
-                          : () => handleTrackings(lesson.id, lesson.videoURL)
+                          : enrollmentData === undefined ||
+                              enrollmentData === null
+                            ? null
+                            : () => handleTrackings(lesson.id, lesson.videoURL)
                       }
                     >
                       <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
@@ -515,20 +559,28 @@ export const DetailKelas = () => {
                     </div>
                     <div
                       className={`${
-                        enrollmentData === undefined || enrollmentData === null
+                        !token
                           ? "text-slate-500"
-                          : trackingData?.status
-                            ? "cursor-pointer text-slate-500"
-                            : "cursor-pointer text-green"
+                          : enrollmentData === undefined ||
+                              enrollmentData === null
+                            ? "text-slate-500"
+                            : trackingData && trackingData.status
+                              ? "cursor-pointer text-slate-500"
+                              : "cursor-pointer text-green"
                       }`}
                       onClick={
-                        enrollmentData === undefined || enrollmentData === null
+                        !token
                           ? null
-                          : () => handleTrackings(lesson.id, lesson.videoURL)
+                          : enrollmentData === undefined ||
+                              enrollmentData === null
+                            ? null
+                            : () => handleTrackings(lesson.id, lesson.videoURL)
                       }
                     >
-                      {enrollmentData === undefined ||
-                      enrollmentData === null ? (
+                      {!token ? (
+                        <BiSolidLock size={25} />
+                      ) : enrollmentData === undefined ||
+                        enrollmentData === null ? (
                         <BiSolidLock size={25} />
                       ) : (
                         <FaCirclePlay size={25} />
