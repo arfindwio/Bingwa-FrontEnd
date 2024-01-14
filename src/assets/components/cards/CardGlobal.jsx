@@ -32,7 +32,10 @@ export const CardGlobal = ({
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-95">
+    <div
+      className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-95"
+      onClick={handleCardClick}
+    >
       <div
         className="h-32 min-w-fit scale-105 cursor-pointer bg-center bg-no-repeat"
         style={{
@@ -40,7 +43,6 @@ export const CardGlobal = ({
           backgroundSize: "cover",
           objectFit: "cover",
         }}
-        onClick={handleCardClick}
       ></div>
       {/* Container Desc Card Kelas */}
       <div className="flex flex-col gap-4 bg-white px-4 py-3">
@@ -82,7 +84,9 @@ export const CardGlobal = ({
               color="#22c55e"
               className="hidden md:flex lg:flex"
             />
-            <div className="text-sm font-semibold text-primary">{duration}</div>
+            <div className="text-sm font-semibold text-primary">
+              {duration} Minute
+            </div>
           </div>
         </div>
         {isPremium ? (

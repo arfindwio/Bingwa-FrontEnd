@@ -161,7 +161,7 @@ export const DetailEnroll = () => {
               <div className="flex items-center gap-1">
                 <LiaBookSolid size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeLessonsCourseId?.length} Modul
+                  {/* {storeLessonsCourseId?.length} Modul */}
                 </div>
               </div>
               <div className="flex items-center gap-1">
