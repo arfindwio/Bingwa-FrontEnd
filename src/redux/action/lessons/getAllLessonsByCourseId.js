@@ -1,4 +1,4 @@
-import { reduxGetAllLessonsByCourseId } from "../../../services/lessons/getAllLessonsByCourseId";
+import { reduxGetAllLessonsByCourseId } from "../../../services/lessons/getAllLessons";
 import {
   setLessonsByCourseId,
   startLoading,

@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// Redux Actions
-import { filterCoursesAction } from "../../../redux/action/courses/filterCourseAction";
+// Redux Action
+import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
 
-export const SidebarKelas = () => {
+export const SidebarKelas = ({
+  filters,
+  selectedCategories,
+  selectedLevels,
+  handleFilterChange,
+  queryParams,
+  searchInput,
+}) => {
   const dispatch = useDispatch();
 
   // Redux Store
@@ -12,48 +19,53 @@ export const SidebarKelas = () => {
     (state) => state.dataCategories.categories,
   );
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedLevels, setSelectedLevels] = useState([]);
+  useEffect(() => {
+    const formatSearch = searchInput ? `search=${searchInput}` : "";
+    const fullQuery = formatSearch
+      ? `${formatSearch}&${queryParams}`
+      : queryParams;
 
-  const handleCategoryFilter = (e) => {
-    let isSelected = e.target.checked;
-    let value = e.target.value;
-
-    setSelectedCategories((prevCategories) => {
-      const updatedCategories = isSelected
-        ? [...prevCategories, value]
-        : prevCategories.filter((category) => category !== value);
-
-      dispatch(filterCoursesAction(updatedCategories, selectedLevels));
-
-      return updatedCategories;
-    });
-  };
-
-  const handleLevelFilter = (e) => {
-    let isSelected = e.target.checked;
-    let value = e.target.value;
-
-    setSelectedLevels((prevLevels) => {
-      const updatedLevels = isSelected
-        ? [...prevLevels, value]
-        : prevLevels.filter((level) => level !== value);
-
-      dispatch(filterCoursesAction(selectedCategories, updatedLevels));
-
-      return updatedLevels;
-    });
-  };
-
-  const clearFilters = () => {
-    setSelectedCategories([]);
-    setSelectedLevels([]);
-    dispatch(filterCoursesAction([], []));
-  };
+    dispatch(getAllCoursesAction(fullQuery));
+  }, [filters, selectedCategories, selectedLevels, searchInput, dispatch]);
 
   return (
     <>
       <div className="flex w-full flex-col rounded-2xl bg-white p-0 md:p-4 lg:p-4">
+        {/* Filter */}
+        <div className="flex px-4 py-3 text-xl font-bold">Filter</div>
+        <div className="flex flex-col space-y-4 pb-3 font-medium">
+          <label className="flex items-center px-6">
+            <input
+              type="checkbox"
+              value={"newest"}
+              checked={filters.newest}
+              onChange={() => handleFilterChange("filter", "newest")}
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
+            />
+            Paling Baru
+          </label>
+          <label className="flex items-center px-6">
+            <input
+              type="checkbox"
+              value={"populer"}
+              checked={filters.populer}
+              onChange={() => handleFilterChange("filter", "populer")}
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
+            />
+            Paling Populer
+          </label>
+          <label className="flex items-center px-6">
+            <input
+              type="checkbox"
+              value={"promo"}
+              checked={filters.promo}
+              onChange={() => handleFilterChange("filter", "promo")}
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
+            />
+            Promo
+          </label>
+        </div>
+
         {/* Kategori */}
         <div className="flex px-4 py-3 text-xl font-bold">Kategori</div>
         <div className="flex flex-col space-y-4 pb-3 font-medium">
@@ -62,9 +74,11 @@ export const SidebarKelas = () => {
               <input
                 type="checkbox"
                 value={value.categoryName}
-                className="mr-2 h-[20px] w-[20px] cursor-pointer"
                 checked={selectedCategories.includes(value.categoryName)}
-                onChange={handleCategoryFilter}
+                onChange={() =>
+                  handleFilterChange("category", value.categoryName)
+                }
+                className="mr-2 h-[20px] w-[20px] cursor-pointer"
               />
               {value.categoryName}
             </label>
@@ -79,7 +93,7 @@ export const SidebarKelas = () => {
               type="checkbox"
               value={"Beginner Level"}
               checked={selectedLevels.includes("Beginner Level")}
-              onChange={handleLevelFilter}
+              onChange={() => handleFilterChange("level", "Beginner Level")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Beginner Level
@@ -89,7 +103,7 @@ export const SidebarKelas = () => {
               type="checkbox"
               value={"Intermediate Level"}
               checked={selectedLevels.includes("Intermediate Level")}
-              onChange={handleLevelFilter}
+              onChange={() => handleFilterChange("level", "Intermediate Level")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Intermediate Level
@@ -99,7 +113,7 @@ export const SidebarKelas = () => {
               type="checkbox"
               value={"Advanced Level"}
               checked={selectedLevels.includes("Advanced Level")}
-              onChange={handleLevelFilter}
+              onChange={() => handleFilterChange("level", "Advanced Level")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Advanced Level
@@ -108,9 +122,7 @@ export const SidebarKelas = () => {
 
         {/* Hapus Filter */}
         <div className="flex justify-center py-10">
-          <button className="font-semibold text-red-600" onClick={clearFilters}>
-            Hapus Filter
-          </button>
+          <button className="font-semibold text-red-600">Hapus Filter</button>
         </div>
       </div>
     </>

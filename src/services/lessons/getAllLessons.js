@@ -4,3 +4,7 @@ import http from "../../utils/http";
 export const reduxGetAllLessonsByCourseId = async (courseId) => {
   return await http.get(`${API_ENDPOINT.LESSONS}/${courseId}`);
 };
+
+export const reduxGetAllLessons = async () => {
+  return await http.get(`${API_ENDPOINT.LESSONS}`);
+};
