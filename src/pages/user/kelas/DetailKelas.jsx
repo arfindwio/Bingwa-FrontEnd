@@ -59,6 +59,7 @@ export const DetailKelas = () => {
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
+
   const storeEnrollments = useSelector((state) => state.enrollments.course);
 
   const storeTrackingsCourseEnroll = useSelector(
@@ -76,11 +77,11 @@ export const DetailKelas = () => {
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
-  const enrollmentData = storeEnrollments.find((enrollCourse) => {
-    return enrollCourse.courseId === Number(courseId);
-  });
-
-  console.log(enrollmentData);
+  const enrollmentData = storeEnrollments
+    ? storeEnrollments.find(
+        (enrollCourse) => enrollCourse.courseId === Number(courseId),
+      )
+    : null;
 
   const selectedCourse = !token
     ? storeDetailCourses
@@ -99,8 +100,10 @@ export const DetailKelas = () => {
   const getAllData = () => {
     dispatch(getDetailCoursesAction(courseId));
     dispatch(getAllLessonsByCourseIdAction(courseId));
-    dispatch(getAllEnrollmentsAction());
-    if (token) dispatch(getTrackingByCourseId(courseId));
+    if (token) {
+      dispatch(getAllEnrollmentsAction());
+      dispatch(getTrackingByCourseId(courseId));
+    }
   };
 
   const handleDetail = () => {
@@ -339,85 +342,97 @@ export const DetailKelas = () => {
             </div>
 
             {/* Chapter */}
-            {selectedCourse.chapter.map((chapter, index) => (
-              <div key={index} className="flex flex-col gap-4">
-                <div className="flex justify-between gap-10">
-                  <h2 className="font-semibold text-primary">
-                    Chapter {index + 1} - {chapter.name}
-                  </h2>
-                  <h2 className="font-semibold text-blue">
-                    {chapter.duration} Minute
-                  </h2>
+            {selectedCourse &&
+              selectedCourse.chapter &&
+              selectedCourse.chapter.map((chapter, index) => (
+                <div key={index} className="flex flex-col gap-4">
+                  <div className="flex justify-between gap-10">
+                    <h2 className="font-semibold text-primary">
+                      Chapter {index + 1} - {chapter.name}
+                    </h2>
+                    <h2 className="font-semibold text-blue">
+                      {chapter.duration} Minute
+                    </h2>
+                  </div>
+                  {/* Lesson List */}
+                  {chapter.lesson &&
+                    chapter.lesson.map((lesson, lessonIndex) => {
+                      const trackingData = storeTrackingsCourseEnroll
+                        ? storeTrackingsCourseEnroll.find(
+                            (tracking) => tracking.lessonId === lesson.id,
+                          )
+                        : null;
+
+                      return (
+                        <div
+                          key={lessonIndex}
+                          className="flex items-center justify-between"
+                        >
+                          <div
+                            className={`flex w-full ${
+                              !token
+                                ? ""
+                                : enrollmentData === undefined ||
+                                    enrollmentData === null
+                                  ? ""
+                                  : "cursor-pointer"
+                            } items-center gap-4`}
+                            onClick={
+                              !token
+                                ? null
+                                : enrollmentData === undefined ||
+                                    enrollmentData === null
+                                  ? null
+                                  : () =>
+                                      handleTrackings(
+                                        lesson.id,
+                                        lesson.videoURL,
+                                      )
+                            }
+                          >
+                            <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                              {lessonIndex + 1}
+                            </p>
+                            <p className="font-semibold">{lesson.lessonName}</p>
+                          </div>
+                          <div
+                            className={`${
+                              !token
+                                ? "text-slate-500"
+                                : enrollmentData === undefined ||
+                                    enrollmentData === null
+                                  ? "text-slate-500"
+                                  : trackingData && trackingData.status
+                                    ? "cursor-pointer text-slate-500"
+                                    : "cursor-pointer text-green"
+                            }`}
+                            onClick={
+                              !token
+                                ? null
+                                : enrollmentData === undefined ||
+                                    enrollmentData === null
+                                  ? null
+                                  : () =>
+                                      handleTrackings(
+                                        lesson.id,
+                                        lesson.videoURL,
+                                      )
+                            }
+                          >
+                            {!token ? (
+                              <BiSolidLock size={25} />
+                            ) : enrollmentData === undefined ||
+                              enrollmentData === null ? (
+                              <BiSolidLock size={25} />
+                            ) : (
+                              <FaCirclePlay size={25} />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
-                {/* Lesson List */}
-                {chapter.lesson.map((lesson, lessonIndex) => {
-                  const trackingData = storeTrackingsCourseEnroll.find(
-                    (tracking) => tracking.lessonId === lesson.id,
-                  );
-                  return (
-                    <div
-                      key={lessonIndex}
-                      className="flex items-center justify-between"
-                    >
-                      <div
-                        className={`flex w-full ${
-                          !token
-                            ? ""
-                            : enrollmentData === undefined ||
-                                enrollmentData === null
-                              ? ""
-                              : "cursor-pointer"
-                        } items-center gap-4`}
-                        onClick={
-                          !token
-                            ? null
-                            : enrollmentData === undefined ||
-                                enrollmentData === null
-                              ? null
-                              : () =>
-                                  handleTrackings(lesson.id, lesson.videoURL)
-                        }
-                      >
-                        <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                          {lessonIndex + 1}
-                        </p>
-                        <p className="font-semibold">{lesson.lessonName}</p>
-                      </div>
-                      <div
-                        className={`${
-                          !token
-                            ? "text-slate-500"
-                            : enrollmentData === undefined ||
-                                enrollmentData === null
-                              ? "text-slate-500"
-                              : trackingData.status
-                                ? "cursor-pointer text-slate-500"
-                                : "cursor-pointer text-green"
-                        }`}
-                        onClick={
-                          !token
-                            ? null
-                            : enrollmentData === undefined ||
-                                enrollmentData === null
-                              ? null
-                              : () =>
-                                  handleTrackings(lesson.id, lesson.videoURL)
-                        }
-                      >
-                        {!token ? (
-                          <BiSolidLock size={25} />
-                        ) : enrollmentData === undefined ||
-                          enrollmentData === null ? (
-                          <BiSolidLock size={25} />
-                        ) : (
-                          <FaCirclePlay size={25} />
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
@@ -514,83 +529,92 @@ export const DetailKelas = () => {
           </div>
 
           {/* Chapter */}
-          {selectedCourse.chapter.map((chapter, index) => (
-            <div key={index} className="flex flex-col gap-4">
-              <div className="flex justify-between px-2 pt-6 text-lg">
-                <h2 className="font-bold text-primary">Chapter {index + 1}</h2>
-                <h2 className="font-bold text-blue">{chapter.duration}</h2>
-              </div>
-              <h2 className="text-center font-bold text-black">
-                {chapter.name}
-              </h2>
-              {/* Lesson List */}
-              {chapter.lesson.map((lesson, lessonIndex) => {
-                const trackingData = storeTrackingsCourseEnroll.find(
-                  (tracking) => tracking.lessonId === lesson.id,
-                );
+          {selectedCourse &&
+            selectedCourse.chapter &&
+            selectedCourse.chapter.map((chapter, index) => (
+              <div key={index} className="flex flex-col gap-4">
+                <div className="flex justify-between px-2 pt-6 text-lg">
+                  <h2 className="font-bold text-primary">
+                    Chapter {index + 1}
+                  </h2>
+                  <h2 className="font-bold text-blue">{chapter.duration}</h2>
+                </div>
+                <h2 className="text-center font-bold text-black">
+                  {chapter.name}
+                </h2>
+                {/* Lesson List */}
+                {chapter.lesson &&
+                  chapter.lesson.map((lesson, lessonIndex) => {
+                    const trackingData = storeTrackingsCourseEnroll
+                      ? storeTrackingsCourseEnroll.find(
+                          (tracking) => tracking.lessonId === lesson.id,
+                        )
+                      : null;
 
-                return (
-                  <div
-                    key={lessonIndex}
-                    className="flex items-center justify-between"
-                  >
-                    <div
-                      className={`flex w-full ${
-                        !token
-                          ? ""
-                          : enrollmentData === undefined ||
-                              enrollmentData === null
-                            ? ""
-                            : "cursor-pointer"
-                      }items-center gap-4`}
-                      onClick={
-                        !token
-                          ? null
-                          : enrollmentData === undefined ||
-                              enrollmentData === null
-                            ? null
-                            : () => handleTrackings(lesson.id, lesson.videoURL)
-                      }
-                    >
-                      <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                        {lessonIndex + 1}
-                      </p>
-                      <p className="font-semibold">{lesson.lessonName}</p>
-                    </div>
-                    <div
-                      className={`${
-                        !token
-                          ? "text-slate-500"
-                          : enrollmentData === undefined ||
-                              enrollmentData === null
-                            ? "text-slate-500"
-                            : trackingData && trackingData.status
-                              ? "cursor-pointer text-slate-500"
-                              : "cursor-pointer text-green"
-                      }`}
-                      onClick={
-                        !token
-                          ? null
-                          : enrollmentData === undefined ||
-                              enrollmentData === null
-                            ? null
-                            : () => handleTrackings(lesson.id, lesson.videoURL)
-                      }
-                    >
-                      {!token ? (
-                        <BiSolidLock size={25} />
-                      ) : enrollmentData === undefined ||
-                        enrollmentData === null ? (
-                        <BiSolidLock size={25} />
-                      ) : (
-                        <FaCirclePlay size={25} />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+                    return (
+                      <div
+                        key={lessonIndex}
+                        className="flex items-center justify-between"
+                      >
+                        <div
+                          className={`flex w-full ${
+                            !token
+                              ? ""
+                              : enrollmentData === undefined ||
+                                  enrollmentData === null
+                                ? ""
+                                : "cursor-pointer"
+                          }items-center gap-4`}
+                          onClick={
+                            !token
+                              ? null
+                              : enrollmentData === undefined ||
+                                  enrollmentData === null
+                                ? null
+                                : () =>
+                                    handleTrackings(lesson.id, lesson.videoURL)
+                          }
+                        >
+                          <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                            {lessonIndex + 1}
+                          </p>
+                          <p className="font-semibold">{lesson.lessonName}</p>
+                        </div>
+                        <div
+                          className={`${
+                            !token
+                              ? "text-slate-500"
+                              : enrollmentData === undefined ||
+                                  enrollmentData === null
+                                ? "text-slate-500"
+                                : trackingData && trackingData.status
+                                  ? "cursor-pointer text-slate-500"
+                                  : "cursor-pointer text-green"
+                          }`}
+                          onClick={
+                            !token
+                              ? null
+                              : enrollmentData === undefined ||
+                                  enrollmentData === null
+                                ? null
+                                : () =>
+                                    handleTrackings(lesson.id, lesson.videoURL)
+                          }
+                        >
+                          {!token ? (
+                            <BiSolidLock size={25} />
+                          ) : enrollmentData === undefined ||
+                            enrollmentData === null ? (
+                            <BiSolidLock size={25} />
+                          ) : (
+                            <FaCirclePlay size={25} />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            ))}
         </DialogBody>
       </Dialog>
     </>

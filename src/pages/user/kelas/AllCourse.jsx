@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
@@ -17,8 +17,7 @@ import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
 import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
-import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
-import { filterCoursesAction } from "../../../redux/action/courses/filterCourseAction";
+import { getAllLessonsAction } from "../../../redux/action/lessons/getAllLessons";
 
 // Material Tailwind Components
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
@@ -29,59 +28,101 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 export const AllCourse = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation();
 
-  const categoryParam = new URLSearchParams(location.search).get("category");
+  const [searchInput, setSearchInput] = useState("");
+  const [open, setOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    newest: false,
+    populer: false,
+    promo: false,
+  });
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([]);
 
   // Redux Store
   const storeCourses = useSelector((state) => state.dataCourses.courses);
-  const storeFilteredCourses = useSelector(
-    (state) => state.dataCourses.filteredCourses,
-  );
+  const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
+
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
-
-  const getCourses = () => {
-    dispatch(getAllCoursesAction());
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    getCourses();
+    getAllData();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (categoryParam) {
-      dispatch(filterCoursesAction(categoryParam, []));
-    }
-  }, [categoryParam, dispatch]);
+  const getAllData = () => {
+    dispatch(getAllCoursesAction());
+    dispatch(getAllLessonsAction());
+  };
 
-  // Search Feature
-  const [searchInput, setSearchInput] = useState("");
-
-  const handleSearchCourse = (searchInput) => {
-    const search = dispatch(searchCourseAction(searchInput));
-
-    if (search) {
-      navigate(`/pilih-kelas?search=${searchInput}`);
+  // Function to handle filter changes
+  const handleFilterChange = (filterType, value) => {
+    if (filterType === "filter") {
+      setFilters((prevFilters) => {
+        const newFilters = {
+          ...prevFilters,
+          [value]: !prevFilters[value],
+        };
+        return newFilters;
+      });
+    } else if (filterType === "category") {
+      setSelectedCategories((prevCategories) => {
+        return prevCategories.includes(value)
+          ? prevCategories.filter((category) => category !== value)
+          : [...prevCategories, value];
+      });
+    } else if (filterType === "level") {
+      setSelectedLevels((prevLevels) => {
+        return prevLevels.includes(value)
+          ? prevLevels.filter((level) => level !== value)
+          : [...prevLevels, value];
+      });
     }
   };
 
-  // Filter Feature
-  const [displayedCourses, setDisplayedCourses] = useState([]);
+  const createQueryParams = (filters, selectedCategories, selectedLevels) => {
+    const queryParams = [];
 
-  useEffect(() => {
-    const coursesToDisplay =
-      storeFilteredCourses?.length > 0 ? storeFilteredCourses : [];
-    setDisplayedCourses(coursesToDisplay);
-  }, [storeFilteredCourses, storeCourses]);
+    // Handle checkbox filters (newest, popular, promo)
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        queryParams.push(`f=${key}`);
+      }
+    });
 
-  const [open, setOpen] = React.useState(false);
+    // Handle category filters
+    selectedCategories.forEach((category) => {
+      queryParams.push(`c=${encodeURIComponent(category)}`);
+    });
+
+    // Handle level filters
+    selectedLevels.forEach((level) => {
+      queryParams.push(`l=${encodeURIComponent(level)}`);
+    });
+
+    return queryParams.join("&");
+  };
+
+  const queryParams = createQueryParams(
+    filters,
+    selectedCategories,
+    selectedLevels,
+  );
+
+  // Search Feature
+  const handleSearchCourse = () => {
+    const formatSearch = `search=${searchInput}`;
+
+    const fullQuery = `${formatSearch}&${queryParams}`;
+
+    dispatch(getAllCoursesAction(fullQuery));
+  };
 
   const handleOpen = () => setOpen(!open);
 
@@ -104,7 +145,7 @@ export const AllCourse = () => {
             </div>
             {isMobile ? (
               <div
-                className="-mt-8 font-semibold text-primary md:mt-0 lg:mt-0"
+                className="mt-8 font-semibold text-primary md:mt-0 lg:mt-0"
                 onClick={handleOpen}
               >
                 Filter
@@ -135,7 +176,14 @@ export const AllCourse = () => {
           <div className="flex items-start justify-center py-4 md:justify-between lg:justify-between">
             {/* Filter */}
             <div className="hidden w-[30%] md:flex lg:flex">
-              <SidebarKelas />
+              <SidebarKelas
+                filters={filters}
+                selectedCategories={selectedCategories}
+                selectedLevels={selectedLevels}
+                handleFilterChange={handleFilterChange}
+                queryParams={queryParams}
+                searchInput={searchInput}
+              />
             </div>
 
             {/* Button */}
@@ -164,26 +212,36 @@ export const AllCourse = () => {
 
               {/* Main Content */}
               <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 lg:grid-cols-2">
-                {displayedCourses.length === 0 ? (
+                {storeCourses.length === 0 ? (
                   <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
                     - Course tidak ditemukan -
                   </p>
                 ) : (
-                  displayedCourses.map((value) => (
-                    <CardGlobal
-                      key={value.id}
-                      image={value.courseImg}
-                      category={value.category.categoryName}
-                      rating={value.averageRating}
-                      title={value.courseName}
-                      author={value.mentor}
-                      level={value.level}
-                      modul={value.modul}
-                      duration={value.duration}
-                      courseId={value.id}
-                      isPremium={value.isPremium}
-                    />
-                  ))
+                  storeCourses.map((value) => {
+                    const lessonsData = storeLessons
+                      ? storeLessons.filter(
+                          (lesson) =>
+                            lesson.chapter.course.courseName ===
+                            value.courseName,
+                        )
+                      : null;
+
+                    return (
+                      <CardGlobal
+                        key={value.id}
+                        image={value.courseImg}
+                        category={value.category.categoryName}
+                        rating={value.averageRating}
+                        title={value.courseName}
+                        author={value.mentor}
+                        level={value.level}
+                        modul={lessonsData?.length}
+                        duration={value.totalDuration}
+                        courseId={value.id}
+                        isPremium={value.isPremium}
+                      />
+                    );
+                  })
                 )}
               </div>
             </div>
@@ -197,7 +255,14 @@ export const AllCourse = () => {
           <IoClose size={30} onClick={handleOpen} />
         </DialogHeader>
         <DialogBody>
-          <SidebarKelas />
+          <SidebarKelas
+            filters={filters}
+            selectedCategories={selectedCategories}
+            selectedLevels={selectedLevels}
+            handleFilterChange={handleFilterChange}
+            queryParams={queryParams}
+            searchInput={searchInput}
+          />
         </DialogBody>
       </Dialog>
     </>
