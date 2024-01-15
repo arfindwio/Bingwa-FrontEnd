@@ -64,13 +64,36 @@ export const AllCourse = () => {
   // Function to handle filter changes
   const handleFilterChange = (filterType, value) => {
     if (filterType === "filter") {
-      setFilters((prevFilters) => {
-        const newFilters = {
-          ...prevFilters,
-          [value]: !prevFilters[value],
-        };
-        return newFilters;
-      });
+      if (value === "all") {
+        // Toggle between "All," "Kelas Premium," and "Kelas Gratis"
+        setFilters((prevFilters) => {
+          const allSelected = Object.values(prevFilters).every(
+            (selected) => selected,
+          );
+          const newFilters = {
+            newest: !allSelected,
+            populer: false,
+            promo: false,
+          };
+          return newFilters;
+        });
+      } else {
+        setFilters((prevFilters) => {
+          const newFilters = {
+            ...prevFilters,
+            [value]: !prevFilters[value],
+          };
+
+          // Toggle between "premium" and "free" filters
+          if (value === "premium" && newFilters.free) {
+            newFilters.free = false;
+          } else if (value === "free" && newFilters.premium) {
+            newFilters.premium = false;
+          }
+
+          return newFilters;
+        });
+      }
     } else if (filterType === "category") {
       setSelectedCategories((prevCategories) => {
         return prevCategories.includes(value)
@@ -189,22 +212,29 @@ export const AllCourse = () => {
             {/* Button */}
             <div className="-mt-10 flex w-full flex-wrap items-center justify-between font-semibold md:mt-0 md:w-[65%] lg:mt-0 lg:w-[65%]">
               <div className="flex w-full gap-4 text-center">
-                <div className="flex w-[20%] cursor-pointer items-center justify-center rounded-xl bg-primary py-2 text-sm text-white md:text-base lg:text-base">
+                <div
+                  className={`flex w-[20%] cursor-pointer items-center justify-center rounded-xl py-2 text-sm  md:text-base lg:text-base ${
+                    filters.premium || filters.free
+                      ? "bg-white"
+                      : "bg-primary text-white"
+                  }`}
+                  onClick={() => handleFilterChange("filter", "all")}
+                >
                   <button>All</button>
                 </div>
                 <div
-                  className="flex w-[40%] cursor-pointer items-center justify-center rounded-xl bg-white py-2 text-sm md:w-[50%] md:text-base lg:w-[60%] lg:text-base"
-                  onClick={() => {
-                    navigate("/pilih-premium");
-                  }}
+                  className={`rounded- flex w-[40%] cursor-pointer items-center justify-center rounded-xl py-2 text-sm md:w-[50%] md:text-base lg:w-[60%] lg:text-base ${
+                    filters.premium ? "bg-primary text-white" : "bg-white"
+                  }`}
+                  onClick={() => handleFilterChange("filter", "premium")}
                 >
                   <button>Kelas Premium</button>
                 </div>
                 <div
-                  className="flex w-[30%] cursor-pointer items-center justify-center rounded-xl bg-white py-2 text-sm md:w-[40%] md:text-base lg:w-[30%] lg:text-base"
-                  onClick={() => {
-                    navigate("/pilih-gratis");
-                  }}
+                  className={`flex w-[30%] cursor-pointer items-center justify-center rounded-xl  py-2 text-sm md:w-[40%] md:text-base lg:w-[30%] lg:text-base ${
+                    filters.free ? "bg-primary text-white" : "bg-white"
+                  }`}
+                  onClick={() => handleFilterChange("filter", "free")}
                 >
                   <button>Kelas Gratis</button>
                 </div>
