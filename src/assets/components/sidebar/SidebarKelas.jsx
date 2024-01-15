@@ -25,6 +25,8 @@ export const SidebarKelas = ({
       ? `${formatSearch}&${queryParams}`
       : queryParams;
 
+    console.log(fullQuery);
+
     dispatch(getAllCoursesAction(fullQuery));
   }, [filters, selectedCategories, selectedLevels, searchInput, dispatch]);
 
