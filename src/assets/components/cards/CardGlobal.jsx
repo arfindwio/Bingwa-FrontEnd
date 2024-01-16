@@ -14,6 +14,7 @@ import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailC
 export const CardGlobal = ({
   image,
   category,
+  totalRating,
   rating,
   title,
   author,
@@ -22,6 +23,8 @@ export const CardGlobal = ({
   duration,
   courseId,
   isPremium,
+  price,
+  promotion,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,11 +36,11 @@ export const CardGlobal = ({
 
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-95"
+      className="flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:scale-95"
       onClick={handleCardClick}
     >
       <div
-        className="h-32 min-w-fit scale-105 cursor-pointer bg-center bg-no-repeat"
+        className="h-32 min-w-fit bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
@@ -48,12 +51,19 @@ export const CardGlobal = ({
       <div className="flex flex-col gap-4 bg-white px-4 py-3">
         <div className="flex justify-between">
           <div className="text-lg font-bold text-primary">{category}</div>
-          <div className="flex items-center gap-1">
-            <div className="text-yellow-700">
-              <FaStar />
+          {!rating ? null : (
+            <div className="flex items-center gap-1">
+              <div className="text-yellow-700">
+                <FaStar />
+              </div>
+              <div className="font-bold">
+                {rating}
+                <span className="ms-1 font-medium text-slate-500">
+                  ({totalRating})
+                </span>
+              </div>
             </div>
-            <div className="font-bold">{rating}4.9</div>
-          </div>
+          )}
         </div>
         <div className="flex flex-col">
           <div className="font-semibold text-slate-800">{title}</div>
@@ -90,21 +100,36 @@ export const CardGlobal = ({
           </div>
         </div>
         {isPremium ? (
-          <div
-            className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover"
-            onClick={handleCardClick}
-          >
-            <div className="flex items-center gap-2">
-              <IoDiamond size={20} color="white" />
-              <div className="font-bold text-white">Premium</div>
+          <div className="flex items-center">
+            <div
+              className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover"
+              onClick={handleCardClick}
+            >
+              <div className="flex items-center gap-2">
+                <IoDiamond size={20} color="white" />
+                <div className="font-bold text-white">
+                  Rp{" "}
+                  {promotion.discount
+                    ? price - promotion.discount * price
+                    : price}
+                </div>
+              </div>
             </div>
+            {promotion.discount ? (
+              <div className="ms-1 text-red-500 ">
+                <span className="me-1 text-slate-500 line-through">
+                  Rp {price}
+                </span>
+                {promotion.discount * 100}%
+              </div>
+            ) : null}
           </div>
         ) : (
           <div
             className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
             onClick={handleCardClick}
           >
-            Mulai Kelas
+            Free
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 // Icons
@@ -44,6 +44,9 @@ export const NavbarKelas = () => {
     }
   };
 
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <div className="fixed top-0 z-20 flex w-screen items-center justify-between gap-2 bg-primary px-2 py-4 md:px-6 lg:px-28">
       <div className="flex gap-10">
@@ -82,14 +85,14 @@ export const NavbarKelas = () => {
         <div
           className="flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
           onClick={() => {
-            navigate("/kelas-saya");
+            navigate("/all-kelas");
           }}
         >
           <IoIosList size={28} />
           <div className="text-lg">Kelas</div>
         </div>
 
-        <div className="flex space-x-2 md:space-x-4 lg:space-x-4">
+        <div className={`flex space-x-2 md:space-x-4 lg:space-x-4`}>
           <IoIosNotificationsOutline
             size={30}
             onClick={() => {
