@@ -22,7 +22,7 @@ export const SearchMobile = () => {
     }
   };
   return (
-    <div className="bg-secondary px-3 pt-5">
+    <div className=" bg-secondary px-3 pt-5 md:absolute md:w-full">
       <div className="relative rounded-2xl shadow-lg">
         <input
           type="text"

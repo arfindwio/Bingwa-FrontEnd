@@ -17,8 +17,6 @@ export const getAllCoursesAction =
         getAllInput = `?${search}`;
       }
 
-      console.log(getAllInput);
-
       const response = await (getAllInput
         ? reduxGetAllCoursesByQuery(getAllInput)
         : reduxGetAllCourses());
