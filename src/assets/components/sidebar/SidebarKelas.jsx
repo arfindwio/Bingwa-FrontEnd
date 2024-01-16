@@ -9,26 +9,11 @@ export const SidebarKelas = ({
   selectedCategories,
   selectedLevels,
   handleFilterChange,
-  queryParams,
-  searchInput,
 }) => {
-  const dispatch = useDispatch();
-
   // Redux Store
   const storeCategories = useSelector(
     (state) => state.dataCategories.categories,
   );
-
-  useEffect(() => {
-    const formatSearch = searchInput ? `search=${searchInput}` : "";
-    const fullQuery = formatSearch
-      ? `${formatSearch}&${queryParams}`
-      : queryParams;
-
-    console.log(fullQuery);
-
-    dispatch(getAllCoursesAction(fullQuery));
-  }, [filters, selectedCategories, selectedLevels, searchInput, dispatch]);
 
   return (
     <>

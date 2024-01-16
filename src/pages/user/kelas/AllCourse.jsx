@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
@@ -26,7 +25,6 @@ import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const AllCourse = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [searchInput, setSearchInput] = useState("");
@@ -56,6 +54,15 @@ export const AllCourse = () => {
     getAllData();
   }, [dispatch]);
 
+  useEffect(() => {
+    const formatSearch = searchInput ? `search=${searchInput}` : "";
+    const fullQuery = formatSearch
+      ? `${formatSearch}&${queryParams}`
+      : queryParams;
+
+    dispatch(getAllCoursesAction(fullQuery));
+  }, [filters, selectedCategories, selectedLevels, searchInput, dispatch]);
+
   const getAllData = () => {
     dispatch(getAllCoursesAction());
     dispatch(getAllLessonsAction());
@@ -65,16 +72,16 @@ export const AllCourse = () => {
   const handleFilterChange = (filterType, value) => {
     if (filterType === "filter") {
       if (value === "all") {
-        // Toggle between "All," "Kelas Premium," and "Kelas Gratis"
         setFilters((prevFilters) => {
-          const allSelected = Object.values(prevFilters).every(
-            (selected) => selected,
-          );
           const newFilters = {
-            newest: !allSelected,
-            populer: false,
-            promo: false,
+            ...prevFilters,
+            [value]: !prevFilters[value],
           };
+
+          newFilters.all = false;
+          newFilters.free = false;
+          newFilters.premium = false;
+
           return newFilters;
         });
       } else {
@@ -84,23 +91,32 @@ export const AllCourse = () => {
             [value]: !prevFilters[value],
           };
 
-          // Toggle between "premium" and "free" filters
           if (value === "premium" && newFilters.free) {
             newFilters.free = false;
+            newFilters.all = false;
           } else if (value === "free" && newFilters.premium) {
             newFilters.premium = false;
+            newFilters.all = false;
+          }
+
+          if (value === "newest" && newFilters.populer) {
+            newFilters.populer = false;
+          } else if (value === "populer" && newFilters.newest) {
+            newFilters.newest = false;
           }
 
           return newFilters;
         });
       }
     } else if (filterType === "category") {
+      // Handle category filter changes
       setSelectedCategories((prevCategories) => {
         return prevCategories.includes(value)
           ? prevCategories.filter((category) => category !== value)
           : [...prevCategories, value];
       });
     } else if (filterType === "level") {
+      // Handle level filter changes
       setSelectedLevels((prevLevels) => {
         return prevLevels.includes(value)
           ? prevLevels.filter((level) => level !== value)
@@ -168,7 +184,7 @@ export const AllCourse = () => {
             </div>
             {isMobile ? (
               <div
-                className="mt-8 font-semibold text-primary md:mt-0 lg:mt-0"
+                className="-mt-8 font-semibold text-primary md:mt-0 lg:mt-0"
                 onClick={handleOpen}
               >
                 Filter
@@ -182,7 +198,7 @@ export const AllCourse = () => {
                   onKeyDown={(e) =>
                     e.key === "Enter" ? handleSearchCourse(searchInput) : ""
                   }
-                  className="cursor-pointer rounded-3xl border-2 border-primary px-1 py-2 outline-none md:px-4 lg:px-4"
+                  className="cursor-pointer rounded-3xl border-2 border-primary px-1 py-2 outline-none md:px-4 lg:px-4 "
                   placeholder="Cari Kelas..."
                 />
                 <BiSearchAlt
@@ -204,8 +220,6 @@ export const AllCourse = () => {
                 selectedCategories={selectedCategories}
                 selectedLevels={selectedLevels}
                 handleFilterChange={handleFilterChange}
-                queryParams={queryParams}
-                searchInput={searchInput}
               />
             </div>
 
@@ -241,6 +255,14 @@ export const AllCourse = () => {
               </div>
 
               {/* Main Content */}
+              {searchInput ? (
+                <div className="-mt-12 truncate font-medium md:mt-0 md:pt-4 md:text-lg lg:mt-0 lg:text-lg">
+                  Menampilkan
+                  <span className="ms-3 font-bold text-primary ">
+                    "{searchInput}"
+                  </span>
+                </div>
+              ) : null}
               <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 lg:grid-cols-2">
                 {storeCourses.length === 0 ? (
                   <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
@@ -250,9 +272,7 @@ export const AllCourse = () => {
                   storeCourses.map((value) => {
                     const lessonsData = storeLessons
                       ? storeLessons.filter(
-                          (lesson) =>
-                            lesson.chapter.course.courseName ===
-                            value.courseName,
+                          (lesson) => lesson.chapter.course.id === value.id,
                         )
                       : null;
 
@@ -262,13 +282,16 @@ export const AllCourse = () => {
                         image={value.courseImg}
                         category={value.category.categoryName}
                         rating={value.averageRating}
+                        totalRating={value.enrollment.length}
                         title={value.courseName}
                         author={value.mentor}
                         level={value.level}
-                        modul={lessonsData?.length}
+                        modul={lessonsData.length}
                         duration={value.totalDuration}
                         courseId={value.id}
                         isPremium={value.isPremium}
+                        price={value.price}
+                        promotion={value.promotion}
                       />
                     );
                   })
@@ -290,8 +313,6 @@ export const AllCourse = () => {
             selectedCategories={selectedCategories}
             selectedLevels={selectedLevels}
             handleFilterChange={handleFilterChange}
-            queryParams={queryParams}
-            searchInput={searchInput}
           />
         </DialogBody>
       </Dialog>
