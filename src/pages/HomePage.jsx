@@ -64,7 +64,9 @@ export const HomePage = () => {
   const storeCategories = useSelector(
     (state) => state.dataCategories.categories,
   );
-  const storeCourses = useSelector((state) => state.dataCourses.courses);
+  const storeCourses = useSelector(
+    (state) => state.dataCourses.courses.courses,
+  );
   const loading = useSelector((state) => state.authLogin.loading);
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);

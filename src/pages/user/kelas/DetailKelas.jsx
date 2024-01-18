@@ -59,13 +59,10 @@ export const DetailKelas = () => {
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
-
   const storeEnrollments = useSelector((state) => state.enrollments.course);
-
   const storeTrackingsCourseEnroll = useSelector(
     (state) => state.trackings.trackingsCourseId.allTrackings,
   );
-
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
   const [dialogOpen, setDialogOpen] = useState(false);
