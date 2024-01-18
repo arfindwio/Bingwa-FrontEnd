@@ -8,8 +8,14 @@ import { RiShieldStarLine } from "react-icons/ri";
 import { LiaBookSolid } from "react-icons/lia";
 import { IoDiamond, IoTime } from "react-icons/io5";
 
+// Material Tailwind
+import { Progress } from "@material-tailwind/react";
+
 // Redux Actions
 import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
+
+// Cookies
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const CardGlobal = ({
   image,
@@ -25,9 +31,12 @@ export const CardGlobal = ({
   isPremium,
   price,
   promotion,
+  enrollmentData,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const handleCardClick = () => {
     dispatch(getDetailCoursesAction(courseId));
@@ -116,21 +125,45 @@ export const CardGlobal = ({
               </div>
             </div>
             {promotion.discount ? (
-              <div className="ms-1 text-red-500 ">
-                <span className="me-1 text-slate-500 line-through">
+              <div className="ms-2 font-bold text-red-500">
+                <span className="me-1 font-semibold text-slate-500 line-through">
                   Rp {price}
                 </span>
                 {promotion.discount * 100}%
               </div>
             ) : null}
           </div>
-        ) : (
+        ) : // Non-premium content
+        !token ? (
           <div
             className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
             onClick={handleCardClick}
           >
             Free
           </div>
+        ) : (
+          <>
+            {!enrollmentData ? (
+              <div
+                className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
+                onClick={handleCardClick}
+              >
+                Free
+              </div>
+            ) : (
+              <>
+                <div className="flex w-full py-1">
+                  <Progress
+                    value={enrollmentData.progres * 100}
+                    size="lg"
+                    label="Completed"
+                    color="blue"
+                    className="h-6 text-sm font-bold"
+                  />
+                </div>
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
