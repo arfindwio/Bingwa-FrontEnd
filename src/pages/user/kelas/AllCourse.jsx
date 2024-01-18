@@ -11,12 +11,14 @@ import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
 import { SidebarKelas } from "../../../assets/components/sidebar/SidebarKelas";
+import { Pagination } from "../../../assets/components/pagination/Pagination";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
 import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
 import { getAllLessonsAction } from "../../../redux/action/lessons/getAllLessons";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 
 // Material Tailwind Components
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
@@ -39,8 +41,14 @@ export const AllCourse = () => {
   const [selectedLevels, setSelectedLevels] = useState([]);
 
   // Redux Store
-  const storeCourses = useSelector((state) => state.dataCourses.courses);
+  const storeCourses = useSelector(
+    (state) => state.dataCourses.courses.courses,
+  );
+  const storePaginationCourses = useSelector(
+    (state) => state.dataCourses.courses.pagination,
+  );
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -66,6 +74,7 @@ export const AllCourse = () => {
   const getAllData = () => {
     dispatch(getAllCoursesAction());
     dispatch(getAllLessonsAction());
+    if (token) dispatch(getAllEnrollmentsAction());
   };
 
   // Function to handle filter changes
@@ -154,13 +163,17 @@ export const AllCourse = () => {
     selectedLevels,
   );
 
-  // Search Feature
-  const handleSearchCourse = () => {
-    const formatSearch = `search=${searchInput}`;
-
-    const fullQuery = `${formatSearch}&${queryParams}`;
-
-    dispatch(getAllCoursesAction(fullQuery));
+  const clearAllFilters = () => {
+    setFilters({
+      newest: false,
+      populer: false,
+      promo: false,
+      all: false,
+      free: false,
+      premium: false,
+    });
+    setSelectedCategories([]);
+    setSelectedLevels([]);
   };
 
   const handleOpen = () => setOpen(!open);
@@ -195,18 +208,12 @@ export const AllCourse = () => {
                   type="text"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" ? handleSearchCourse(searchInput) : ""
-                  }
                   className="cursor-pointer rounded-3xl border-2 border-primary px-1 py-2 outline-none md:px-4 lg:px-4 "
                   placeholder="Cari Kelas..."
                 />
                 <BiSearchAlt
                   size={25}
                   className="absolute inset-y-2 right-4 cursor-pointer rounded-lg bg-primary p-1 text-white"
-                  onClick={() => {
-                    handleSearchCourse(searchInput);
-                  }}
                 />
               </div>
             )}
@@ -220,6 +227,7 @@ export const AllCourse = () => {
                 selectedCategories={selectedCategories}
                 selectedLevels={selectedLevels}
                 handleFilterChange={handleFilterChange}
+                clearAllFilters={clearAllFilters}
               />
             </div>
 
@@ -275,6 +283,12 @@ export const AllCourse = () => {
                           (lesson) => lesson.chapter.course.id === value.id,
                         )
                       : null;
+                    const enrollmentData = storeEnrollments
+                      ? storeEnrollments.find(
+                          (enrollCourse) =>
+                            enrollCourse.courseId === Number(value.id),
+                        )
+                      : null;
 
                     return (
                       <CardGlobal
@@ -292,11 +306,23 @@ export const AllCourse = () => {
                         isPremium={value.isPremium}
                         price={value.price}
                         promotion={value.promotion}
+                        enrollmentData={enrollmentData}
                       />
                     );
                   })
                 )}
               </div>
+
+              {/* Pagination */}
+              {storeCourses.length <= 10 ? null : (
+                <div className="mx-auto">
+                  <Pagination
+                    nextLink={storePaginationCourses.links.next}
+                    prevLink={storePaginationCourses.links.prev}
+                    totalItems={storePaginationCourses.total_items}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -313,6 +339,7 @@ export const AllCourse = () => {
             selectedCategories={selectedCategories}
             selectedLevels={selectedLevels}
             handleFilterChange={handleFilterChange}
+            clearAllFilters={clearAllFilters}
           />
         </DialogBody>
       </Dialog>
