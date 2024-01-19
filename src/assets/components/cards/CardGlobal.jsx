@@ -154,7 +154,7 @@ export const CardGlobal = ({
               <>
                 <div className="flex w-full py-1">
                   <Progress
-                    value={enrollmentData.progres * 100}
+                    value={Math.floor(enrollmentData.progres * 100)}
                     size="lg"
                     label="Completed"
                     color="blue"

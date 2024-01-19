@@ -5,6 +5,8 @@ const cookies = new Cookies();
 export const CookiesKeys = {
   AuthToken: "authToken",
   RegisterToken: "registerToken",
+  CategoryFilter: "categoryFilter",
+  SearchFilter: "searchFilter",
 };
 
 const CookieOptions = {
