@@ -1,11 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+// Cookie
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
+
 export const CardKategory = ({ thumbnail, category }) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = () => {
-    navigate(`/all-kelas?category=${encodeURIComponent(category)}`);
+    CookieStorage.set(CookiesKeys.CategoryFilter, category);
+    navigate(`/all-kelas`);
   };
 
   return (

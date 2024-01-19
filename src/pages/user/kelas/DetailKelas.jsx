@@ -329,7 +329,7 @@ export const DetailKelas = () => {
                           className="hidden md:hidden lg:flex"
                         />
                         <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                          {enrollmentData.progres * 100}% Completed
+                          {Math.floor(enrollmentData.progres * 100)}% Completed
                         </div>
                       </>
                     )}
@@ -516,7 +516,7 @@ export const DetailKelas = () => {
                         className="hidden md:hidden lg:flex"
                       />
                       <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                        {enrollmentData.progres * 100}% Completed
+                        {Math.floor(enrollmentData.progres * 100)}% Completed
                       </div>
                     </>
                   )}
