@@ -11,12 +11,24 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
 
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);
-    let page = pageMatch ? parseInt(pageMatch[1], 10) - 1 : 1;
+    let page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
 
     setcurrentPage(page);
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/courses/?`)[1];
 
     dispatch(getAllCoursesAction(formatLink));
+  };
+
+  const handleNumberPageChange = (numberPage) => {
+    let link = !nextLink ? prevLink : nextLink;
+
+    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/courses/?`)[1];
+
+    var newLink = formatLink.replace(/(page=)\d+/, "$1" + numberPage);
+
+    setcurrentPage(numberPage);
+
+    dispatch(getAllCoursesAction(newLink));
   };
 
   const renderPageNumbers = () => {
@@ -26,7 +38,7 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
       pageNumbers.push(
         <button
           key={i}
-          onClick={() => handlePageChange(nextLink)}
+          onClick={() => handleNumberPageChange(i)}
           className={`mx-1 cursor-pointer ${
             currentPage === i ? "text-blue-500" : "text-gray-400"
           }`}

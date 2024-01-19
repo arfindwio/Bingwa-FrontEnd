@@ -53,6 +53,7 @@ export const AllCourse = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
+  const categoryFilter = CookieStorage.get(CookiesKeys.CategoryFilter);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -63,13 +64,30 @@ export const AllCourse = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    if (categoryFilter) {
+      // Jika kategori belum ada dalam selectedCategories, maka set
+      if (!selectedCategories.includes(categoryFilter)) {
+        setSelectedCategories([categoryFilter]);
+      }
+
+      // Selain itu, set cookie ke null dan hindari looping tanpa batas
+      CookieStorage.remove(CookiesKeys.CategoryFilter);
+    }
+
     const formatSearch = searchInput ? `search=${searchInput}` : "";
     const fullQuery = formatSearch
       ? `${formatSearch}&${queryParams}`
       : queryParams;
 
     dispatch(getAllCoursesAction(fullQuery));
-  }, [filters, selectedCategories, selectedLevels, searchInput, dispatch]);
+  }, [
+    categoryFilter,
+    filters,
+    selectedCategories,
+    selectedLevels,
+    searchInput,
+    dispatch,
+  ]);
 
   const getAllData = () => {
     dispatch(getAllCoursesAction());
@@ -78,6 +96,7 @@ export const AllCourse = () => {
   };
 
   // Function to handle filter changes
+
   const handleFilterChange = (filterType, value) => {
     if (filterType === "filter") {
       if (value === "all") {
@@ -305,7 +324,7 @@ export const AllCourse = () => {
                         courseId={value.id}
                         isPremium={value.isPremium}
                         price={value.price}
-                        promotion={value.promotion}
+                        promotion={!value.promotion ? "" : value.promotion}
                         enrollmentData={enrollmentData}
                       />
                     );
@@ -314,7 +333,7 @@ export const AllCourse = () => {
               </div>
 
               {/* Pagination */}
-              {storeCourses.length <= 10 ? null : (
+              {storeCourses.length < 1 ? null : (
                 <div className="mx-auto">
                   <Pagination
                     nextLink={storePaginationCourses.links.next}
