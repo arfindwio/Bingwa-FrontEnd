@@ -65,12 +65,10 @@ export const AllCourse = () => {
 
   useEffect(() => {
     if (categoryFilter) {
-      // Jika kategori belum ada dalam selectedCategories, maka set
       if (!selectedCategories.includes(categoryFilter)) {
         setSelectedCategories([categoryFilter]);
       }
 
-      // Selain itu, set cookie ke null dan hindari looping tanpa batas
       CookieStorage.remove(CookiesKeys.CategoryFilter);
     }
 
@@ -319,12 +317,12 @@ export const AllCourse = () => {
                         title={value.courseName}
                         author={value.mentor}
                         level={value.level}
-                        modul={lessonsData.length}
                         duration={value.totalDuration}
                         courseId={value.id}
                         isPremium={value.isPremium}
                         price={value.price}
                         promotion={!value.promotion ? "" : value.promotion}
+                        modul={lessonsData.length}
                         enrollmentData={enrollmentData}
                       />
                     );
@@ -333,7 +331,7 @@ export const AllCourse = () => {
               </div>
 
               {/* Pagination */}
-              {storeCourses.length < 1 ? null : (
+              {storeCourses.length <= 10 ? null : (
                 <div className="mx-auto">
                   <Pagination
                     nextLink={storePaginationCourses.links.next}
