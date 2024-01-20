@@ -2,10 +2,15 @@ import {
   reduxGetAllCourses,
   reduxGetAllCoursesByQuery,
 } from "../../../services/courses/getAllCourses";
-import { getAllCourses } from "../../reducer/courses/courseSlice";
+import {
+  getAllCourses,
+  startLoading,
+  endLoading,
+} from "../../reducer/courses/courseSlice";
 
 export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
   try {
+    dispatch(startLoading());
     let getAllInput = `?${fullQuery}`;
 
     const response = await (getAllInput
@@ -18,5 +23,7 @@ export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
   } catch (err) {
     console.error("getAllCoursesAction", err);
     throw err;
+  } finally {
+    dispatch(endLoading());
   }
 };
