@@ -8,7 +8,7 @@ import Header from "../assets/img/Header.webp";
 
 // Components
 import { NavbarHome } from "../assets/components/navbar/NavbarHome";
-import { CardKursus } from "../assets/components/cards/CardKursus";
+import { CardGlobal } from "../assets/components/cards/CardGlobal";
 import { NavbarKelas } from "../assets/components/navbar/NavbarKelas";
 import CardKategorySkeleton from "../assets/components/skeleton/CardKategorySkeleton";
 import { Footer } from "../assets/components/footer/Footer";
@@ -19,9 +19,10 @@ import { SliderCardCategories } from "../assets/components/slider/SliderCardCate
 import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 
 // Redux Actions
-import { getUserProfileAction } from "../redux/action/auth/getUserProfileAction";
 import { getAllCategoriesAction } from "../redux/action/categories/getAllCategoriesAction";
 import { getAllCoursesAction } from "../redux/action/courses/getAllCoursesAction";
+import { getAllLessonsAction } from "../redux/action/lessons/getAllLessons";
+import { getAllEnrollmentsAction } from "../redux/action/enrollments/getAllEnrollmentsAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../utils/cookie";
@@ -34,32 +35,6 @@ export const HomePage = () => {
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
-  const getUserProfile = () => {
-    dispatch(getUserProfileAction());
-  };
-
-  const getCategories = () => {
-    dispatch(getAllCategoriesAction());
-  };
-
-  const getCourses = () => {
-    dispatch(getAllCoursesAction());
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    getUserProfile();
-    getCategories();
-    getCourses();
-  }, [dispatch]);
-
-  const toggleShowAllCourses = () => {
-    setShowAllCourses(!showAllCourses);
-  };
-
   // Redux Store
   const storeCategories = useSelector(
     (state) => state.dataCategories.categories,
@@ -67,9 +42,30 @@ export const HomePage = () => {
   const storeCourses = useSelector(
     (state) => state.dataCourses.courses.courses,
   );
+  const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
   const loading = useSelector((state) => state.authLogin.loading);
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    getAllData();
+  }, [dispatch]);
+
+  const getAllData = () => {
+    dispatch(getAllCoursesAction());
+    dispatch(getAllCategoriesAction());
+    dispatch(getAllLessonsAction());
+    if (token) dispatch(getAllEnrollmentsAction());
+  };
+
+  const toggleShowAllCourses = () => {
+    setShowAllCourses(!showAllCourses);
+  };
 
   const handleCategoryFilter = (category) => {
     setSelectedCategory(category);
@@ -173,22 +169,38 @@ export const HomePage = () => {
                       value.category.categoryName === selectedCategory,
                   )
                   .slice(0, 6)
-                  .map((value) => (
-                    <CardKursus
-                      key={value.id}
-                      image={value.courseImg}
-                      category={value.category.categoryName}
-                      rating={value.averageRating}
-                      title={value.courseName}
-                      author={value.mentor}
-                      level={value.level}
-                      modul={value.modul}
-                      duration={value.totalDuration}
-                      price={value.price}
-                      courseId={value.id}
-                      isPremium={value.isPremium}
-                    />
-                  ))
+                  .map((value) => {
+                    const lessonsData = storeLessons
+                      ? storeLessons.filter(
+                          (lesson) => lesson.chapter.course.id === value.id,
+                        )
+                      : null;
+                    const enrollmentData = storeEnrollments
+                      ? storeEnrollments.find(
+                          (enrollCourse) =>
+                            enrollCourse.courseId === Number(value.id),
+                        )
+                      : null;
+                    return (
+                      <CardGlobal
+                        key={value.id}
+                        image={value.courseImg}
+                        category={value.category.categoryName}
+                        rating={value.averageRating}
+                        title={value.courseName}
+                        author={value.mentor}
+                        level={value.level}
+                        duration={value.totalDuration}
+                        price={value.price}
+                        courseId={value.id}
+                        isPremium={value.isPremium}
+                        promotion={!value.promotion ? "" : value.promotion}
+                        totalRating={value.enrollment.length}
+                        modul={lessonsData.length}
+                        enrollmentData={enrollmentData}
+                      />
+                    );
+                  })
               ) : (
                 <p className="col-span-3 py-10 text-center text-lg italic text-slate-500">
                   - Course Belum Tersedia -
@@ -208,22 +220,38 @@ export const HomePage = () => {
                     value.category.categoryName === selectedCategory,
                 )
                 .slice(0, 3) // Display the first 3 courses
-                .map((value) => (
-                  <CardKursus
-                    key={value.id}
-                    image={value.courseImg}
-                    category={value.category.categoryName}
-                    rating={value.averageRating}
-                    title={value.courseName}
-                    author={value.mentor}
-                    level={value.level}
-                    modul={value.modul}
-                    duration={value.totalDuration}
-                    price={value.price}
-                    courseId={value.id}
-                    isPremium={value.isPremium}
-                  />
-                ))
+                .map((value) => {
+                  const lessonsData = storeLessons
+                    ? storeLessons.filter(
+                        (lesson) => lesson.chapter.course.id === value.id,
+                      )
+                    : null;
+                  const enrollmentData = storeEnrollments
+                    ? storeEnrollments.find(
+                        (enrollCourse) =>
+                          enrollCourse.courseId === Number(value.id),
+                      )
+                    : null;
+                  return (
+                    <CardGlobal
+                      key={value.id}
+                      image={value.courseImg}
+                      category={value.category.categoryName}
+                      rating={value.averageRating}
+                      title={value.courseName}
+                      author={value.mentor}
+                      level={value.level}
+                      duration={value.totalDuration}
+                      price={value.price}
+                      courseId={value.id}
+                      isPremium={value.isPremium}
+                      promotion={!value.promotion ? "" : value.promotion}
+                      totalRating={value.enrollment.length}
+                      modul={lessonsData.length}
+                      enrollmentData={enrollmentData}
+                    />
+                  );
+                })
             ) : (
               <p className="col-span-3 py-10 text-center text-lg italic text-slate-500">
                 - Course Belum Tersedia -

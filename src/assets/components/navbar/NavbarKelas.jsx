@@ -25,6 +25,9 @@ import {
 import { logoutUserAction } from "../../../redux/action/auth/logoutUserAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
+// Cookie
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
+
 export const NavbarKelas = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,12 +43,16 @@ export const NavbarKelas = () => {
     const search = dispatch(searchCourseAction(searchInput));
 
     if (search) {
-      navigate(`/pilih-kelas?search=${searchInput}`);
+      CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
+      navigate(`/pilih-kelas`);
+      // if (currentPath === "/pilih-kelas") window.location.reload();
     }
   };
 
   const location = useLocation();
   const currentPath = location.pathname;
+
+  const test = currentPath === "/kelas-saya" ? "" : "";
 
   return (
     <div className="fixed top-0 z-20 flex w-screen items-center justify-between gap-2 bg-primary px-2 py-4 md:px-6 lg:px-28">
