@@ -77,13 +77,7 @@ export const HomePage = () => {
 
   return (
     <>
-      {isMobile ? (
-        <NavbarMobile />
-      ) : token === undefined ? (
-        <NavbarHome />
-      ) : (
-        <NavbarKelas />
-      )}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
       <div className="flex flex-col md:mt-[5rem] lg:mt-[5rem]">
         {isMobile ? <SearchMobile /> : <></>}
         {/* Hero Section */}

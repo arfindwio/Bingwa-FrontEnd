@@ -40,16 +40,17 @@ export const PilihKelas = () => {
   const searchFilter = CookieStorage.get(CookiesKeys.SearchFilter);
 
   useEffect(() => {
-    getAllData();
-
     if (searchFilter) {
-      setSearchInput(searchFilter);
       const formatSearch = `search=${searchFilter}&limit=15`;
       dispatch(getAllCoursesAction(formatSearch));
 
       CookieStorage.remove(CookiesKeys.SearchFilter);
     }
   }, [searchFilter, searchInput]);
+
+  useEffect(() => {
+    getAllData();
+  }, []);
 
   const getAllData = () => {
     dispatch(getAllCoursesAction("limit=15"));
@@ -61,13 +62,7 @@ export const PilihKelas = () => {
 
   return (
     <>
-      {isMobile ? (
-        <NavbarMobile />
-      ) : token === undefined ? (
-        <NavbarHome />
-      ) : (
-        <NavbarKelas />
-      )}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
       <div className="flex h-fit min-h-screen flex-col justify-between bg-secondary">
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-4 md:px-4 md:pt-20 lg:px-24 lg:pt-20">

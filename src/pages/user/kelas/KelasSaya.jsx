@@ -56,13 +56,7 @@ export const KelasSaya = () => {
 
   return (
     <>
-      {isMobile ? (
-        <NavbarMobile />
-      ) : token === undefined ? (
-        <NavbarHome />
-      ) : (
-        <NavbarKelas />
-      )}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
       <div className="flex h-full min-h-screen flex-col justify-between bg-secondary">
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-2 md:px-8 md:pb-0 md:pt-20 lg:px-24 lg:pb-0 lg:pt-20">

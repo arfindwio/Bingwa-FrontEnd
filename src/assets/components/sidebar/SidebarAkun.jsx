@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 // icons
@@ -14,6 +14,9 @@ import { logoutUserAction } from "../../../redux/action/auth/logoutUserAction";
 export const SidebarAkun = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
 
   // Handle Logout
   const handleLogout = () => {
@@ -33,7 +36,15 @@ export const SidebarAkun = () => {
         <div className="text-primary">
           <LuPenLine size={25} />
         </div>
-        <div className="text-md font-semibold">Profil Saya</div>
+        <div
+          className={`${
+            currentPath === "/akun-profile"
+              ? "text-lg font-bold text-primary"
+              : "text-md font-semibold"
+          }`}
+        >
+          Profil Saya
+        </div>
       </div>
       {/* Sidebar Item */}
       <div
@@ -45,7 +56,15 @@ export const SidebarAkun = () => {
         <div className="text-primary">
           <IoSettingsOutline size={25} />
         </div>
-        <div className="text-md font-semibold">Ubah Password</div>
+        <div
+          className={`${
+            currentPath === "/akun-password"
+              ? "text-lg font-bold text-primary"
+              : "text-md font-semibold"
+          }`}
+        >
+          Ubah Password
+        </div>
       </div>
       {/* Sidebar Item */}
       <div
@@ -57,7 +76,15 @@ export const SidebarAkun = () => {
         <div className="text-primary">
           <MdOutlineShoppingCart size={25} />
         </div>
-        <div className="text-md font-semibold">Riwayat Pembayaran</div>
+        <div
+          className={`${
+            currentPath === "/akun-pembayaran"
+              ? "text-lg font-bold text-primary"
+              : "text-md font-semibold"
+          }`}
+        >
+          Riwayat Pembayaran
+        </div>
       </div>
       {/* Sidebar Item */}
       <div

@@ -13,7 +13,7 @@ function TokenProtected({ children }) {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   useEffect(() => {
-    if (token === undefined) {
+    if (!token) {
       showErrorToast("Silahkan login terlebih dahulu");
       navigate("/login");
     }

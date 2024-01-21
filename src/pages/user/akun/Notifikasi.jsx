@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
 // Components
-import { NavbarNotif } from "../../../assets/components/navbar/NavbarNotif";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 
 // Redux Actions
@@ -29,7 +29,7 @@ export const Notifikasi = () => {
 
   return (
     <>
-      {isMobile ? <NavbarMobile /> : <NavbarNotif />}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
       {isMobile ? (
         <div className="flex min-h-screen flex-col p-4">
           <h1 className="pb-8 text-2xl font-bold">Notifikasi</h1>

@@ -57,10 +57,12 @@ export const RouteList = () => {
         <Route path="/pilih-premium" element={<PilihPremium />} />
         <Route path="/pilih-gratis" element={<PilihGratis />} />
         <Route path="/pilih-kelas" element={<PilihKelas />} />
+
         {/* Belum Enroll */}
         <Route path="/detail-kelas/:courseId" element={<DetailKelas />} />
         {/* Sudah Enroll */}
         <Route path="/detail-course/:courseId" element={<DetailEnroll />} />
+
         <Route path="/all-kelas" element={<AllCourse />} />
 
         {/* Payment */}

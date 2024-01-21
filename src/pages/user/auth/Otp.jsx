@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 // Images
@@ -17,14 +17,17 @@ import {
 // Helper
 import { showSuccessToast } from "../../../helper/ToastHelper";
 
+// Cookie
+import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
+
 export const Otp = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
-  const emailParam = new URLSearchParams(location.search).get("email");
-  const [Email, setEmail] = useState(emailParam || "");
+  const [Email, setEmail] = useState("");
   const [otpInputs, setOtpInputs] = useState(["", "", "", "", "", ""]);
   const [seconds, setSeconds] = useState(60);
+
+  const emailData = CookieStorage.get(CookiesKeys.EmailRegister);
 
   // Set Waktu Berjalan
   useEffect(() => {
@@ -34,6 +37,16 @@ export const Otp = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (emailData) {
+      if (!Email) {
+        setEmail(emailData);
+      }
+
+      CookieStorage.remove(CookiesKeys.EmailRegister);
+    }
+  }, [emailData, Email]);
 
   // Input Otp
   const handleChange = (index, value) => {
