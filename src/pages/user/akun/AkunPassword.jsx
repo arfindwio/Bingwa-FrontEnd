@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
 // Components
-import { NavbarAkun } from "../../../assets/components/navbar/NavbarAkun";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
 
@@ -182,7 +182,7 @@ export const AkunPassword = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarAkun style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
     </>
   );
 };

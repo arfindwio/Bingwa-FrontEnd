@@ -11,7 +11,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
-    const token = CookieStorage.get(CookiesKeys.AuthToken) || null;
+    const token = CookieStorage.get(CookiesKeys.AuthToken);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

@@ -6,7 +6,8 @@ import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 
 // Components
-import { NavbarAkun } from "../../../assets/components/navbar/NavbarAkun";
+// import { NavbarAkun } from "../../../assets/components/navbar/NavbarAkun";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 
@@ -27,31 +28,27 @@ import {
 } from "../../../redux/action/auth/getUserProfileAction";
 
 export const AkunProfile = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const Data = useSelector((state) => state.authLogin);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const getUserProfile = () => {
-    dispatch(getUserProfileAction());
-  };
+  const [image, setImage] = useState(null);
+  const [newFullName, setNewFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [newCity, setNewCity] = useState("");
+  const [newCountry, setNewCountry] = useState("");
 
   useEffect(() => {
-    getUserProfile();
+    getAllData();
   }, [dispatch]);
 
-  const [image, setImage] = useState(null);
-  const [newFullName, setNewFullName] = useState(
-    Data.userProfile?.fullName || "",
-  );
-  const [email, setEmail] = useState(Data.user?.email || "");
-  const [newPhoneNumber, setNewPhoneNumber] = useState(
-    Data.userProfile?.phoneNumber || "",
-  );
-  const [newCity, setNewCity] = useState(Data.userProfile?.city || "");
-  const [newCountry, setNewCountry] = useState(Data.userProfile?.country || "");
+  const getAllData = () => {
+    dispatch(getUserProfileAction());
+  };
 
   const handleInputName = (e) => {
     if (e) {
@@ -159,12 +156,12 @@ export const AkunProfile = () => {
                   src={
                     image
                       ? URL.createObjectURL(image)
-                      : Data?.userProfile?.profilePicture || ""
+                      : Data.userProfile?.userProfile?.profilePicture || ""
                   }
                   alt=""
                   className="h-full w-full cursor-pointer rounded-full object-cover"
                 />
-                {Data?.userProfile && Data?.userProfile.profilePicture ? (
+                {Data?.userProfile?.userProfile?.profilePicture ? (
                   <></>
                 ) : (
                   <div className="absolute bottom-0 right-0 rounded-full bg-slate-100 p-1 text-primary">
@@ -180,7 +177,7 @@ export const AkunProfile = () => {
                   placeholder="Bingwa"
                   id="name"
                   onChange={handleInputName}
-                  value={newFullName}
+                  value={Data.userProfile?.userProfile?.fullName || newFullName}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -191,7 +188,7 @@ export const AkunProfile = () => {
                   placeholder="bingwa@gmail.com"
                   id="email"
                   onChange={handleInputEmail}
-                  value={email}
+                  value={Data.userProfile?.email || email}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -202,7 +199,9 @@ export const AkunProfile = () => {
                   placeholder="08123456789"
                   id="phone"
                   onChange={handleInputPhone}
-                  value={newPhoneNumber}
+                  value={
+                    Data.userProfile?.userProfile?.phoneNumber || newPhoneNumber
+                  }
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -213,7 +212,7 @@ export const AkunProfile = () => {
                   placeholder="Jakarta"
                   id="city"
                   onChange={handleInputCity}
-                  value={newCity}
+                  value={Data.userProfile?.city || newCity}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -224,7 +223,7 @@ export const AkunProfile = () => {
                   placeholder="Indonesia"
                   id="country"
                   onChange={handleInputCountry}
-                  value={newCountry}
+                  value={Data.userProfile?.userProfile?.country || newCountry}
                 />
               </div>
               <button
@@ -237,7 +236,7 @@ export const AkunProfile = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarAkun style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
     </>
   );
 };

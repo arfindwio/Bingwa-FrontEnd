@@ -56,7 +56,7 @@ const courseSlice = createSlice({
       const { selectedCategories, selectedLevels } = action.payload;
 
       // Pengecekan untuk memastikan tidak undefined
-      if (selectedCategories === undefined || selectedLevels === undefined) {
+      if (!selectedCategories || !selectedLevels) {
         // Handle jika salah satu atau keduanya undefined
         return;
       }

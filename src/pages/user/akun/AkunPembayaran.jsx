@@ -4,7 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import { NavbarAkun } from "../../../assets/components/navbar/NavbarAkun";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { CardRiwayat } from "../../../assets/components/cards/CardRiwayat";
@@ -95,7 +95,7 @@ export const AkunPembayaran = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarAkun style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
     </>
   );
 };

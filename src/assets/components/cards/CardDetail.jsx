@@ -17,6 +17,8 @@ export const CardDetail = ({
   duration,
   price,
   isPremium,
+  totalRating,
+  promotion,
 }) => {
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md">
@@ -31,12 +33,19 @@ export const CardDetail = ({
       <div className="flex flex-col gap-4 bg-white px-4 py-3">
         <div className="flex justify-between">
           <div className="text-lg font-bold text-primary">{category}</div>
-          <div className="flex items-center gap-1">
-            <div className="text-yellow-700">
-              <FaStar />
+          {!rating ? null : (
+            <div className="flex items-center gap-1">
+              <div className="text-yellow-700">
+                <FaStar />
+              </div>
+              <div className="font-bold">
+                {rating}
+                <span className="ms-1 font-medium text-slate-500">
+                  ({totalRating})
+                </span>
+              </div>
             </div>
-            <div className="font-bold">{rating}4.9</div>
-          </div>
+          )}
         </div>
         <div className="flex flex-col">
           <div className="font-semibold text-slate-800">{title}</div>
@@ -67,20 +76,37 @@ export const CardDetail = ({
               color="#22c55e"
               className="hidden md:flex lg:flex"
             />
-            <div className="text-sm font-semibold text-primary">{duration}</div>
+            <div className="text-sm font-semibold text-primary">
+              {duration} Minute
+            </div>
           </div>
         </div>
         {isPremium ? (
-          <div className="flex w-fit justify-between rounded-3xl bg-blue px-4 py-1 transition-all">
-            <div className="flex items-center gap-1">
-              <IoDiamond size={20} color="white" />
-              <div className="font-bold text-white">Beli</div>
-              <div className="font-bold text-white">Rp {price}</div>
+          <div className="flex items-center">
+            <div className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover">
+              <div className="flex items-center gap-2">
+                <IoDiamond size={20} color="white" />
+                <div className="font-bold text-white">
+                  Rp{" "}
+                  {promotion.discount
+                    ? price - promotion.discount * price
+                    : price}
+                </div>
+              </div>
             </div>
+            {promotion.discount ? (
+              <div className="ms-2 font-bold text-red-500">
+                <span className="me-1 font-semibold text-slate-500 line-through">
+                  Rp {price}
+                </span>
+                {promotion.discount * 100}%
+              </div>
+            ) : null}
           </div>
         ) : (
-          <div className="w-fit rounded-3xl bg-green px-4 py-1 text-center text-base font-bold text-white transition-all">
-            Gratis
+          // Non-premium content
+          <div className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white">
+            Free
           </div>
         )}
       </div>

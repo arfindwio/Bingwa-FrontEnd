@@ -11,7 +11,7 @@ export const filterCoursesAction =
     }
 
     // Cek jika kategori atau level kesulitan undefined
-    if (selectedCategories === undefined || selectedLevels === undefined) {
+    if (!selectedCategories || !selectedLevels) {
       return;
     }
 

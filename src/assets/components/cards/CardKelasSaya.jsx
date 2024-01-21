@@ -50,7 +50,7 @@ export const CardKelasSaya = ({
       <div className="flex flex-col gap-4 bg-white px-4 py-3">
         <div className="flex justify-between">
           <div className="text-lg font-bold text-primary">{category}</div>
-          {rating === undefined || rating === null ? null : (
+          {!rating ? null : (
             <div className="flex items-center gap-1">
               <div className="text-yellow-700">
                 <FaStar />
