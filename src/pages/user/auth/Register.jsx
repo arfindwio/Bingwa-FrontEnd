@@ -19,6 +19,9 @@ import {
 // Icons
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
+// Cookie
+import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
+
 export const Register = () => {
   const navigate = useNavigate();
   const [FullName, setFullName] = useState("");
@@ -63,10 +66,12 @@ export const Register = () => {
 
     toast.dismiss(loadingToastId);
 
+    CookieStorage.set(CookiesKeys.EmailRegister, Email);
+
     if (register) {
       showSuccessToast("Tautan Verifikasi telah dikirim!");
       setTimeout(() => {
-        navigate(`/otp?email=${encodeURIComponent(Email)}`);
+        navigate(`/otp`);
       }, 2000);
     }
   };

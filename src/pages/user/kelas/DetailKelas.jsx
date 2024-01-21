@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 
 // Components
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { CardDetail } from "../../../assets/components/cards/CardDetail";
 
@@ -82,7 +81,7 @@ export const DetailKelas = () => {
 
   const selectedCourse = !token
     ? storeDetailCourses
-    : enrollmentData === undefined || enrollmentData === null
+    : !enrollmentData
       ? storeDetailCourses
       : enrollmentData.course;
 
@@ -129,7 +128,7 @@ export const DetailKelas = () => {
         }
       }
 
-      if (token === undefined) {
+      if (!token) {
         showErrorToast("Anda harus login terlebih dahulu");
       }
     } catch (err) {
@@ -157,7 +156,7 @@ export const DetailKelas = () => {
 
   return (
     <>
-      {token === undefined ? <NavbarHome /> : <NavbarKelas />}
+      <NavbarKelas />
 
       {/* Parent Container */}
       <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-20">
@@ -191,8 +190,7 @@ export const DetailKelas = () => {
                 {storeDetailCourses?.category?.categoryName}
               </div>
               <div className="flex items-center gap-1">
-                {storeDetailCourses.averageRating === null ||
-                storeDetailCourses.averageRating === undefined ? null : (
+                {!storeDetailCourses.averageRating ? null : (
                   <>
                     <div className="text-yellow-700">
                       <FaStar />
@@ -240,7 +238,7 @@ export const DetailKelas = () => {
 
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
-            {videoLink === null || videoLink === undefined ? (
+            {!videoLink ? (
               <div
                 className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
                 style={{
@@ -312,7 +310,7 @@ export const DetailKelas = () => {
                   </div>
                 ) : (
                   <>
-                    {enrollmentData === undefined || enrollmentData === null ? (
+                    {!enrollmentData ? (
                       <div
                         className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                         onClick={handleEnrollCourse}
@@ -369,17 +367,15 @@ export const DetailKelas = () => {
                             className={`flex w-full ${
                               !token
                                 ? ""
-                                : enrollmentData === undefined ||
-                                    enrollmentData === null
-                                  ? ""
+                                : !enrollmentData
+                                  ? "cursor-pointer"
                                   : "cursor-pointer"
                             } items-center gap-4`}
                             onClick={
                               !token
                                 ? null
-                                : enrollmentData === undefined ||
-                                    enrollmentData === null
-                                  ? null
+                                : !enrollmentData
+                                  ? handleDialogOpen
                                   : () =>
                                       handleTrackings(
                                         lesson.id,
@@ -396,9 +392,8 @@ export const DetailKelas = () => {
                             className={`${
                               !token
                                 ? "text-slate-500"
-                                : enrollmentData === undefined ||
-                                    enrollmentData === null
-                                  ? "text-slate-500"
+                                : !enrollmentData
+                                  ? "cursor-pointer text-slate-500"
                                   : trackingData && trackingData.status
                                     ? "cursor-pointer text-slate-500"
                                     : "cursor-pointer text-green"
@@ -406,9 +401,8 @@ export const DetailKelas = () => {
                             onClick={
                               !token
                                 ? null
-                                : enrollmentData === undefined ||
-                                    enrollmentData === null
-                                  ? null
+                                : !enrollmentData
+                                  ? handleDialogOpen
                                   : () =>
                                       handleTrackings(
                                         lesson.id,
@@ -418,8 +412,7 @@ export const DetailKelas = () => {
                           >
                             {!token ? (
                               <BiSolidLock size={25} />
-                            ) : enrollmentData === undefined ||
-                              enrollmentData === null ? (
+                            ) : !enrollmentData ? (
                               <BiSolidLock size={25} />
                             ) : (
                               <FaCirclePlay size={25} />
@@ -460,10 +453,16 @@ export const DetailKelas = () => {
               title={storeDetailCourses?.courseName}
               author={storeDetailCourses?.mentor}
               level={storeDetailCourses?.level}
-              modul={storeDetailCourses?.modul}
-              duration={storeDetailCourses?.duration}
+              duration={storeDetailCourses?.totalDuration}
               price={storeDetailCourses?.price}
               isPremium={storeDetailCourses?.isPremium}
+              totalRating={storeDetailCourses.enrollment.length}
+              promotion={
+                !storeDetailCourses.promotion
+                  ? ""
+                  : storeDetailCourses.promotion
+              }
+              modul={storeLessonsCourseId.length}
             />
           )}
         </DialogBody>
@@ -499,7 +498,7 @@ export const DetailKelas = () => {
                 </div>
               ) : (
                 <div>
-                  {enrollmentData === undefined || enrollmentData === null ? (
+                  {!enrollmentData ? (
                     <div
                       className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                       onClick={handleEnrollCourse}
@@ -557,17 +556,15 @@ export const DetailKelas = () => {
                           className={`flex w-full ${
                             !token
                               ? ""
-                              : enrollmentData === undefined ||
-                                  enrollmentData === null
-                                ? ""
+                              : !enrollmentData
+                                ? "cursor-pointer"
                                 : "cursor-pointer"
                           }items-center gap-4`}
                           onClick={
                             !token
                               ? null
-                              : enrollmentData === undefined ||
-                                  enrollmentData === null
-                                ? null
+                              : !enrollmentData
+                                ? handleDialogOpen
                                 : () =>
                                     handleTrackings(lesson.id, lesson.videoURL)
                           }
@@ -581,9 +578,8 @@ export const DetailKelas = () => {
                           className={`${
                             !token
                               ? "text-slate-500"
-                              : enrollmentData === undefined ||
-                                  enrollmentData === null
-                                ? "text-slate-500"
+                              : !enrollmentData
+                                ? "cursor-pointer text-slate-500"
                                 : trackingData && trackingData.status
                                   ? "cursor-pointer text-slate-500"
                                   : "cursor-pointer text-green"
@@ -591,17 +587,15 @@ export const DetailKelas = () => {
                           onClick={
                             !token
                               ? null
-                              : enrollmentData === undefined ||
-                                  enrollmentData === null
-                                ? null
+                              : !enrollmentData
+                                ? handleDialogOpen
                                 : () =>
                                     handleTrackings(lesson.id, lesson.videoURL)
                           }
                         >
                           {!token ? (
                             <BiSolidLock size={25} />
-                          ) : enrollmentData === undefined ||
-                            enrollmentData === null ? (
+                          ) : !enrollmentData ? (
                             <BiSolidLock size={25} />
                           ) : (
                             <FaCirclePlay size={25} />

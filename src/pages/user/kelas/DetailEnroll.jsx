@@ -96,7 +96,7 @@ export const DetailEnroll = () => {
 
   return (
     <>
-      {token === undefined ? <NavbarHome /> : <NavbarKelas />}
+      {!token ? <NavbarHome /> : <NavbarKelas />}
 
       {/* Parent Container */}
       <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-20">
@@ -185,7 +185,7 @@ export const DetailEnroll = () => {
           </div>
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
-            {videoLink === null || videoLink === undefined ? (
+            {!videoLink ? (
               <div
                 className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
                 style={{

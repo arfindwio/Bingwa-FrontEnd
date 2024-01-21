@@ -8,6 +8,7 @@ import { IoIosNotificationsOutline, IoIosList } from "react-icons/io";
 import { LuUser } from "react-icons/lu";
 import { LuLogOut } from "react-icons/lu";
 import { FaUser } from "react-icons/fa6";
+import { CgLogIn } from "react-icons/cg";
 
 // Images
 import BrandLogo from "../../img/brain.webp";
@@ -31,13 +32,13 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 export const NavbarKelas = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogout = () => {
-    dispatch(logoutUserAction());
-  };
-
-  // Search Feature
   const [searchInput, setSearchInput] = useState("");
+
+  const currentPath = location.pathname;
+
+  const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const handleSearchCourse = (searchInput) => {
     const search = dispatch(searchCourseAction(searchInput));
@@ -45,14 +46,12 @@ export const NavbarKelas = () => {
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
       navigate(`/pilih-kelas`);
-      // if (currentPath === "/pilih-kelas") window.location.reload();
     }
   };
 
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  const test = currentPath === "/kelas-saya" ? "" : "";
+  const handleLogout = () => {
+    dispatch(logoutUserAction());
+  };
 
   return (
     <div className="fixed top-0 z-20 flex w-screen items-center justify-between gap-2 bg-primary px-2 py-4 md:px-6 lg:px-28">
@@ -88,55 +87,91 @@ export const NavbarKelas = () => {
         </div>
       </div>
 
-      <div className="flex cursor-pointer items-center gap-1 space-x-2 text-white md:space-x-4 lg:gap-2 lg:space-x-4">
+      {!token ? (
         <div
-          className="flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
+          className="flex cursor-pointer gap-2 font-semibold text-white"
           onClick={() => {
-            navigate("/all-kelas");
+            navigate("/Login");
           }}
         >
-          <IoIosList size={28} />
-          <div className="text-lg">Kelas</div>
+          <CgLogIn size={30} className="hidden md:flex lg:flex" />
+          <div className="text-xl">Masuk</div>
         </div>
-
-        <div className={`flex space-x-2 md:space-x-4 lg:space-x-4`}>
-          <IoIosNotificationsOutline
-            size={30}
+      ) : (
+        <div className="flex cursor-pointer items-center gap-1 space-x-2 text-white md:space-x-4 lg:gap-2 lg:space-x-4">
+          <div
+            className={`${
+              currentPath === "/all-kelas"
+                ? "flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
+                : "flex space-x-2 md:space-x-4 lg:space-x-4"
+            }`}
             onClick={() => {
-              navigate("/notifikasi");
+              navigate("/all-kelas");
             }}
-          />
-          <Menu>
-            <MenuHandler>
-              <Button
-                className="bg-primary p-0 shadow-none hover:shadow-none"
-                ripple={false}
-                size="sm"
-              >
-                <LuUser size={30} />
-              </Button>
-            </MenuHandler>
-            <MenuList>
-              <MenuItem
-                onClick={() => {
-                  navigate("/akun-profile");
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <FaUser size={17} />
-                  <span>Profile</span>
-                </div>
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <div className="flex items-center gap-3">
-                  <LuLogOut size={17} />
-                  <span>Logout</span>
-                </div>
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          >
+            <IoIosList size={28} />
+            {currentPath === "/all-kelas" ? (
+              <div className="text-lg">Class</div>
+            ) : null}
+          </div>
+
+          <div
+            className={`${
+              currentPath === "/notifikasi"
+                ? "flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
+                : "flex space-x-2 md:space-x-4 lg:space-x-4"
+            }`}
+          >
+            <IoIosNotificationsOutline
+              size={30}
+              onClick={() => {
+                navigate("/notifikasi");
+              }}
+            />
+            {currentPath === "/notifikasi" ? (
+              <div className="text-lg">Notification</div>
+            ) : null}
+          </div>
+          {currentPath === "/akun-profile" ||
+          currentPath === "/akun-password" ||
+          currentPath === "/akun-pembayaran" ? (
+            <div className="flex rounded-xl bg-blue-400 px-2 py-1 font-bold lg:gap-2 lg:px-6">
+              <LuUser size={28} />
+              <div className="text-lg">Account</div>
+            </div>
+          ) : (
+            <Menu>
+              <MenuHandler>
+                <Button
+                  className="bg-primary p-0 shadow-none hover:shadow-none"
+                  ripple={false}
+                  size="sm"
+                >
+                  <LuUser size={30} />
+                </Button>
+              </MenuHandler>
+              <MenuList>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/akun-profile");
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <FaUser size={17} />
+                    <span>Profile</span>
+                  </div>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  <div className="flex items-center gap-3">
+                    <LuLogOut size={17} />
+                    <span>Logout</span>
+                  </div>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 };

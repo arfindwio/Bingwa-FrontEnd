@@ -6,8 +6,8 @@ import { setUserProfile } from "../../reducer/auth/loginSlice";
 export const getUserProfileAction = () => (dispatch) => {
   return reduxGetUser()
     .then((result) => {
-      dispatch(setUserProfile(result.data.data.user.userProfile));
-      return true;
+      dispatch(setUserProfile(result.data.data.user));
+      return result.data.data.user;
     })
     .catch((err) => {
       console.error("reduxGetUser", err);
