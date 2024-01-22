@@ -18,7 +18,7 @@ import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import { RiShieldStarLine } from "react-icons/ri";
 import { LiaBookSolid } from "react-icons/lia";
 import { IoClose, IoCloseSharp, IoTime } from "react-icons/io5";
@@ -67,9 +67,15 @@ export const DetailKelas = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentCourseId, setPaymentCourseId] = useState(null);
   const [videoLink, setVideoLink] = useState(null);
+  const [rating, setRating] = useState(0);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
+  const handleDialogReviewOpen = () => {
+    setDialogReviewOpen(!dialogReviewOpen);
+    setRating(0);
+  };
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
@@ -150,6 +156,10 @@ export const DetailKelas = () => {
     }
   };
 
+  const handleStarClick = (star) => {
+    setRating(star);
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -197,6 +207,9 @@ export const DetailKelas = () => {
                     </div>
                     <div className="text-lg font-bold">
                       {storeDetailCourses.averageRating}
+                      <span className="ms-1 font-medium text-slate-500">
+                        ({storeDetailCourses.enrollment.length})
+                      </span>
                     </div>
                   </>
                 )}
@@ -229,12 +242,72 @@ export const DetailKelas = () => {
               </div>
             </div>
           </div>
-          <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
-            <div className="font-semibold">Join Grup Telegram</div>
-            <div>
-              <HiChatAlt2 size={20} />
+          <div className="flex">
+            <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
+              <div className="font-semibold">Join Grup Telegram</div>
+              <div>
+                <HiChatAlt2 size={20} />
+              </div>
+            </div>
+            <div
+              className="ms-2 flex w-fit cursor-pointer items-center gap-2 rounded-xl border-2 border-green bg-white px-6 py-2 text-green"
+              onClick={handleDialogReviewOpen}
+            >
+              <div className="font-semibold">Add Review This Course</div>
             </div>
           </div>
+          {/* Dialog Review */}
+          <Dialog
+            open={dialogReviewOpen}
+            handler={handleDialogReviewOpen}
+            className="py-3"
+          >
+            <DialogHeader className="relative flex flex-col items-center">
+              <IoCloseSharp
+                size={30}
+                className="absolute right-4 top-4 cursor-pointer text-primary"
+                onClick={handleDialogReviewOpen}
+              />
+              <h1 className="text-xl font-semibold text-slate-700">
+                Rate and Review
+              </h1>
+            </DialogHeader>
+            <DialogBody className="w-full text-sm">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <span className="text-center text-lg">Rating</span>
+                  <div className="flex justify-center">
+                    {[...Array(5)].map((star, index) => {
+                      const starValue = index + 1;
+                      return starValue <= rating ? (
+                        <FaStar
+                          size={60}
+                          key={index}
+                          className="cursor-pointer text-yellow-700"
+                          onClick={() => handleStarClick(starValue)}
+                        />
+                      ) : (
+                        <FaRegStar
+                          size={60}
+                          key={index}
+                          className="cursor-pointer text-slate-500"
+                          onClick={() => handleStarClick(starValue)}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </DialogBody>
+            <DialogFooter className="flex justify-center">
+              <div
+                className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover"
+                onClick={handleEnrollCourse}
+              >
+                <div className="font-semibold text-white">Submit</div>
+              </div>
+            </DialogFooter>
+          </Dialog>
 
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
