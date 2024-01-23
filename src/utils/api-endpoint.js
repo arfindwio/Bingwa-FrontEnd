@@ -40,7 +40,7 @@ export const API_ENDPOINT = {
   // LESSONS
   // /lessons [GET] Get All Lessons
   // /lessons [POST] Create Lesson
-  // /lessons/{courseId}[GET] Get Lesson by Course
+  // /lessons/{courseId} [GET] Get Lesson by Course
   // /lessons/{lessonId} [GET] Get Lesson by ID
   // /lessons/{lesssonId} [PUT] Update Lesson by ID
   // /lessons/{lesssonId} [DELETE] Delete Lesson by ID
@@ -52,7 +52,8 @@ export const API_ENDPOINT = {
   CREATE_ENROLLMENT: "/enrollments", // [POST] Create Enrollment by Course ID
 
   // REVIEWS
-  CREATE_REVIEW: "/reviews/{courseId}", // [POST] Create Review
+  // /reviews/{courseId}" [POST] Create Review
+  REVIEWS: "/reviews",
 
   // PROMOTIONS
   GET_ALL_PROMOTIONS: "/promotions", // [GET] Get All Promotions

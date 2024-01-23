@@ -10,6 +10,7 @@ import adminLoginSlice from "./admin/auth/adminLoginSlice";
 import allDataSlice from "./admin/data/allDataSlice";
 import courseSlice from "./courses/courseSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
+import ReviewsSlice from "./reviews/reviewsSlice";
 import LessonsSlice from "./lessons/LessonsSlice";
 import PaymentSlice from "./payment/PaymentSlice";
 import getNotificationsSlice from "./notifications/getNotificationsSlice";
@@ -33,6 +34,9 @@ export default combineReducers({
 
   // Enrollments
   enrollments: EnrollmentsSlice,
+
+  // Reviews
+  reviews: ReviewsSlice,
 
   // Lessons
   lessons: LessonsSlice,
