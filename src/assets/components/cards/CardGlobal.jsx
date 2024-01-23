@@ -66,7 +66,7 @@ export const CardGlobal = ({
                 <FaStar />
               </div>
               <div className="font-bold">
-                {rating}
+                {Math.floor(rating * 10) / 10}
                 <span className="ms-1 font-medium text-slate-500">
                   ({totalRating})
                 </span>

@@ -18,7 +18,7 @@ import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import { RiShieldStarLine } from "react-icons/ri";
 import { LiaBookSolid } from "react-icons/lia";
 import { IoClose, IoCloseSharp, IoTime } from "react-icons/io5";
@@ -37,6 +37,7 @@ import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/get
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
 import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
+import { reviewCourseAction } from "../../../redux/action/reviews/reviewCourseAction";
 
 // Material Tailwind Components
 import {
@@ -55,6 +56,8 @@ export const DetailKelas = () => {
   const { courseId } = useParams();
 
   const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
+  const test = useSelector((state) => state);
+  console.log(test);
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
@@ -67,9 +70,16 @@ export const DetailKelas = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentCourseId, setPaymentCourseId] = useState(null);
   const [videoLink, setVideoLink] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [Comment, setComment] = useState("");
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
+  const handleDialogReviewOpen = () => {
+    setDialogReviewOpen(!dialogReviewOpen);
+    setRating(0);
+  };
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
@@ -150,6 +160,53 @@ export const DetailKelas = () => {
     }
   };
 
+  const handleStarClick = (star) => {
+    setRating(star);
+  };
+
+  const handleInput = (e) => {
+    if (e) {
+      if (e.target.id === "comment") {
+        setComment(e.target.value);
+      }
+    }
+  };
+
+  const handleReview = async () => {
+    const loadingToastId = showLoadingToast("Loading...");
+
+    const review = await dispatch(
+      reviewCourseAction(courseId, {
+        userRating: rating,
+        userComment: Comment,
+      }),
+    );
+
+    toast.dismiss(loadingToastId);
+
+    if (review) {
+      setDialogReviewOpen(!dialogReviewOpen);
+      setTimeout(() => {
+        showSuccessToast("Your review has been submitted successfully!");
+      }, 400);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+  };
+
+  const validateForm = () => {
+    if (rating.length === 0 || !rating || rating === 0) {
+      setDialogReviewOpen(!dialogReviewOpen);
+      setTimeout(() => {
+        showErrorToast("Rating cannot be empty. Please provide a rating");
+      }, 400);
+      return;
+    }
+
+    handleReview();
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -196,7 +253,10 @@ export const DetailKelas = () => {
                       <FaStar />
                     </div>
                     <div className="text-lg font-bold">
-                      {storeDetailCourses.averageRating}
+                      {Math.floor(storeDetailCourses.averageRating * 10) / 10}
+                      <span className="ms-1 font-medium text-slate-500">
+                        ({storeDetailCourses.enrollment.length})
+                      </span>
                     </div>
                   </>
                 )}
@@ -229,12 +289,90 @@ export const DetailKelas = () => {
               </div>
             </div>
           </div>
-          <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
-            <div className="font-semibold">Join Grup Telegram</div>
-            <div>
-              <HiChatAlt2 size={20} />
+          <div className="flex">
+            <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
+              <div className="font-semibold">Join Grup Telegram</div>
+              <div>
+                <HiChatAlt2 size={20} />
+              </div>
             </div>
+            {!token ? null : !enrollmentData || enrollmentData.review ? null : (
+              <div
+                className="ms-2 flex w-fit cursor-pointer items-center gap-2 rounded-xl border-2 border-green bg-white px-6 py-2 text-green"
+                onClick={handleDialogReviewOpen}
+              >
+                <div className="font-semibold">Add Review This Course</div>
+              </div>
+            )}
           </div>
+          {/* Dialog Review */}
+          <Dialog
+            open={dialogReviewOpen}
+            handler={handleDialogReviewOpen}
+            className="py-3"
+          >
+            <DialogHeader className="relative flex flex-col items-center">
+              <IoCloseSharp
+                size={30}
+                className="absolute right-4 top-4 cursor-pointer text-primary"
+                onClick={handleDialogReviewOpen}
+              />
+              <h1 className="text-2xl font-semibold text-slate-700">
+                Rate and Review
+              </h1>
+            </DialogHeader>
+            <DialogBody className="w-full text-sm">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <span className="text-center text-lg">Rating</span>
+                  <div className="flex justify-center">
+                    {[...Array(5)].map((star, index) => {
+                      const starValue = index + 1;
+                      return starValue <= rating ? (
+                        <FaStar
+                          size={60}
+                          key={index}
+                          className="cursor-pointer text-yellow-700"
+                          onClick={() => handleStarClick(starValue)}
+                        />
+                      ) : (
+                        <FaRegStar
+                          size={60}
+                          key={index}
+                          className="cursor-pointer text-slate-500"
+                          onClick={() => handleStarClick(starValue)}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-col gap-2">
+                  <span className="text-center text-lg">Review</span>
+                  <input
+                    placeholder="Share your experience with this course..."
+                    onChange={handleInput}
+                    className="rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
+                    type="text"
+                    value={Comment}
+                    id="comment"
+                  />
+                </div>
+              </div>
+            </DialogBody>
+            <DialogFooter className="flex justify-center">
+              <div className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover">
+                <button
+                  type="button"
+                  className="font-semibold text-white"
+                  onClick={() => {
+                    validateForm();
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </DialogFooter>
+          </Dialog>
 
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
