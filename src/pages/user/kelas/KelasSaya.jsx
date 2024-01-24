@@ -136,7 +136,7 @@ export const KelasSaya = () => {
                     .filter((value) => {
                       if (filterStatus === "All") return true;
                       if (filterStatus === "In Progress")
-                        return value.progres >= 0 && value.progres < 100;
+                        return value.progress >= 0 && value.progress < 100;
                       if (filterStatus === "Completed")
                         return value.progres >= 100;
                       return false;
@@ -153,7 +153,7 @@ export const KelasSaya = () => {
                           level={value.course.level}
                           modul={value.course.modul}
                           duration={value.course.totalDuration}
-                          progress={value.progres}
+                          progress={value.progress}
                           rating={value.course.averageRating}
                         />
                       );

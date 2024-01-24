@@ -3,10 +3,7 @@ import http from "../../utils/http";
 
 export const reduxPutTrackings = async (lessonId) => {
   try {
-    const response = await http.put(
-      `${API_ENDPOINT.UPDATE_TRACKINGS}/${lessonId}`,
-    );
-    return response.data;
+    return await http.put(`${API_ENDPOINT.UPDATE_TRACKINGS}/${lessonId}`);
   } catch (error) {
     console.error("Error updating trackings:", error);
     throw error;

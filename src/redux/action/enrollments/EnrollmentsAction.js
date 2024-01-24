@@ -1,7 +1,7 @@
 import { reduxPostEnrollments } from "../../../services/enrollments/CreateEnrollments";
 import { setEnrollments } from "../../reducer/enrollments/EnrollmentsSlice";
 
-export const postEnrollmentsAction = (courseId) => async (dispatch) => {
+export const enrollmentsAction = (courseId) => async (dispatch) => {
   await reduxPostEnrollments(courseId)
     .then((result) => {
       dispatch(setEnrollments(result.data.data.enrollments));

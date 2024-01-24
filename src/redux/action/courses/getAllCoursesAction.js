@@ -13,7 +13,7 @@ export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
     dispatch(startLoading());
     let getAllInput = `?${fullQuery}`;
 
-    const response = await (getAllInput
+    const response = await (fullQuery
       ? reduxGetAllCoursesByQuery(getAllInput)
       : reduxGetAllCourses());
 

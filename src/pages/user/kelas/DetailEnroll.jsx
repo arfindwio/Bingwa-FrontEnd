@@ -255,7 +255,7 @@ export const DetailEnroll = () => {
                   className="hidden md:hidden lg:flex"
                 />
                 <div className="rounded-3xl bg-primary px-3 py-1 font-semibold text-white">
-                  {storeDetailCoursesEnroll?.progres * 100}% Completed
+                  {storeDetailCoursesEnroll?.progress * 100}% Completed
                 </div>
               </div>
             </div>
@@ -328,7 +328,7 @@ export const DetailEnroll = () => {
                 className="hidden md:hidden lg:flex"
               />
               <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                {storeDetailCoursesEnroll?.progres}% Completed
+                {storeDetailCoursesEnroll?.progress}% Completed
               </div>
             </div>
           </div>

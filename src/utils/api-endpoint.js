@@ -50,6 +50,8 @@ export const API_ENDPOINT = {
   GET_ALL_ENROLLMENTS: "/enrollments", // [GET] Get All Enrollments
   GET_ENROLMENT: "/enrollments", //{courseId} // [GET] Get Enrollments by ID
   CREATE_ENROLLMENT: "/enrollments", // [POST] Create Enrollment by Course ID
+  // /enrollments/{courseId} // [PUT] Update Enrollment Preparation by Course ID
+  ENROLLMENTS: "/enrollments",
 
   // REVIEWS
   // /reviews/{courseId}" [POST] Create Review
