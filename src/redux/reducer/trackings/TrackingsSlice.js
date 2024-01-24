@@ -19,7 +19,6 @@ const getTrackingsSlice = createSlice({
     startLoading: (state) => {
       state.loading = true;
     },
-
     endLoading: (state) => {
       state.loading = false;
     },

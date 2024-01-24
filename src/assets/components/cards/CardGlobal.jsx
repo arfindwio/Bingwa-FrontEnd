@@ -154,7 +154,7 @@ export const CardGlobal = ({
               <>
                 <div className="flex w-full">
                   <Progress
-                    value={Math.floor(enrollmentData.progres * 100)}
+                    value={Math.floor(enrollmentData.progress * 100)}
                     size="lg"
                     label="Completed"
                     color="blue"

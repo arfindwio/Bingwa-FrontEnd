@@ -8,6 +8,9 @@ import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { CardDetail } from "../../../assets/components/cards/CardDetail";
 
+// Images
+import onboarding from "../../../assets/img/onboarding.webp";
+
 // Helper
 import {
   showLoadingToast,
@@ -28,16 +31,15 @@ import { BiSolidLock } from "react-icons/bi";
 import { FaArrowCircleRight } from "react-icons/fa";
 import { TbProgressCheck } from "react-icons/tb";
 
-// Service
-import { reduxPutTrackings } from "../../../services/trackings/Tracking";
-
 // Redux Actions
-import { postEnrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
+import { enrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/getAllLessonsByCourseId";
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
 import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
 import { reviewCourseAction } from "../../../redux/action/reviews/reviewCourseAction";
+import { enrollmentPreparationAction } from "../../../redux/action/enrollments/EnrollmentPreparationAction";
+import { putTrackingsAction } from "../../../redux/action/trackings/TrackingsAction";
 
 // Material Tailwind Components
 import {
@@ -56,8 +58,6 @@ export const DetailKelas = () => {
   const { courseId } = useParams();
 
   const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
-  const test = useSelector((state) => state);
-  console.log(test);
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
@@ -66,6 +66,8 @@ export const DetailKelas = () => {
     (state) => state.trackings.trackingsCourseId.allTrackings,
   );
   const isLoading = useSelector((state) => state.dataCourses.loading);
+  const loadingTracking = useSelector((state) => state);
+  console.log(loadingTracking);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentCourseId, setPaymentCourseId] = useState(null);
@@ -74,8 +76,14 @@ export const DetailKelas = () => {
   const [Comment, setComment] = useState("");
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
   const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
+  const [dialogPreparationOpen, setDialogPreparationOpen] = useState(true);
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleDialogPreparationOpen = () =>
+    setDialogPreparationOpen(!dialogPreparationOpen);
+
   const handleDialogReviewOpen = () => {
     setDialogReviewOpen(!dialogReviewOpen);
     setRating(0);
@@ -109,6 +117,9 @@ export const DetailKelas = () => {
     if (token) {
       dispatch(getAllEnrollmentsAction());
       dispatch(getTrackingByCourseId(courseId));
+      if (enrollmentData && !enrollmentData.preparationCheck) {
+        dispatch(enrollmentPreparationAction(courseId));
+      }
     }
   };
 
@@ -132,9 +143,10 @@ export const DetailKelas = () => {
         }
 
         if (!isPremium) {
-          await dispatch(postEnrollmentsAction(storeDetailCourses.id));
+          await dispatch(enrollmentsAction(storeDetailCourses.id));
+          dispatch(getAllEnrollmentsAction());
+          dispatch(getTrackingByCourseId(courseId));
           showSuccessToast("Berhasil Enrollments Course");
-          window.location.reload();
         }
       }
 
@@ -151,10 +163,14 @@ export const DetailKelas = () => {
     const loadingToastId = showLoadingToast("Loading ...");
 
     try {
-      await reduxPutTrackings(lessonId);
-      setVideoLink(videoUrl.split("https://youtu.be/")[1]);
-      toast.dismiss(loadingToastId);
-      showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
+      await dispatch(putTrackingsAction(lessonId));
+      if (!loadingTracking.trackings.isLoading) {
+        setVideoLink(videoUrl.split("https://youtu.be/")[1]);
+        toast.dismiss(loadingToastId);
+        dispatch(getTrackingByCourseId(courseId));
+        dispatch(getAllEnrollmentsAction());
+        showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
+      }
     } catch (error) {
       console.error("Error handling trackings:", error);
     }
@@ -185,10 +201,10 @@ export const DetailKelas = () => {
     toast.dismiss(loadingToastId);
 
     if (review) {
-      setDialogReviewOpen(!dialogReviewOpen);
+      setDialogReviewOpen(false);
       setTimeout(() => {
         showSuccessToast("Your review has been submitted successfully!");
-      }, 400);
+      }, 1000);
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -305,74 +321,6 @@ export const DetailKelas = () => {
               </div>
             )}
           </div>
-          {/* Dialog Review */}
-          <Dialog
-            open={dialogReviewOpen}
-            handler={handleDialogReviewOpen}
-            className="py-3"
-          >
-            <DialogHeader className="relative flex flex-col items-center">
-              <IoCloseSharp
-                size={30}
-                className="absolute right-4 top-4 cursor-pointer text-primary"
-                onClick={handleDialogReviewOpen}
-              />
-              <h1 className="text-2xl font-semibold text-slate-700">
-                Rate and Review
-              </h1>
-            </DialogHeader>
-            <DialogBody className="w-full text-sm">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <span className="text-center text-lg">Rating</span>
-                  <div className="flex justify-center">
-                    {[...Array(5)].map((star, index) => {
-                      const starValue = index + 1;
-                      return starValue <= rating ? (
-                        <FaStar
-                          size={60}
-                          key={index}
-                          className="cursor-pointer text-yellow-700"
-                          onClick={() => handleStarClick(starValue)}
-                        />
-                      ) : (
-                        <FaRegStar
-                          size={60}
-                          key={index}
-                          className="cursor-pointer text-slate-500"
-                          onClick={() => handleStarClick(starValue)}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-col gap-2">
-                  <span className="text-center text-lg">Review</span>
-                  <input
-                    placeholder="Share your experience with this course..."
-                    onChange={handleInput}
-                    className="rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
-                    type="text"
-                    value={Comment}
-                    id="comment"
-                  />
-                </div>
-              </div>
-            </DialogBody>
-            <DialogFooter className="flex justify-center">
-              <div className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover">
-                <button
-                  type="button"
-                  className="font-semibold text-white"
-                  onClick={() => {
-                    validateForm();
-                  }}
-                >
-                  Submit
-                </button>
-              </div>
-            </DialogFooter>
-          </Dialog>
 
           {/* Section Detail Kelas */}
           <div className="flex flex-col">
@@ -465,7 +413,7 @@ export const DetailKelas = () => {
                           className="hidden md:hidden lg:flex"
                         />
                         <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                          {Math.floor(enrollmentData.progres * 100)}% Completed
+                          {Math.floor(enrollmentData.progress * 100)}% Completed
                         </div>
                       </>
                     )}
@@ -565,7 +513,117 @@ export const DetailKelas = () => {
         </div>
       </div>
 
-      {/* Dialog */}
+      {/* Dialog OnBoarding */}
+      <Dialog
+        open={
+          enrollmentData && !enrollmentData.preparationCheck
+            ? dialogPreparationOpen
+            : false
+        }
+        handler={handleDialogPreparationOpen}
+        className="py-3"
+      >
+        <DialogHeader className="flex flex-col">
+          <IoCloseSharp
+            size={30}
+            className="absolute right-4 top-4 cursor-pointer text-primary"
+            onClick={handleDialogPreparationOpen}
+          />
+          <h1 className="text-3xl font-semibold text-primary">Onboarding...</h1>
+        </DialogHeader>
+        <DialogBody className="flex flex-col items-center justify-center px-12">
+          <img src={onboarding} alt="onboarding" className="w-[50%]" />
+          <h1 className="my-6 font-semibold text-slate-800">
+            Persiapkan hal berikut untuk belajar yang maksimal:
+          </h1>
+          <p className="text-slate-600">
+            Mempunyai akun Figma atau Install Adobe XD
+          </p>
+          <p className="text-slate-600">
+            Menggunakan internet minimal kecepatan 2Mbps
+          </p>
+          <p className="text-slate-600">Belajar di tempat yang nyaman</p>
+        </DialogBody>
+        <DialogFooter className="flex justify-center">
+          <div
+            className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover"
+            onClick={handleDialogPreparationOpen}
+          >
+            <div className="font-semibold text-white">Ikuti Kelas</div>
+          </div>
+        </DialogFooter>
+      </Dialog>
+
+      {/* Dialog Review */}
+      <Dialog
+        open={dialogReviewOpen}
+        handler={handleDialogReviewOpen}
+        className="py-3"
+      >
+        <DialogHeader className="relative flex flex-col items-center">
+          <IoCloseSharp
+            size={30}
+            className="absolute right-4 top-4 cursor-pointer text-primary"
+            onClick={handleDialogReviewOpen}
+          />
+          <h1 className="text-2xl font-semibold text-slate-700">
+            Rate and Review
+          </h1>
+        </DialogHeader>
+        <DialogBody className="w-full text-sm">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <span className="text-center text-lg">Rating</span>
+              <div className="flex items-center justify-center">
+                {[...Array(5)].map((star, index) => {
+                  const starValue = index + 1;
+                  return starValue <= rating ? (
+                    <FaStar
+                      size={60}
+                      key={index}
+                      className="cursor-pointer text-yellow-700"
+                      onClick={() => handleStarClick(starValue)}
+                    />
+                  ) : (
+                    <FaRegStar
+                      size={60}
+                      key={index}
+                      className="cursor-pointer text-slate-500"
+                      onClick={() => handleStarClick(starValue)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div className="mt-4 flex flex-col gap-2">
+              <span className="text-center text-lg">Review</span>
+              <textarea
+                placeholder="Share your experience with this course..."
+                onChange={handleInput}
+                className="rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
+                value={Comment}
+                id="comment"
+                rows={4}
+              ></textarea>
+            </div>
+          </div>
+        </DialogBody>
+        <DialogFooter className="flex justify-center">
+          <div className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover">
+            <button
+              type="button"
+              className="font-semibold text-white"
+              onClick={() => {
+                validateForm();
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        </DialogFooter>
+      </Dialog>
+
+      {/* Dialog Payment */}
       <Dialog open={dialogOpen} handler={handleDialogOpen} className="py-3">
         <DialogHeader className="relative flex flex-col items-center">
           <IoCloseSharp
@@ -615,7 +673,7 @@ export const DetailKelas = () => {
         </DialogFooter>
       </Dialog>
 
-      {/* Dialog Chapter */}
+      {/* Dialog Chapter & Lesson */}
       <Dialog open={open} handler={handleOpen} size="xxl">
         <DialogHeader className="-mb-6 flex justify-end pr-4 pt-10">
           <IoClose size={30} onClick={handleOpen} />
@@ -653,7 +711,7 @@ export const DetailKelas = () => {
                         className="hidden md:hidden lg:flex"
                       />
                       <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                        {Math.floor(enrollmentData.progres * 100)}% Completed
+                        {Math.floor(enrollmentData.progress * 100)}% Completed
                       </div>
                     </>
                   )}
