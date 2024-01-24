@@ -4,10 +4,11 @@ const initialState = {
   course: [],
   enrollCourseId: [],
   enrollments: null,
+  enrollmentPreparation: null,
   loading: false,
 };
 
-const postEnrollmentSlice = createSlice({
+const enrollmentSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
@@ -19,6 +20,9 @@ const postEnrollmentSlice = createSlice({
     },
     setCourseEnroll: (state, action) => {
       state.course = action.payload;
+    },
+    setEnrollmentPreparation: (state, action) => {
+      state.enrollmentPreparation = action.payload;
     },
     startLoading: (state) => {
       state.loading = true;
@@ -34,8 +38,9 @@ export const {
   setEnrollments,
   setCourseEnroll,
   setEnrollByCourseId,
+  setEnrollmentPreparation,
   startLoading,
   endLoading,
-} = postEnrollmentSlice.actions;
+} = enrollmentSlice.actions;
 
-export default postEnrollmentSlice.reducer;
+export default enrollmentSlice.reducer;
