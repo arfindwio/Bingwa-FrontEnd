@@ -1,5 +1,5 @@
-import { reduxGetHistoryPayment } from "../../../services/payment/HistoryPayment";
-import { setHistory } from "../../reducer/payment/PaymentSlice";
+import { reduxGetHistoryPayment } from "../../../services/payments/HistoryPayment";
+import { setHistory } from "../../reducer/payments/PaymentsSlice";
 
 export const getHistoryAction = () => (dispatch) => {
   reduxGetHistoryPayment()

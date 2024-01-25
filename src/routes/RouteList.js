@@ -35,7 +35,6 @@ export const RouteList = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/homepage" element={<HomePage />} />
 
         {/* User */}
         <Route path="/login" element={<LoginPage />} />

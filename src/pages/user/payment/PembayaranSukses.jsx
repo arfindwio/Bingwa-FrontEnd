@@ -54,7 +54,7 @@ export const PembayaranSukses = () => {
           <div
             className="cursor-pointer items-center px-2 py-2 text-center text-lg font-semibold text-blue"
             onClick={() => {
-              navigate("/homepage");
+              navigate("/");
             }}
           >
             Kembali ke Beranda

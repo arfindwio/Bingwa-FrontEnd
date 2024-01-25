@@ -1,36 +1,37 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import registerSlice from "./auth/registerSlice";
-import passwordSlice from "./auth/passwordSlice";
-import otpSlice from "./auth/otpSlice";
-import loginSlice from "./auth/loginSlice";
-import profileSlice from "./akun/profileSlice";
+import RegisterSlice from "./auth/registerSlice";
+import PasswordSlice from "./auth/passwordSlice";
+import OtpSlice from "./auth/otpSlice";
+import LoginSlice from "./auth/loginSlice";
+import UsersSlice from "./auth/usersSlice";
+import ProfileSlice from "./akun/profileSlice";
 import ChangePassSlice from "./akun/ChangePassSlice";
 import getAllCategoriesSlice from "./categories/getAllCategoriesSlice";
 import adminLoginSlice from "./admin/auth/adminLoginSlice";
 import allDataSlice from "./admin/data/allDataSlice";
-import courseSlice from "./courses/courseSlice";
+import CourseSlice from "./courses/courseSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
 import ReviewsSlice from "./reviews/reviewsSlice";
 import LessonsSlice from "./lessons/LessonsSlice";
-import PaymentSlice from "./payment/PaymentSlice";
+import PaymentSlice from "./payments/PaymentsSlice";
 import getNotificationsSlice from "./notifications/getNotificationsSlice";
-import getTrackingsSlice from "./trackings/TrackingsSlice";
-import paymentSlice from "./admin/payments/paymentSlice";
+import TrackingsSlice from "./trackings/TrackingsSlice";
 
 export default combineReducers({
   // User
-  authLogin: loginSlice,
-  authRegister: registerSlice,
-  authPassword: passwordSlice,
-  authOtp: otpSlice,
-  authProfile: profileSlice,
+  authLogin: LoginSlice,
+  authRegister: RegisterSlice,
+  authPassword: PasswordSlice,
+  authOtp: OtpSlice,
+  authProfile: ProfileSlice,
   changePass: ChangePassSlice,
+  users: UsersSlice,
 
   // Categories
   dataCategories: getAllCategoriesSlice,
 
   // Courses
-  dataCourses: courseSlice,
+  dataCourses: CourseSlice,
 
   // Enrollments
   enrollments: EnrollmentsSlice,
@@ -43,13 +44,12 @@ export default combineReducers({
 
   // Payment
   payment: PaymentSlice,
-  adminPayment: paymentSlice,
 
   // seNotifications
   notifications: getNotificationsSlice,
 
   // Trackings
-  trackings: getTrackingsSlice,
+  trackings: TrackingsSlice,
 
   // Admin
   adminAuthLogin: adminLoginSlice,
