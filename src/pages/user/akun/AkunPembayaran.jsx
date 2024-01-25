@@ -14,7 +14,7 @@ import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseS
 import { GoArrowLeft } from "react-icons/go";
 
 // Redux Actions
-import { getHistoryAction } from "../../../redux/action/payment/HistoryAction";
+import { getHistoryAction } from "../../../redux/action/payments/HistoryAction";
 
 export const AkunPembayaran = () => {
   const navigate = useNavigate();

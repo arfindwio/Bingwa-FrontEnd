@@ -67,7 +67,6 @@ export const DetailKelas = () => {
   );
   const isLoading = useSelector((state) => state.dataCourses.loading);
   const loadingTracking = useSelector((state) => state);
-  console.log(loadingTracking);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentCourseId, setPaymentCourseId] = useState(null);

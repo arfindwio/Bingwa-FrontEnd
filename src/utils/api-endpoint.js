@@ -81,6 +81,7 @@ export const API_ENDPOINT = {
   GET_PAYMENT_BY_COURSE: "/payments/{courseId}", // [GET] Get Payment by Course ID
   CREATE_PAYMENT: "/payments", // [POST] Create Payment
   CREATE_MIDTRANS_PAYMENT: "/payment/midtrans", // [POST] Create Payment Midtrans
+  PAYMENTS: "/payments",
 
   // ADMIN
   GET_ADMIN_ALL: "/admin/all", // [GET] Get All Data From Admin

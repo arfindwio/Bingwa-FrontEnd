@@ -1,5 +1,5 @@
-import { reduxPostPayment } from "../../../services/payment/CreatePayment";
-import { setPayment } from "../../reducer/payment/PaymentSlice";
+import { reduxPostPayment } from "../../../services/payments/CreatePayment";
+import { setPayment } from "../../reducer/payments/PaymentsSlice";
 
 export const postPaymentAction = (input, courseId) => async (dispatch) => {
   try {

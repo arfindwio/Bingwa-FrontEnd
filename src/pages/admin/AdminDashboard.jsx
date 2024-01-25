@@ -3,34 +3,31 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Components
 import { AdminNavbar } from "../../assets/components/admin/adminNavbar";
-import { AdminPojok } from "../../assets/components/admin/AdminPojok";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import LoadingSpinner from "../../assets/components/loading/loadingSpinner";
 
 // Redux Actions
 import { getAllDataAction } from "../../redux/action/admin/data/getAllDataAction";
-import { getAllPaymentsAction } from "../../redux/action/admin/payments/getAllPaymentsAction";
+import { getAllPaymentsAction } from "../../redux/action/payments/getAllPaymentsAction";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
 
   // Redux Store
   const adminData = useSelector((state) => state.allAdminData);
-  const adminPayment = useSelector((state) => state.adminPayment.payments);
-  const isLoading = useSelector((state) => state.adminPayment.loading);
-
-  const getAdminData = () => {
-    dispatch(getAllDataAction());
-  };
-
-  const getAllAdminPayments = () => {
-    dispatch(getAllPaymentsAction());
-  };
+  const storePayments = useSelector((state) => state.payment.payments);
+  console.log(storePayments);
+  const isLoading = useSelector((state) => state.payment.loading);
 
   useEffect(() => {
-    getAdminData();
-    getAllAdminPayments();
+    getAllData();
   }, [dispatch]);
+
+  const getAllData = () => {
+    dispatch(getAllDataAction());
+    dispatch(getAllPaymentsAction());
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -39,7 +36,7 @@ export const AdminDashboard = () => {
   return (
     <div className="flex">
       <div className="w-1/6">
-        <AdminPojok />
+        <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
         <div>
@@ -97,7 +94,7 @@ export const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {adminPayment === null ? (
+                    {!storePayments ? (
                       <tr>
                         <td
                           className="px-4 py-3 text-center text-sm
@@ -108,9 +105,11 @@ export const AdminDashboard = () => {
                         </td>
                       </tr>
                     ) : (
-                      adminPayment.map((value, index) => (
+                      storePayments.map((value, index) => (
                         <tr key={index} className="text-xs">
-                          <td className="px-4 py-3">{value.id}</td>
+                          <td className="px-4 py-3">
+                            {value.user.userProfile.fullName.split(" ")[0]}
+                          </td>
                           <td className="px-4 py-3">
                             {value.course.category.categoryName}
                           </td>

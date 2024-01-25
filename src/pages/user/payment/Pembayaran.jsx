@@ -23,7 +23,7 @@ import bca from "../../../assets/img/BCA.webp";
 import mandiri from "../../../assets/img/MANDIRI.webp";
 
 // Redux Actions
-import { postPaymentAction } from "../../../redux/action/payment/PaymentAction";
+import { postPaymentAction } from "../../../redux/action/payments/PaymentAction";
 
 // Helper
 import {

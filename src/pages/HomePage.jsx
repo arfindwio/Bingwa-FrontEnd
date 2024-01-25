@@ -151,13 +151,13 @@ export const HomePage = () => {
           {/* Container Card Kelas */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {showAllCourses ? (
-              storeCourses.filter(
+              storeCourses?.filter(
                 (value) =>
                   selectedCategory === "All" ||
                   value.category.categoryName === selectedCategory,
               ).length > 0 ? (
                 storeCourses
-                  .filter(
+                  ?.filter(
                     (value) =>
                       selectedCategory === "All" ||
                       value.category.categoryName === selectedCategory,
@@ -165,7 +165,7 @@ export const HomePage = () => {
                   .slice(0, 6)
                   .map((value) => {
                     const lessonsData = storeLessons
-                      ? storeLessons.filter(
+                      ? storeLessons?.filter(
                           (lesson) => lesson.chapter.course.id === value.id,
                         )
                       : null;
@@ -189,8 +189,8 @@ export const HomePage = () => {
                         courseId={value.id}
                         isPremium={value.isPremium}
                         promotion={!value.promotion ? "" : value.promotion}
-                        totalRating={value.enrollment.length}
-                        modul={lessonsData.length}
+                        totalRating={value.enrollment?.length}
+                        modul={lessonsData?.length}
                         enrollmentData={enrollmentData}
                       />
                     );
@@ -201,22 +201,22 @@ export const HomePage = () => {
                 </p>
               )
             ) : storeCourses
-                .filter(
+                ?.filter(
                   (value) =>
                     selectedCategory === "All" ||
                     value.category.categoryName === selectedCategory,
                 )
-                .slice(0, 3).length > 0 ? ( // Display the first 3 courses
+                .slice(0, 3).length > 0 ? (
               storeCourses
-                .filter(
+                ?.filter(
                   (value) =>
                     selectedCategory === "All" ||
                     value.category.categoryName === selectedCategory,
                 )
-                .slice(0, 3) // Display the first 3 courses
+                .slice(0, 3)
                 .map((value) => {
                   const lessonsData = storeLessons
-                    ? storeLessons.filter(
+                    ? storeLessons?.filter(
                         (lesson) => lesson.chapter.course.id === value.id,
                       )
                     : null;
@@ -240,8 +240,8 @@ export const HomePage = () => {
                       courseId={value.id}
                       isPremium={value.isPremium}
                       promotion={!value.promotion ? "" : value.promotion}
-                      totalRating={value.enrollment.length}
-                      modul={lessonsData.length}
+                      totalRating={value.enrollment?.length}
+                      modul={lessonsData?.length}
                       enrollmentData={enrollmentData}
                     />
                   );
