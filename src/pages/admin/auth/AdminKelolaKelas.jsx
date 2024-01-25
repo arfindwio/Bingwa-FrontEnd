@@ -11,7 +11,7 @@ import {
 
 // Components
 import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminPojok } from "../../../assets/components/admin/AdminPojok";
+import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../../assets/components/admin/AdminCard";
 import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
@@ -27,50 +27,11 @@ import { getAllCoursesAction } from "../../../redux/action/courses/getAllCourses
 import { deleteCourseAction } from "../../../redux/action/admin/course/deleteCourseAction";
 import { editCourseAction } from "../../../redux/action/admin/course/editCourseAction";
 import { getAllDataAction } from "../../../redux/action/admin/data/getAllDataAction";
-import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
 import { createCourseAction } from "../../../redux/action/admin/course/createCourseAction";
 
 export const AdminKelolaKelas = () => {
   const dispatch = useDispatch();
 
-  const storeSearchedCourses = useSelector(
-    (state) => state.dataCourses.searchedCourses,
-  );
-
-  // Redux Store
-  const adminData = useSelector((state) => state.allAdminData);
-  const storeAllCourse = useSelector((state) => state.dataCourses.courses);
-  const storeDetailCourse = useSelector((state) => state.dataCourses.detail);
-
-  const [dialogTambah, setDialogTambah] = useState(false);
-  const [dialogEdit, setDialogEdit] = useState(false);
-
-  const getAdminData = () => {
-    dispatch(getAllDataAction());
-  };
-
-  const getAllCourse = () => {
-    dispatch(getAllCoursesAction());
-  };
-
-  const getDetailCourse = (categoryId) => {
-    dispatch(getDetailCoursesAction(categoryId));
-  };
-
-  const renderAllState = () => {
-    getAllCourse();
-    getAdminData();
-    getDetailCourse();
-  };
-
-  useEffect(() => {
-    renderAllState();
-  }, [dispatch]);
-
-  const handleDialogTambah = () => setDialogTambah(!dialogTambah);
-  const handleDialogEdit = () => setDialogEdit(!dialogEdit);
-
-  // Tambah Course
   const [newCourseName, setNewCourseName] = useState("");
   const [newPrice, setNewPrice] = useState("");
   const [newLevel, setNewLevel] = useState("");
@@ -80,10 +41,47 @@ export const AdminKelolaKelas = () => {
   const [newMentor, setNewMentor] = useState("");
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [newForumUrl, setNewForumUrl] = useState("");
-  const [newDuration, setNewDuration] = useState("");
   const [newCourseImg, setNewCourseImg] = useState("");
   const [newCategoryId, setNewCategoryId] = useState("");
   const [newPromotionId, setNewPromotionId] = useState("");
+
+  // Edit Course
+  const [editingCourseId, setEditingCourseId] = useState(null);
+
+  const [updateCourseName, setUpdateCourseName] = useState("");
+  const [updatePrice, setUpdatePrice] = useState("");
+  const [updateLevel, setUpdateLevel] = useState("");
+  const [updateAboutCourse, setUpdateAboutCourse] = useState("");
+  const [updateTargetAudience, setUpdateTargetAudience] = useState("");
+  const [updateLearningMaterial, setUpdateLearningMaterial] = useState("");
+  const [updateMentor, setUpdateMentor] = useState("");
+  const [updateVideoUrl, setUpdateVideoUrl] = useState("");
+  const [updateForumUrl, setUpdateForumUrl] = useState("");
+  const [updateCourseImg, setUpdateCourseImg] = useState("");
+  const [updateCategoryId, setUpdateCategoryId] = useState("");
+  const [updatePromotionId, setUpdatePromotionId] = useState("");
+
+  const [dialogCreate, setDialogCreate] = useState(false);
+  const [dialogEdit, setDialogEdit] = useState(false);
+
+  // Redux Store
+  const adminData = useSelector((state) => state.allAdminData);
+  const storeAllCourse = useSelector((state) => state.dataCourses.courses);
+  const storeDetailCourse = useSelector((state) => state.dataCourses.detail);
+
+  const isLoading = useSelector((state) => state.dataCourses.loading);
+
+  useEffect(() => {
+    getAllData();
+  }, [dispatch]);
+
+  const getAllData = () => {
+    dispatch(getAllDataAction());
+    dispatch(getAllCoursesAction());
+  };
+
+  const handleDialogCreate = () => setDialogCreate(!dialogCreate);
+  const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
   // New Course
   const handleNewCourse = async () => {
@@ -98,7 +96,6 @@ export const AdminKelolaKelas = () => {
         mentor: newMentor,
         videoURL: newVideoUrl,
         forumURL: newForumUrl,
-        duration: newDuration,
         courseImg: newCourseImg,
         categoryId: Number(newCategoryId),
         promotionId: newPromotionId ? Number(newPromotionId) : null,
@@ -106,12 +103,12 @@ export const AdminKelolaKelas = () => {
     );
 
     if (!newCourse) {
-      setDialogTambah(false);
+      setDialogCreate(false);
     }
 
     if (newCourse) {
       showSuccessToast("Course berhasil tambahkan!");
-      setDialogTambah(false);
+      setDialogCreate(false);
 
       setNewCourseName("");
       setNewPrice("");
@@ -122,63 +119,20 @@ export const AdminKelolaKelas = () => {
       setNewMentor("");
       setNewVideoUrl("");
       setNewForumUrl("");
-      setNewDuration("");
       setNewCourseImg("");
       setNewCategoryId("");
       setNewPromotionId("");
 
-      renderAllState();
+      getAllData();
     }
   };
 
   // Edit Course
-  const [editingCourseId, setEditingCourseId] = useState(null);
-
-  const [updateCourseName, setUpdateCourseName] = useState(
-    storeDetailCourse?.courseName || "",
-  );
-  const [updatePrice, setUpdatePrice] = useState(
-    storeDetailCourse?.price || "",
-  );
-  const [updateLevel, setUpdateLevel] = useState(
-    storeDetailCourse?.level || "",
-  );
-  const [updateAboutCourse, setUpdateAboutCourse] = useState(
-    storeDetailCourse?.aboutCourse || "",
-  );
-  const [updateTargetAudience, setUpdateTargetAudience] = useState(
-    storeDetailCourse?.targetAudience || "",
-  );
-  const [updateLearningMaterial, setUpdateLearningMaterial] = useState(
-    storeDetailCourse?.learningMaterial || "",
-  );
-  const [updateMentor, setUpdateMentor] = useState(
-    storeDetailCourse?.mentor || "",
-  );
-  const [updateVideoUrl, setUpdateVideoUrl] = useState(
-    storeDetailCourse?.videoURL || "",
-  );
-  const [updateForumUrl, setUpdateForumUrl] = useState(
-    storeDetailCourse?.forumURL || "",
-  );
-  const [updateDuration, setUpdateDuration] = useState(
-    storeDetailCourse?.duration || "",
-  );
-  const [updateCourseImg, setUpdateCourseImg] = useState(
-    storeDetailCourse?.courseImg || "",
-  );
-  const [updateCategoryId, setUpdateCategoryId] = useState(
-    storeDetailCourse?.categoryId || "",
-  );
-  const [updatePromotionId, setUpdatePromotionId] = useState(
-    storeDetailCourse?.promotionId || "",
-  );
-
-  // Edit Course
   const handleEditCourse = (courseId) => {
-    const courseToEdit = storeAllCourse.find(
+    const courseToEdit = storeAllCourse.courses.find(
       (course) => course.id === courseId,
     );
+    console.log(courseToEdit);
 
     setEditingCourseId(courseId);
     setUpdateCourseName(courseToEdit.courseName);
@@ -190,7 +144,6 @@ export const AdminKelolaKelas = () => {
     setUpdateMentor(courseToEdit.mentor);
     setUpdateVideoUrl(courseToEdit.videoURL);
     setUpdateForumUrl(courseToEdit.forumURL);
-    setUpdateDuration(courseToEdit.duration);
     setUpdateCourseImg(courseToEdit.courseImg);
     setUpdateCategoryId(courseToEdit.categoryId);
     setUpdatePromotionId(courseToEdit.promotionId);
@@ -212,7 +165,6 @@ export const AdminKelolaKelas = () => {
           mentor: updateMentor,
           videoURL: updateVideoUrl,
           forumURL: updateForumUrl,
-          duration: updateDuration,
           courseImg: updateCourseImg,
           categoryId: updateCategoryId,
           promotionId: updatePromotionId,
@@ -236,12 +188,11 @@ export const AdminKelolaKelas = () => {
       setUpdateMentor("");
       setUpdateVideoUrl("");
       setUpdateForumUrl("");
-      setUpdateDuration("");
       setUpdateCourseImg("");
       setUpdateCategoryId("");
       setUpdatePromotionId("");
 
-      renderAllState(); // Refresh course data
+      getAllData(); // Refresh course data
     }
   };
 
@@ -254,20 +205,9 @@ export const AdminKelolaKelas = () => {
 
       window.scrollTo(0, 0);
 
-      renderAllState();
+      getAllData();
     }
   };
-
-  // Displayed Course
-  const [displayedCourses, setDisplayedCourses] = useState([]);
-
-  useEffect(() => {
-    const coursesToDisplay =
-      storeSearchedCourses?.length > 0 ? storeSearchedCourses : storeAllCourse;
-    setDisplayedCourses(coursesToDisplay);
-  }, [storeSearchedCourses, storeAllCourse]);
-
-  const isLoading = useSelector((state) => state.dataCourses.loading);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -276,7 +216,7 @@ export const AdminKelolaKelas = () => {
   return (
     <div className="flex">
       <div className="w-1/6">
-        <AdminPojok />
+        <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
         <AdminNavbar />
@@ -307,7 +247,7 @@ export const AdminKelolaKelas = () => {
                   <div className="flex w-full items-center space-x-3 md:w-auto">
                     <button
                       className="flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-2 text-white transition-all hover:bg-primary-hover"
-                      onClick={handleDialogTambah}
+                      onClick={handleDialogCreate}
                     >
                       <FiPlusCircle size={30} />
                       <span className="font-semibold">Tambah</span>
@@ -343,55 +283,54 @@ export const AdminKelolaKelas = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {displayedCourses &&
-                      displayedCourses?.map((value, index) => (
-                        <tr
-                          className="border-b dark:border-gray-700"
-                          key={value.id}
+                    {storeAllCourse.courses.map((value, index) => (
+                      <tr
+                        className="border-b dark:border-gray-700"
+                        key={value.id}
+                      >
+                        <th
+                          scope="row"
+                          className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white"
                         >
-                          <th
-                            scope="row"
-                            className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white"
+                          {index + 1}
+                        </th>
+                        <td className="px-4 py-3">
+                          {value.category?.categoryName}
+                        </td>
+                        <td className="px-4 py-3">{value.courseName}</td>
+                        <td className="px-4 py-3">
+                          {value.isPremium ? (
+                            <span className="font-semibold text-primary">
+                              Premium
+                            </span>
+                          ) : (
+                            <span className="font-semibold text-green">
+                              Gratis
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          {value.level.split(" ")[0]}
+                        </td>
+                        <td className="px-4 py-3">Rp {value.price}</td>
+                        <td className="flex gap-1 py-3 text-sm font-semibold text-white">
+                          <button
+                            className="rounded-full bg-primary px-3 py-1"
+                            onClick={() => handleEditCourse(value.id)}
                           >
-                            {index + 1}
-                          </th>
-                          <td className="px-4 py-3">
-                            {value.category?.categoryName}
-                          </td>
-                          <td className="px-4 py-3">{value.courseName}</td>
-                          <td className="px-4 py-3">
-                            {value.isPremium ? (
-                              <span className="font-semibold text-primary">
-                                Premium
-                              </span>
-                            ) : (
-                              <span className="font-semibold text-green">
-                                Gratis
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            {value.level.split(" ")[0]}
-                          </td>
-                          <td className="px-4 py-3">Rp {value.price}</td>
-                          <td className="flex gap-1 py-3 text-sm font-semibold text-white">
-                            <button
-                              className="rounded-full bg-primary px-3 py-1"
-                              onClick={() => handleEditCourse(value.id)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="rounded-full bg-red-400 px-3 py-1"
-                              onClick={() => {
-                                handleDeleteCourse(value.id);
-                              }}
-                            >
-                              Hapus
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                            Edit
+                          </button>
+                          <button
+                            className="rounded-full bg-red-400 px-3 py-1"
+                            onClick={() => {
+                              handleDeleteCourse(value.id);
+                            }}
+                          >
+                            Hapus
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -400,15 +339,15 @@ export const AdminKelolaKelas = () => {
         </section>
       </div>
 
-      {/* Dialog Tambah */}
-      <Dialog open={dialogTambah} handler={handleDialogTambah} size="xxl">
+      {/* Dialog Create */}
+      <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Tambah Kelas</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
-              onClick={handleDialogTambah}
+              onClick={handleDialogCreate}
             />
           </div>
         </DialogHeader>
@@ -516,16 +455,6 @@ export const AdminKelolaKelas = () => {
                 value={newCourseImg}
                 onChange={(e) => setNewCourseImg(e.target.value)}
                 placeholder="Masukkan Link Thumbnail"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Durasi</span>
-              <input
-                type="text"
-                value={newDuration}
-                onChange={(e) => setNewDuration(e.target.value)}
-                placeholder="Masukkan Durasi"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -679,16 +608,6 @@ export const AdminKelolaKelas = () => {
                 value={updateCourseImg}
                 onChange={(e) => setUpdateCourseImg(e.target.value)}
                 placeholder="Masukkan Link Thumbnail"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Durasi</span>
-              <input
-                type="text"
-                value={updateDuration}
-                onChange={(e) => setUpdateDuration(e.target.value)}
-                placeholder="Masukkan Durasi"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>

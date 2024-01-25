@@ -8,7 +8,6 @@ import { IoClose } from "react-icons/io5";
 
 // Component
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
 import { SidebarKelas } from "../../../assets/components/sidebar/SidebarKelas";
 import { Pagination } from "../../../assets/components/pagination/Pagination";

@@ -1,9 +1,9 @@
-import { reduxGetAllPayments } from "../../../../services/admin/payments/getAllPayments";
+import { reduxGetAllPayments } from "../../../services/payments/Payments";
 import {
-  endLoading,
   setPayment,
+  endLoading,
   startLoading,
-} from "../../../reducer/admin/payments/paymentSlice";
+} from "../../reducer/payments/PaymentsSlice";
 
 export const getAllPaymentsAction = () => async (dispatch) => {
   try {
@@ -11,8 +11,8 @@ export const getAllPaymentsAction = () => async (dispatch) => {
     const result = await reduxGetAllPayments();
     dispatch(setPayment(result.data.data.payments));
     return result;
-  } catch (e) {
-    console.error("getAllPaymentsAction", e);
+  } catch (err) {
+    console.error("getAllPaymentsAction", err);
   } finally {
     dispatch(endLoading());
   }

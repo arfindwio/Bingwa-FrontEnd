@@ -177,7 +177,11 @@ export const AkunProfile = () => {
                   placeholder="Bingwa"
                   id="name"
                   onChange={handleInputName}
-                  value={Data.userProfile?.userProfile?.fullName || newFullName}
+                  value={
+                    !newFullName
+                      ? setNewFullName(Data.userProfile?.userProfile?.fullName)
+                      : newFullName
+                  }
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -188,7 +192,7 @@ export const AkunProfile = () => {
                   placeholder="bingwa@gmail.com"
                   id="email"
                   onChange={handleInputEmail}
-                  value={Data.userProfile?.email || email}
+                  value={!email ? setEmail(Data.userProfile?.email) : email}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -200,7 +204,11 @@ export const AkunProfile = () => {
                   id="phone"
                   onChange={handleInputPhone}
                   value={
-                    Data.userProfile?.userProfile?.phoneNumber || newPhoneNumber
+                    !newPhoneNumber
+                      ? setNewPhoneNumber(
+                          Data.userProfile?.userProfile?.phoneNumber,
+                        )
+                      : newPhoneNumber
                   }
                 />
               </div>
@@ -212,7 +220,9 @@ export const AkunProfile = () => {
                   placeholder="Jakarta"
                   id="city"
                   onChange={handleInputCity}
-                  value={Data.userProfile?.city || newCity}
+                  value={
+                    !newCity ? setNewCity(Data.userProfile?.city) : newCity
+                  }
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -223,7 +233,11 @@ export const AkunProfile = () => {
                   placeholder="Indonesia"
                   id="country"
                   onChange={handleInputCountry}
-                  value={Data.userProfile?.userProfile?.country || newCountry}
+                  value={
+                    !newCountry
+                      ? setNewCountry(Data.userProfile?.userProfile?.country)
+                      : newCountry
+                  }
                 />
               </div>
               <button
