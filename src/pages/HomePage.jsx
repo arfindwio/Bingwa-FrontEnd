@@ -19,7 +19,7 @@ import { SliderCardCategories } from "../assets/components/slider/SliderCardCate
 import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 
 // Redux Actions
-import { getAllCategoriesAction } from "../redux/action/categories/getAllCategoriesAction";
+import { getAllCategoriesAction } from "../redux/action/categories/CategoriesAction";
 import { getAllCoursesAction } from "../redux/action/courses/getAllCoursesAction";
 import { getAllLessonsAction } from "../redux/action/lessons/getAllLessons";
 import { getAllEnrollmentsAction } from "../redux/action/enrollments/getAllEnrollmentsAction";
