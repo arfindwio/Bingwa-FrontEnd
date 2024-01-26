@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  lessonsCourseId: [],
   lessons: [],
+  lessonsCourseId: [],
   loading: false,
 };
 
@@ -10,11 +10,28 @@ const LessonsSlice = createSlice({
   name: "lessons",
   initialState,
   reducers: {
+    setLessons: (state, action) => {
+      state.lessons = action.payload;
+    },
     setLessonsByCourseId: (state, action) => {
       state.lessonsCourseId = action.payload;
     },
-    setLessons: (state, action) => {
-      state.lessons = action.payload;
+    addLesson: (state, action) => {
+      state.lessons.push(action.payload);
+    },
+    updateLesson: (state, action) => {
+      const { id, updatedData } = action.payload;
+      const index = state.lessons.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        state.lessons[index] = {
+          ...state.lessons[index],
+          ...updatedData,
+        };
+      }
+    },
+    deleteLesson: (state, action) => {
+      const idToDelete = action.payload;
+      state.lessons = state.lessons.filter((item) => item.id !== idToDelete);
     },
     startLoading: (state) => {
       state.loading = true;
@@ -26,7 +43,14 @@ const LessonsSlice = createSlice({
   },
 });
 
-export const { setLessonsByCourseId, setLessons, startLoading, endLoading } =
-  LessonsSlice.actions;
+export const {
+  setLessonsByCourseId,
+  setLessons,
+  addLesson,
+  updateLesson,
+  deleteLesson,
+  startLoading,
+  endLoading,
+} = LessonsSlice.actions;
 
 export default LessonsSlice.reducer;

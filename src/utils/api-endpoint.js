@@ -60,11 +60,12 @@ export const API_ENDPOINT = {
   REVIEWS: "/reviews",
 
   // PROMOTIONS
-  GET_ALL_PROMOTIONS: "/promotions", // [GET] Get All Promotions
-  CREATE_PROMOTION: "/promotions", // [POST] Create Promotions
-  GET_PROMOTION: "/promotions/{promotionId}", // [GET] Get Promotions by ID
-  UPDATE_PROMOTION: "/promotions/{promotionId}", // [PUT] Update Promotions by ID
-  DELETE_PROMOTION: "/promotions/{promotionId}", // [DELETE] Delete Promotions by ID
+  // /promotions // [GET] Get All Promotions
+  // /promotions // [POST] Create Promotions
+  // /promotions/{promotionId} // [GET] Get Promotions by ID
+  // /promotions/{promotionId} // [PUT] Update Promotions by ID
+  // /promotions/{promotionId} // [DELETE] Delete Promotions by ID
+  PROMOTIONS: "/promotions",
 
   // NOTIFICATIONS
   GET_ALL_NOTIFICATIONS: "/notifications", // [GET] Get All Notification by Authentication

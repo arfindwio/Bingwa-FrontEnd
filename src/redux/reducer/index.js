@@ -17,6 +17,7 @@ import LessonsSlice from "./lessons/LessonsSlice";
 import PaymentSlice from "./payments/PaymentsSlice";
 import getNotificationsSlice from "./notifications/getNotificationsSlice";
 import TrackingsSlice from "./trackings/TrackingsSlice";
+import PromotionsSlice from "./promotions/PromotionsSlice";
 
 export default combineReducers({
   // User
@@ -37,14 +38,17 @@ export default combineReducers({
   // Chapters
   chapters: ChaptersSlice,
 
+  // Lessons
+  lessons: LessonsSlice,
+
+  // Promotions
+  promotions: PromotionsSlice,
+
   // Enrollments
   enrollments: EnrollmentsSlice,
 
   // Reviews
   reviews: ReviewsSlice,
-
-  // Lessons
-  lessons: LessonsSlice,
 
   // Payment
   payment: PaymentSlice,

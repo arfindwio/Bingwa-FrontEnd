@@ -21,8 +21,10 @@ import { DetailKelas } from "../pages/user/kelas/DetailKelas";
 import { DetailEnroll } from "../pages/user/kelas/DetailEnroll";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
 import { AdminManageCategory } from "../pages/admin/auth/AdminManageCategory";
-import { AdminKelolaKelas } from "../pages/admin/auth/AdminKelolaKelas";
+import { AdminManageCourse } from "../pages/admin/auth/AdminManageCourse";
 import { AdminManageChapter } from "../pages/admin/auth/AdminManageChapter";
+import { AdminManageLesson } from "../pages/admin/auth/AdminLesson";
+import { AdminManagePromotion } from "../pages/admin/auth/AdminManagePromotion";
 import { Pembayaran } from "../pages/user/payment/Pembayaran";
 import { PembayaranSukses } from "../pages/user/payment/PembayaranSukses";
 import { ForgetPass } from "../pages/user/auth/ForgetPass";
@@ -92,7 +94,7 @@ export const RouteList = () => {
           path="/admin/kelola-kelas"
           element={
             <AdminTokenProtected>
-              <AdminKelolaKelas />
+              <AdminManageCourse />
             </AdminTokenProtected>
           }
         />
@@ -108,7 +110,7 @@ export const RouteList = () => {
           path="/admin/manage-lesson"
           element={
             <AdminTokenProtected>
-              <AdminManageCategory />
+              <AdminManageLesson />
             </AdminTokenProtected>
           }
         />
@@ -116,7 +118,7 @@ export const RouteList = () => {
           path="/admin/manage-promotion"
           element={
             <AdminTokenProtected>
-              <AdminManageCategory />
+              <AdminManagePromotion />
             </AdminTokenProtected>
           }
         />

@@ -20,7 +20,7 @@ export const getAllChaptersAction = () => async (dispatch) => {
     dispatch(setChapters(result.data.data.chapters));
     return true;
   } catch (err) {
-    console.error("reduxGetUser", err);
+    console.error("getAllChaptersAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -35,7 +35,7 @@ export const postChapterAction = (input) => async (dispatch) => {
     reduxPostChapter(input);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    console.error("postChapterAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -50,7 +50,7 @@ export const putChapterAction = (input, chapterId) => (dispatch) => {
     reduxPutChapter(input, chapterId);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    console.error("putChapterAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -65,7 +65,7 @@ export const deleteChapterAction = (chapterId) => (dispatch) => {
     reduxDeleteChapter(chapterId);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    console.error("deleteChapterAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }

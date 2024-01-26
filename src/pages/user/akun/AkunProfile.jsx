@@ -122,9 +122,10 @@ export const AkunProfile = () => {
                     image
                       ? URL.createObjectURL(image)
                       : storeUserProfile.userProfile?.userProfile
-                          ?.profilePicture || ""
+                          ?.profilePicture ||
+                        "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706262091020"
                   }
-                  alt=""
+                  alt="profile"
                   className="h-full w-full cursor-pointer rounded-full object-cover"
                 />
                 {storeUserProfile?.userProfile?.userProfile?.profilePicture ? (
