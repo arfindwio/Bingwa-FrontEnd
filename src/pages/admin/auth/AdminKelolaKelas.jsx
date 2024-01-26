@@ -23,11 +23,13 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
-import { deleteCourseAction } from "../../../redux/action/admin/course/deleteCourseAction";
-import { editCourseAction } from "../../../redux/action/admin/course/editCourseAction";
 import { getAllDataAction } from "../../../redux/action/admin/data/getAllDataAction";
-import { createCourseAction } from "../../../redux/action/admin/course/createCourseAction";
+import {
+  getAllCoursesAction,
+  postCourseAction,
+  putCourseAction,
+  deleteCourseAction,
+} from "../../../redux/action/courses/CoursesAction";
 
 export const AdminKelolaKelas = () => {
   const dispatch = useDispatch();
@@ -66,8 +68,9 @@ export const AdminKelolaKelas = () => {
 
   // Redux Store
   const adminData = useSelector((state) => state.allAdminData);
-  const storeAllCourse = useSelector((state) => state.dataCourses.courses);
-  const storeDetailCourse = useSelector((state) => state.dataCourses.detail);
+  const storeAllCourse = useSelector(
+    (state) => state.dataCourses.courses.courses,
+  );
 
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
@@ -86,7 +89,7 @@ export const AdminKelolaKelas = () => {
   // New Course
   const handleNewCourse = async () => {
     const newCourse = await dispatch(
-      createCourseAction({
+      postCourseAction({
         courseName: newCourseName,
         price: Number(newPrice),
         level: newLevel,
@@ -104,6 +107,7 @@ export const AdminKelolaKelas = () => {
 
     if (!newCourse) {
       setDialogCreate(false);
+      dispatch(getAllCoursesAction());
     }
 
     if (newCourse) {
@@ -123,30 +127,37 @@ export const AdminKelolaKelas = () => {
       setNewCategoryId("");
       setNewPromotionId("");
 
-      getAllData();
+      dispatch(getAllCoursesAction());
     }
   };
 
   // Edit Course
   const handleEditCourse = (courseId) => {
-    const courseToEdit = storeAllCourse.courses.find(
+    const courseToEdit = storeAllCourse.find(
       (course) => course.id === courseId,
     );
-    console.log(courseToEdit);
 
     setEditingCourseId(courseId);
-    setUpdateCourseName(courseToEdit.courseName);
-    setUpdatePrice(courseToEdit.price);
-    setUpdateLevel(courseToEdit.level);
-    setUpdateAboutCourse(courseToEdit.aboutCourse);
-    setUpdateTargetAudience(courseToEdit.targetAudience);
-    setUpdateLearningMaterial(courseToEdit.learningMaterial);
-    setUpdateMentor(courseToEdit.mentor);
-    setUpdateVideoUrl(courseToEdit.videoURL);
-    setUpdateForumUrl(courseToEdit.forumURL);
-    setUpdateCourseImg(courseToEdit.courseImg);
-    setUpdateCategoryId(courseToEdit.categoryId);
-    setUpdatePromotionId(courseToEdit.promotionId);
+    setUpdateCourseName(courseToEdit ? courseToEdit.courseName : null || null);
+    setUpdatePrice(courseToEdit ? courseToEdit.price : null || null);
+    setUpdateLevel(courseToEdit ? courseToEdit.level : null || null);
+    setUpdateAboutCourse(
+      courseToEdit ? courseToEdit.aboutCourse : null || null,
+    );
+    setUpdateTargetAudience(
+      courseToEdit ? courseToEdit.targetAudience : null || null,
+    );
+    setUpdateLearningMaterial(
+      courseToEdit ? courseToEdit.learningMaterial : null || null,
+    );
+    setUpdateMentor(courseToEdit ? courseToEdit.mentor : null || null);
+    setUpdateVideoUrl(courseToEdit ? courseToEdit.videoURL : null || null);
+    setUpdateForumUrl(courseToEdit ? courseToEdit.forumURL : null || null);
+    setUpdateCourseImg(courseToEdit ? courseToEdit.courseImg : null || null);
+    setUpdateCategoryId(courseToEdit ? courseToEdit.categoryId : null || null);
+    setUpdatePromotionId(
+      courseToEdit.promotionId ? courseToEdit.promotionId : null || null,
+    );
 
     setDialogEdit(true);
   };
@@ -154,7 +165,7 @@ export const AdminKelolaKelas = () => {
   // Update Course
   const handleUpdateCourse = async () => {
     const updatedCourse = await dispatch(
-      editCourseAction(
+      putCourseAction(
         {
           courseName: updateCourseName,
           price: Number(updatePrice),
@@ -172,6 +183,11 @@ export const AdminKelolaKelas = () => {
         editingCourseId,
       ),
     );
+
+    if (!updatedCourse) {
+      setDialogEdit(false);
+      dispatch(getAllCoursesAction());
+    }
 
     if (updatedCourse) {
       showSuccessToast("Course berhasil diupdate!");
@@ -192,7 +208,7 @@ export const AdminKelolaKelas = () => {
       setUpdateCategoryId("");
       setUpdatePromotionId("");
 
-      getAllData(); // Refresh course data
+      dispatch(getAllCoursesAction());
     }
   };
 
@@ -200,12 +216,16 @@ export const AdminKelolaKelas = () => {
   const handleDeleteCourse = async (courseId) => {
     const deleteCourse = await dispatch(deleteCourseAction(courseId));
 
+    if (!deleteCourse) {
+      dispatch(getAllCoursesAction());
+    }
+
     if (deleteCourse) {
       showSuccessToast("Course berhasil dihapus");
 
       window.scrollTo(0, 0);
 
-      getAllData();
+      dispatch(getAllCoursesAction());
     }
   };
 
@@ -283,10 +303,10 @@ export const AdminKelolaKelas = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storeAllCourse.courses.map((value, index) => (
+                    {storeAllCourse?.map((value, index) => (
                       <tr
                         className="border-b dark:border-gray-700"
-                        key={value.id}
+                        key={value?.id}
                       >
                         <th
                           scope="row"
@@ -299,7 +319,7 @@ export const AdminKelolaKelas = () => {
                         </td>
                         <td className="px-4 py-3">{value.courseName}</td>
                         <td className="px-4 py-3">
-                          {value.isPremium ? (
+                          {value?.isPremium ? (
                             <span className="font-semibold text-primary">
                               Premium
                             </span>
@@ -310,7 +330,7 @@ export const AdminKelolaKelas = () => {
                           )}
                         </td>
                         <td className="px-4 py-3">
-                          {value.level.split(" ")[0]}
+                          {value?.level.split(" ")[0]}
                         </td>
                         <td className="px-4 py-3">Rp {value.price}</td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
@@ -323,7 +343,7 @@ export const AdminKelolaKelas = () => {
                           <button
                             className="rounded-full bg-red-400 px-3 py-1"
                             onClick={() => {
-                              handleDeleteCourse(value.id);
+                              handleDeleteCourse(value?.id);
                             }}
                           >
                             Hapus

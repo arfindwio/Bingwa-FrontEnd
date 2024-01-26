@@ -3,7 +3,7 @@ import {
   endLoading,
   setEnroll,
   startLoading,
-} from "../../reducer/courses/courseSlice";
+} from "../../reducer/courses/CoursesSlice";
 
 export const getCoursesEnrollAction = (courseId) => async (dispatch) => {
   try {

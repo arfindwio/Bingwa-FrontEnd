@@ -20,7 +20,9 @@ import { AkunPassword } from "../pages/user/akun/AkunPassword";
 import { DetailKelas } from "../pages/user/kelas/DetailKelas";
 import { DetailEnroll } from "../pages/user/kelas/DetailEnroll";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
+import { AdminManageCategory } from "../pages/admin/auth/AdminManageCategory";
 import { AdminKelolaKelas } from "../pages/admin/auth/AdminKelolaKelas";
+import { AdminManageChapter } from "../pages/admin/auth/AdminManageChapter";
 import { Pembayaran } from "../pages/user/payment/Pembayaran";
 import { PembayaranSukses } from "../pages/user/payment/PembayaranSukses";
 import { ForgetPass } from "../pages/user/auth/ForgetPass";
@@ -79,10 +81,42 @@ export const RouteList = () => {
           }
         />
         <Route
+          path="/admin/manage-category"
+          element={
+            <AdminTokenProtected>
+              <AdminManageCategory />
+            </AdminTokenProtected>
+          }
+        />
+        <Route
           path="/admin/kelola-kelas"
           element={
             <AdminTokenProtected>
               <AdminKelolaKelas />
+            </AdminTokenProtected>
+          }
+        />
+        <Route
+          path="/admin/manage-chapter"
+          element={
+            <AdminTokenProtected>
+              <AdminManageChapter />
+            </AdminTokenProtected>
+          }
+        />
+        <Route
+          path="/admin/manage-lesson"
+          element={
+            <AdminTokenProtected>
+              <AdminManageCategory />
+            </AdminTokenProtected>
+          }
+        />
+        <Route
+          path="/admin/manage-promotion"
+          element={
+            <AdminTokenProtected>
+              <AdminManageCategory />
             </AdminTokenProtected>
           }
         />

@@ -9,7 +9,8 @@ import ChangePassSlice from "./akun/ChangePassSlice";
 import getAllCategoriesSlice from "./categories/getAllCategoriesSlice";
 import adminLoginSlice from "./admin/auth/adminLoginSlice";
 import allDataSlice from "./admin/data/allDataSlice";
-import CourseSlice from "./courses/courseSlice";
+import CoursesSlice from "./courses/CoursesSlice";
+import ChaptersSlice from "./chapters/ChaptersSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
 import ReviewsSlice from "./reviews/reviewsSlice";
 import LessonsSlice from "./lessons/LessonsSlice";
@@ -31,7 +32,10 @@ export default combineReducers({
   dataCategories: getAllCategoriesSlice,
 
   // Courses
-  dataCourses: CourseSlice,
+  dataCourses: CoursesSlice,
+
+  // Chapters
+  chapters: ChaptersSlice,
 
   // Enrollments
   enrollments: EnrollmentsSlice,

@@ -22,6 +22,7 @@ export const API_ENDPOINT = {
   GET_ALL_CATEGORIES: "/categories", // [GET] Get All Categories
   UPDATE_CATEGORY: "/categories/{categoryId}", // [PUT] Update Category by ID
   DELETE_CATEGORY: "/categories/{categoryId}", // [DELETE] Delete Category by ID
+  CATEGORIES: "/categories",
 
   // COURSES
   GET_ALL_COURSES: "/courses", // [GET] Get All Courses
@@ -31,11 +32,12 @@ export const API_ENDPOINT = {
   DELETE_COURSE: "/courses", // [DELETE] Delete Course by ID
 
   // CHAPTERS
-  CREATE_CHAPTER: "/chapters", // [POST] Create Chapter
-  GET_ALL_CHAPTERS: "/chapters", // [GET] Get All Chapter
-  GET_CHAPTER: "/chapters/{chapterId}", // [GET] Get Chapter by ID
-  UPDATE_CHAPTER: "/chapters/{chapterId}", // [PUT] Update Chapter by ID
-  DELETE_CHAPTER: "/chapters/{chapterId}", // [DELETE] Delete Chapter by ID
+  // "/chapters", // [POST] Create Chapter
+  // "/chapters", // [GET] Get All Chapter
+  // "/chapters/{chapterId}", // [GET] Get Chapter by ID
+  // "/chapters/{chapterId}", // [PUT] Update Chapter by ID
+  // "/chapters/{chapterId}", // [DELETE] Delete Chapter by ID
+  CHAPTERS: "/chapters",
 
   // LESSONS
   // /lessons [GET] Get All Lessons

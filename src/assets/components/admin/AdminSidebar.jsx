@@ -1,17 +1,14 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 // Images
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
 import { logoutAdminAction } from "../../../redux/action/admin/auth/logoutAdminAction";
-import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
 export const AdminSidebar = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const currentPath = location.pathname;
@@ -38,6 +35,18 @@ export const AdminSidebar = () => {
       </div>
       <div
         className={`w-full ${
+          currentPath === "/admin/manage-category"
+            ? "bg-blue"
+            : "hover:bg-blue-hover hover:bg-opacity-50"
+        } cursor-pointer px-5 py-3 font-sans text-xl text-white `}
+        onClick={() => {
+          navigate("/admin/manage-category");
+        }}
+      >
+        Manage Category
+      </div>
+      <div
+        className={`w-full ${
           currentPath === "/admin/kelola-kelas"
             ? "bg-blue"
             : "hover:bg-blue-hover hover:bg-opacity-50"
@@ -46,7 +55,19 @@ export const AdminSidebar = () => {
           navigate("/admin/kelola-kelas");
         }}
       >
-        Kelola Kelas
+        Manage Course
+      </div>
+      <div
+        className={`w-full ${
+          currentPath === "/admin/manage-chapter"
+            ? "bg-blue"
+            : "hover:bg-blue-hover hover:bg-opacity-50"
+        } cursor-pointer px-5 py-3 font-sans text-xl text-white `}
+        onClick={() => {
+          navigate("/admin/manage-chapter");
+        }}
+      >
+        Manage Chapter
       </div>
       <div
         className={

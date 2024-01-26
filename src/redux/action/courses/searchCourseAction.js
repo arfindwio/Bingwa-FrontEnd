@@ -3,7 +3,7 @@ import {
   endLoading,
   setSearchedCourses,
   startLoading,
-} from "../../reducer/courses/courseSlice";
+} from "../../reducer/courses/CoursesSlice";
 
 export const searchCourseAction = (searchInput) => async (dispatch) => {
   try {
