@@ -43,7 +43,7 @@ export const AdminSidebar = () => {
           navigate("/admin/manage-category");
         }}
       >
-        Manage Category
+        Manage Categories
       </div>
       <div
         className={`w-full ${
@@ -55,7 +55,7 @@ export const AdminSidebar = () => {
           navigate("/admin/kelola-kelas");
         }}
       >
-        Manage Course
+        Manage Courses
       </div>
       <div
         className={`w-full ${
@@ -67,7 +67,31 @@ export const AdminSidebar = () => {
           navigate("/admin/manage-chapter");
         }}
       >
-        Manage Chapter
+        Manage Chapters
+      </div>
+      <div
+        className={`w-full ${
+          currentPath === "/admin/manage-lesson"
+            ? "bg-blue"
+            : "hover:bg-blue-hover hover:bg-opacity-50"
+        } cursor-pointer px-5 py-3 font-sans text-xl text-white `}
+        onClick={() => {
+          navigate("/admin/manage-lesson");
+        }}
+      >
+        Manage Lessons
+      </div>
+      <div
+        className={`w-full ${
+          currentPath === "/admin/manage-promotion"
+            ? "bg-blue"
+            : "hover:bg-blue-hover hover:bg-opacity-50"
+        } cursor-pointer px-5 py-3 font-sans text-xl text-white `}
+        onClick={() => {
+          navigate("/admin/manage-promotion");
+        }}
+      >
+        Manage Promotions
       </div>
       <div
         className={

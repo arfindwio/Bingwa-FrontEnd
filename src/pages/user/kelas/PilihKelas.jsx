@@ -13,7 +13,7 @@ import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
 import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
-import { getAllLessonsAction } from "../../../redux/action/lessons/getAllLessons";
+import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 
 // Cookies

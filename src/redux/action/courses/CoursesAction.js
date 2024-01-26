@@ -50,7 +50,7 @@ export const putCourseAction = (input, courseId) => async (dispatch) => {
     await reduxPutCourse(input, courseId);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    console.error("putCourseAction", err);
   } finally {
     dispatch(endLoading());
   }
@@ -62,7 +62,7 @@ export const deleteCourseAction = (courseId) => async (dispatch) => {
     await reduxDeleteCourse(courseId);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    console.error("deleteCourseAction", err);
   } finally {
     dispatch(endLoading());
   }

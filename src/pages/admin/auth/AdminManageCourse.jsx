@@ -30,8 +30,9 @@ import {
   putCourseAction,
   deleteCourseAction,
 } from "../../../redux/action/courses/CoursesAction";
+import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
 
-export const AdminKelolaKelas = () => {
+export const AdminManageCourse = () => {
   const dispatch = useDispatch();
 
   const [newCourseName, setNewCourseName] = useState("");
@@ -71,6 +72,9 @@ export const AdminKelolaKelas = () => {
   const storeAllCourse = useSelector(
     (state) => state.dataCourses.courses.courses,
   );
+  const storeCategories = useSelector(
+    (state) => state.dataCategories.categories,
+  );
 
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
@@ -81,6 +85,7 @@ export const AdminKelolaKelas = () => {
   const getAllData = () => {
     dispatch(getAllDataAction());
     dispatch(getAllCoursesAction());
+    dispatch(getAllCategoriesAction());
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
@@ -363,7 +368,7 @@ export const AdminKelolaKelas = () => {
       <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Tambah Kelas</h1>
+            <h1 className="font-semibold">Create Course</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -375,17 +380,17 @@ export const AdminKelolaKelas = () => {
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Nama Kelas</span>
+              <span className="text-slate-700">Course Name</span>
               <input
                 type="text"
                 value={newCourseName}
                 onChange={(e) => setNewCourseName(e.target.value)}
-                placeholder="Masukkan Nama Kelas"
+                placeholder="Input Course Name"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col ">
-              <span className="text-slate-700 ">Harga</span>
+              <span className="text-slate-700 ">Price</span>
               <input
                 type="number"
                 value={newPrice}
@@ -400,37 +405,37 @@ export const AdminKelolaKelas = () => {
                 type="text"
                 value={newLevel}
                 onChange={(e) => setNewLevel(e.target.value)}
-                placeholder="Masukkan Level"
+                placeholder="Input Level Course"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Tentang Course</span>
+              <span className="text-slate-700">About Course</span>
               <input
                 type="text"
                 value={newAboutCourse}
                 onChange={(e) => setNewAboutCourse(e.target.value)}
-                placeholder="Masukkan Tentang Course"
+                placeholder="Input About Course"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Target User</span>
+              <span className="text-slate-700">Target Audience</span>
               <input
                 type="text"
                 value={newTargetAudience}
                 onChange={(e) => setNewTargetAudience(e.target.value)}
-                placeholder="MAsukkan Target User"
+                placeholder="Input Target Audience"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Materi Pembelajaran</span>
+              <span className="text-slate-700">Learning Material</span>
               <input
                 type="text"
                 value={newLearningMaterial}
                 onChange={(e) => setNewLearningMaterial(e.target.value)}
-                placeholder="Masukkan Materi Pembelajaran"
+                placeholder="Input Learning Material"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -444,49 +449,60 @@ export const AdminKelolaKelas = () => {
                 type="text"
                 value={newMentor}
                 onChange={(e) => setNewMentor(e.target.value)}
-                placeholder="Masukkan Mentor"
+                placeholder="Input Mentor"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Link Video</span>
+              <span className="text-slate-700">Video URL</span>
               <input
                 type="text"
                 value={newVideoUrl}
                 onChange={(e) => setNewVideoUrl(e.target.value)}
-                placeholder="Masukkan Link Video"
+                placeholder="Input Video URL"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Link Telegram</span>
+              <span className="text-slate-700">Telegram Group URL</span>
               <input
                 type="text"
                 value={newForumUrl}
                 onChange={(e) => setNewForumUrl(e.target.value)}
-                placeholder="Masukkan Link Telegram"
+                placeholder="Input Telegram Group URL"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Link Thumbnail</span>
+              <span className="text-slate-700">Thumbnail Video URL</span>
               <input
                 type="text"
                 value={newCourseImg}
                 onChange={(e) => setNewCourseImg(e.target.value)}
-                placeholder="Masukkan Link Thumbnail"
+                placeholder="Input Thumbnail Video URL"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Kategori ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Category</span>
+              <select
                 value={newCategoryId}
                 onChange={(e) => setNewCategoryId(e.target.value)}
-                placeholder="Masukkan Kategori ID"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                <option value="" hidden>
+                  Choose Category
+                </option>
+                {storeCategories.map((value) => (
+                  <option
+                    key={value.id}
+                    value={value.id}
+                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                  >
+                    {value.categoryName}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex flex-col">
               <span className="text-slate-700">Promotion ID</span>
