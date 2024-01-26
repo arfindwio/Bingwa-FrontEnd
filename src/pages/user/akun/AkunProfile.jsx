@@ -6,7 +6,6 @@ import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 
 // Components
-// import { NavbarAkun } from "../../../assets/components/navbar/NavbarAkun";
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
@@ -22,10 +21,8 @@ import { GoArrowLeft } from "react-icons/go";
 import { IoImageOutline } from "react-icons/io5";
 
 // Redux Action
-import {
-  getUserProfileAction,
-  putUpdateProfile,
-} from "../../../redux/action/auth/getUserProfileAction";
+import { putUpdateProfile } from "../../../redux/action/auth/getUserProfileAction";
+import { getUserAuthenticate } from "../../../redux/action/auth/getUserAuthenticate";
 
 export const AkunProfile = () => {
   const dispatch = useDispatch();
@@ -33,61 +30,29 @@ export const AkunProfile = () => {
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
-  const Data = useSelector((state) => state.authLogin);
+  const storeUserProfile = useSelector((state) => state.users.userAuthenticate);
 
   const [image, setImage] = useState(null);
-  const [newFullName, setNewFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [newPhoneNumber, setNewPhoneNumber] = useState("");
-  const [newCity, setNewCity] = useState("");
-  const [newCountry, setNewCountry] = useState("");
+  const [newFullName, setNewFullName] = useState(
+    storeUserProfile?.userProfile?.fullName || "",
+  );
+  const [newPhoneNumber, setNewPhoneNumber] = useState(
+    storeUserProfile?.userProfile?.phoneNumber || "",
+  );
+  const [newCity, setNewCity] = useState(
+    storeUserProfile?.userProfile?.city || "",
+  );
+  const [newCountry, setNewCountry] = useState(
+    storeUserProfile?.userProfile?.newCountry || "",
+  );
+  const [email, setEmail] = useState(storeUserProfile?.email || "");
 
   useEffect(() => {
     getAllData();
   }, [dispatch]);
 
   const getAllData = () => {
-    dispatch(getUserProfileAction());
-  };
-
-  const handleInputName = (e) => {
-    if (e) {
-      if (e.target.id === "name") {
-        setNewFullName(e.target.value);
-      }
-    }
-  };
-
-  const handleInputEmail = (e) => {
-    if (e) {
-      if (e.target.id === "email") {
-        setEmail(e.target.value);
-      }
-    }
-  };
-
-  const handleInputPhone = (e) => {
-    if (e) {
-      if (e.target.id === "phone") {
-        setNewPhoneNumber(e.target.value);
-      }
-    }
-  };
-
-  const handleInputCity = (e) => {
-    if (e) {
-      if (e.target.id === "city") {
-        setNewCity(e.target.value);
-      }
-    }
-  };
-
-  const handleInputCountry = (e) => {
-    if (e) {
-      if (e.target.id === "country") {
-        setNewCountry(e.target.value);
-      }
-    }
+    dispatch(getUserAuthenticate());
   };
 
   const handleImageUpload = (e) => {
@@ -156,12 +121,13 @@ export const AkunProfile = () => {
                   src={
                     image
                       ? URL.createObjectURL(image)
-                      : Data.userProfile?.userProfile?.profilePicture || ""
+                      : storeUserProfile.userProfile?.userProfile
+                          ?.profilePicture || ""
                   }
                   alt=""
                   className="h-full w-full cursor-pointer rounded-full object-cover"
                 />
-                {Data?.userProfile?.userProfile?.profilePicture ? (
+                {storeUserProfile?.userProfile?.userProfile?.profilePicture ? (
                   <></>
                 ) : (
                   <div className="absolute bottom-0 right-0 rounded-full bg-slate-100 p-1 text-primary">
@@ -176,12 +142,8 @@ export const AkunProfile = () => {
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
                   placeholder="Bingwa"
                   id="name"
-                  onChange={handleInputName}
-                  value={
-                    !newFullName
-                      ? setNewFullName(Data.userProfile?.userProfile?.fullName)
-                      : newFullName
-                  }
+                  onChange={(e) => setNewFullName(e.target.value)}
+                  value={newFullName}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -191,8 +153,8 @@ export const AkunProfile = () => {
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
                   placeholder="bingwa@gmail.com"
                   id="email"
-                  onChange={handleInputEmail}
-                  value={!email ? setEmail(Data.userProfile?.email) : email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -202,14 +164,8 @@ export const AkunProfile = () => {
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
                   placeholder="08123456789"
                   id="phone"
-                  onChange={handleInputPhone}
-                  value={
-                    !newPhoneNumber
-                      ? setNewPhoneNumber(
-                          Data.userProfile?.userProfile?.phoneNumber,
-                        )
-                      : newPhoneNumber
-                  }
+                  onChange={(e) => setNewPhoneNumber(e.target.value)}
+                  value={newPhoneNumber}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -219,10 +175,8 @@ export const AkunProfile = () => {
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
                   placeholder="Jakarta"
                   id="city"
-                  onChange={handleInputCity}
-                  value={
-                    !newCity ? setNewCity(Data.userProfile?.city) : newCity
-                  }
+                  onChange={(e) => setNewCity(e.target.value)}
+                  value={newCity}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -232,12 +186,8 @@ export const AkunProfile = () => {
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
                   placeholder="Indonesia"
                   id="country"
-                  onChange={handleInputCountry}
-                  value={
-                    !newCountry
-                      ? setNewCountry(Data.userProfile?.userProfile?.country)
-                      : newCountry
-                  }
+                  onChange={(e) => setNewCountry(e.target.value)}
+                  value={newCountry}
                 />
               </div>
               <button

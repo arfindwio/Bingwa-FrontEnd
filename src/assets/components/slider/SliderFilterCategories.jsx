@@ -7,7 +7,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import "./SliderFilterCategories.css";
 
 // Redux Actions
-import { getAllCategoriesAction } from "../../../redux/action/categories/getAllCategoriesAction";
+import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
 
 export const SliderFilterCategories = ({
   selectedCategory,

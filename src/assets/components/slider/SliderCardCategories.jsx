@@ -10,7 +10,7 @@ import "./SliderCardCategories.css";
 import { CardKategory } from "../cards/CardKategory";
 
 // Redux Action
-import { getAllCategoriesAction } from "../../../redux/action/categories/getAllCategoriesAction";
+import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
 
 export const SliderCardCategories = () => {
   const dispatch = useDispatch();

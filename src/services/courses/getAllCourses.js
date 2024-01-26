@@ -2,8 +2,8 @@ import { API_ENDPOINT } from "../../utils/api-endpoint";
 import http from "../../utils/http";
 
 // Get All Course
-export const reduxGetAllCoursesByQuery = async (getAllInput) => {
-  return await http.get(`${API_ENDPOINT.GET_ALL_COURSES}${getAllInput}`);
+export const reduxGetAllCoursesByQuery = async (fullQuery) => {
+  return await http.get(`${API_ENDPOINT.GET_ALL_COURSES}${fullQuery}`);
 };
 
 export const reduxGetAllCourses = async () => {

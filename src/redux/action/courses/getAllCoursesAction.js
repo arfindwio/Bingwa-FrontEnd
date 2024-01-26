@@ -6,7 +6,7 @@ import {
   getAllCourses,
   startLoading,
   endLoading,
-} from "../../reducer/courses/courseSlice";
+} from "../../reducer/courses/CoursesSlice";
 
 export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
   try {
