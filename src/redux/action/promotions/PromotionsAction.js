@@ -1,26 +1,27 @@
 import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
-  reduxGetAllCategories,
-  reduxPostCategory,
-  reduxPutCategory,
-  reduxDeleteCategory,
-} from "../../../services/categories/Categories";
+  reduxGetAllPromotions,
+  reduxPostPromotion,
+  reduxPutPromotions,
+  reduxDeletePromotion,
+} from "../../../services/promotions/Promotions";
 
 import {
-  setCategories,
+  setPromotions,
   startLoading,
   endLoading,
-} from "../../reducer/categories/getAllCategoriesSlice";
+} from "../../reducer/promotions/PromotionsSlice";
 
-export const getAllCategoriesAction = () => async (dispatch) => {
+export const getAllPromotionsAction = () => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllCategories();
-    dispatch(setCategories(result.data.data.categories));
+    const result = await reduxGetAllPromotions();
+    dispatch(setPromotions(result.data.data));
+
     return true;
   } catch (err) {
-    console.error("getAllCategoriesAction", err);
+    console.error("getAllPromotionssAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -29,13 +30,13 @@ export const getAllCategoriesAction = () => async (dispatch) => {
   }
 };
 
-export const postCategoryAction = (input) => async (dispatch) => {
+export const postPromotionAction = (input) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxPostCategory(input);
+    reduxPostPromotion(input);
     return true;
   } catch (err) {
-    console.error("postCategoryAction", err);
+    console.error("postPromotionAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -44,13 +45,13 @@ export const postCategoryAction = (input) => async (dispatch) => {
   }
 };
 
-export const putCategoryAction = (input, categoryId) => (dispatch) => {
+export const putPromotionAction = (input, PromotionsId) => (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxPutCategory(input, categoryId);
+    reduxPutPromotions(input, PromotionsId);
     return true;
   } catch (err) {
-    console.error("putCategoryAction", err);
+    console.error("putPromotionAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -59,13 +60,13 @@ export const putCategoryAction = (input, categoryId) => (dispatch) => {
   }
 };
 
-export const deleteCategoryAction = (categoryId) => (dispatch) => {
+export const deletePromotionAction = (PromotionsId) => (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxDeleteCategory(categoryId);
+    reduxDeletePromotion(PromotionsId);
     return true;
   } catch (err) {
-    console.error("deleteCategoryAction", err);
+    console.error("deletePromotionAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }

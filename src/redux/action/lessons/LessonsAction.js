@@ -1,26 +1,27 @@
 import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
-  reduxGetAllCategories,
-  reduxPostCategory,
-  reduxPutCategory,
-  reduxDeleteCategory,
-} from "../../../services/categories/Categories";
+  reduxGetAllLessons,
+  reduxPostLesson,
+  reduxPutLesson,
+  reduxDeleteLesson,
+} from "../../../services/lessons/Lessons";
 
 import {
-  setCategories,
+  setLessons,
   startLoading,
   endLoading,
-} from "../../reducer/categories/getAllCategoriesSlice";
+} from "../../reducer/lessons/LessonsSlice";
 
-export const getAllCategoriesAction = () => async (dispatch) => {
+export const getAllLessonsAction = () => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllCategories();
-    dispatch(setCategories(result.data.data.categories));
+    const result = await reduxGetAllLessons();
+    dispatch(setLessons(result.data.data));
+
     return true;
   } catch (err) {
-    console.error("getAllCategoriesAction", err);
+    console.error("getAllLessonsAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -29,13 +30,13 @@ export const getAllCategoriesAction = () => async (dispatch) => {
   }
 };
 
-export const postCategoryAction = (input) => async (dispatch) => {
+export const postLessonAction = (input) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxPostCategory(input);
+    reduxPostLesson(input);
     return true;
   } catch (err) {
-    console.error("postCategoryAction", err);
+    console.error("postLessonAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -44,13 +45,13 @@ export const postCategoryAction = (input) => async (dispatch) => {
   }
 };
 
-export const putCategoryAction = (input, categoryId) => (dispatch) => {
+export const putLessonAction = (input, lessonId) => (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxPutCategory(input, categoryId);
+    reduxPutLesson(input, lessonId);
     return true;
   } catch (err) {
-    console.error("putCategoryAction", err);
+    console.error("putLessonAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
@@ -59,13 +60,13 @@ export const putCategoryAction = (input, categoryId) => (dispatch) => {
   }
 };
 
-export const deleteCategoryAction = (categoryId) => (dispatch) => {
+export const deleteLessonAction = (lessonId) => (dispatch) => {
   try {
     dispatch(startLoading());
-    reduxDeleteCategory(categoryId);
+    reduxDeleteLesson(lessonId);
     return true;
   } catch (err) {
-    console.error("deleteCategoryAction", err);
+    console.error("deleteLessonAction", err);
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }

@@ -21,7 +21,7 @@ import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 // Redux Actions
 import { getAllCategoriesAction } from "../redux/action/categories/CategoriesAction";
 import { getAllCoursesAction } from "../redux/action/courses/getAllCoursesAction";
-import { getAllLessonsAction } from "../redux/action/lessons/getAllLessons";
+import { getAllLessonsAction } from "../redux/action/lessons/LessonsAction";
 import { getAllEnrollmentsAction } from "../redux/action/enrollments/getAllEnrollmentsAction";
 
 // Cookies
