@@ -30,6 +30,7 @@ import {
   putLessonAction,
   deleteLessonAction,
 } from "../../../redux/action/lessons/LessonsAction";
+import { getAllChaptersAction } from "../../../redux/action/chapters/ChaptersAction";
 
 export const AdminManageLesson = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export const AdminManageLesson = () => {
   const [updateLessonName, setUpdateLessonName] = useState("");
   const [updateVideoURL, setUpdateVideoURL] = useState("");
   const [updateChapterId, setUpdateChapterId] = useState("");
+  const [updateLessonDetail, setUpdateLessonDetail] = useState("");
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
@@ -50,6 +52,7 @@ export const AdminManageLesson = () => {
   // Redux Store
   const adminData = useSelector((state) => state.allAdminData);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
+  const storeChapters = useSelector((state) => state.chapters.chapters);
   const isLoading = useSelector((state) => state.lessons.loading);
 
   useEffect(() => {
@@ -59,6 +62,11 @@ export const AdminManageLesson = () => {
   const getAllData = () => {
     dispatch(getAllDataAction());
     dispatch(getAllLessonsAction());
+    dispatch(getAllChaptersAction());
+  };
+
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllLessonsAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
@@ -99,6 +107,7 @@ export const AdminManageLesson = () => {
     setUpdateLessonName(lessonToEdit.lessonName);
     setUpdateVideoURL(lessonToEdit.videoURL);
     setUpdateChapterId(lessonToEdit.chapterId);
+    setUpdateLessonDetail(lessonToEdit);
 
     setDialogEdit(true);
   };
@@ -160,7 +169,7 @@ export const AdminManageLesson = () => {
         <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar />
+        <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
           <AdminCard title={"Active Users"} count={adminData.countUser} />
@@ -207,10 +216,10 @@ export const AdminManageLesson = () => {
                         Lesson Name
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        VideoURL
+                        Video URL
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        ChapterId
+                        Chapter Name
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Action
@@ -231,7 +240,7 @@ export const AdminManageLesson = () => {
                         </th>
                         <td className="px-4 py-3">{value?.lessonName}</td>
                         <td className="px-4 py-3">{value?.videoURL}</td>
-                        <td className="px-4 py-3">{value?.chapterId}</td>
+                        <td className="px-4 py-3">{value?.chapter.name}</td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
@@ -296,14 +305,33 @@ export const AdminManageLesson = () => {
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Chapter ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Chapter</span>
+              <select
                 value={newChapterId}
                 onChange={(e) => setNewChapterId(e.target.value)}
-                placeholder="Input Chapter ID"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                {storeChapters.length === 0 ? (
+                  <option value="" hidden>
+                    No chapter available
+                  </option>
+                ) : (
+                  <>
+                    <option value="" hidden>
+                      Choose Chapter
+                    </option>
+                    {storeChapters.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.name}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </div>
         </DialogBody>
@@ -357,14 +385,25 @@ export const AdminManageLesson = () => {
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Chapter ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Chapter</span>
+              <select
                 value={updateChapterId}
                 onChange={(e) => setUpdateChapterId(e.target.value)}
-                placeholder="Input Chapter ID"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                <option value={updateLessonDetail?.chapterId} hidden>
+                  {updateLessonDetail?.chapter?.name}
+                </option>
+                {storeChapters.map((value) => (
+                  <option
+                    key={value.id}
+                    value={value.id}
+                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                  >
+                    {value?.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </DialogBody>

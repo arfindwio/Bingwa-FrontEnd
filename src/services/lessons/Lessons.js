@@ -9,6 +9,10 @@ export const reduxGetAllLessons = async () => {
   return await http.get(`${API_ENDPOINT.LESSONS}`);
 };
 
+export const reduxGetAllLessonsByQuery = async (fullQuery) => {
+  return await http.get(`${API_ENDPOINT.LESSONS}${fullQuery}`);
+};
+
 export const reduxPostLesson = async (input) => {
   return await http.post(`${API_ENDPOINT.LESSONS}`, input);
 };

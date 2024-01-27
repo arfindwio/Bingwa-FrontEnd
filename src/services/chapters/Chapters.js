@@ -5,6 +5,10 @@ export const reduxGetAllChapters = async () => {
   return await http.get(API_ENDPOINT.CHAPTERS);
 };
 
+export const reduxGetAllChaptersByQuery = async (fullQuery) => {
+  return await http.get(`${API_ENDPOINT.CHAPTERS}${fullQuery}`);
+};
+
 export const reduxPostChapter = async (input) => {
   return await http.post(`${API_ENDPOINT.CHAPTERS}`, input);
 };

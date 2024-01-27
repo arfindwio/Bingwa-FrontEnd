@@ -30,6 +30,7 @@ import {
   putChapterAction,
   deleteChapterAction,
 } from "../../../redux/action/chapters/ChaptersAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
 export const AdminManageChapter = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export const AdminManageChapter = () => {
   const [updateChapterName, setUpdateChapterName] = useState("");
   const [updateDuration, setUpdateDuration] = useState("");
   const [updateCourseId, setUpdateCourseId] = useState("");
+  const [updateChapterDetail, setUpdateChapterDetail] = useState("");
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
@@ -50,6 +52,9 @@ export const AdminManageChapter = () => {
   // Redux Store
   const adminData = useSelector((state) => state.allAdminData);
   const storeChapters = useSelector((state) => state.chapters.chapters);
+  const storeCourses = useSelector(
+    (state) => state.dataCourses.courses.courses,
+  );
   const isLoading = useSelector((state) => state.chapters.loading);
 
   useEffect(() => {
@@ -59,6 +64,11 @@ export const AdminManageChapter = () => {
   const getAllData = () => {
     dispatch(getAllDataAction());
     dispatch(getAllChaptersAction());
+    dispatch(getAllCoursesAction());
+  };
+
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllChaptersAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
@@ -101,6 +111,7 @@ export const AdminManageChapter = () => {
     setUpdateChapterName(chapterToEdit.name);
     setUpdateDuration(chapterToEdit.duration);
     setUpdateCourseId(chapterToEdit.courseId);
+    setUpdateChapterDetail(chapterToEdit);
 
     setDialogEdit(true);
   };
@@ -164,7 +175,7 @@ export const AdminManageChapter = () => {
         <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar />
+        <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
           <AdminCard title={"Active Users"} count={adminData.countUser} />
@@ -195,7 +206,7 @@ export const AdminManageChapter = () => {
                       onClick={handleDialogCreate}
                     >
                       <FiPlusCircle size={30} />
-                      <span className="font-semibold">Tambah</span>
+                      <span className="font-semibold">Create</span>
                     </button>
                   </div>
                 </div>
@@ -214,7 +225,7 @@ export const AdminManageChapter = () => {
                         Duration
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        CourseId
+                        Course Name
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Action
@@ -234,8 +245,10 @@ export const AdminManageChapter = () => {
                           {index + 1}
                         </th>
                         <td className="px-4 py-3">{value?.name}</td>
-                        <td className="px-4 py-3">{value?.duration}</td>
-                        <td className="px-4 py-3">{value?.courseId}</td>
+                        <td className="px-4 py-3">{value?.duration} Minute</td>
+                        <td className="px-4 py-3">
+                          {value?.course.courseName}
+                        </td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
@@ -266,7 +279,7 @@ export const AdminManageChapter = () => {
       <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Tambah Kelas</h1>
+            <h1 className="font-semibold">Create Chapter</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -288,14 +301,33 @@ export const AdminManageChapter = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Course ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Course</span>
+              <select
                 value={newCourseId}
                 onChange={(e) => setNewCourseId(e.target.value)}
-                placeholder="Input Chapter Image"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                {storeCourses.length === 0 ? (
+                  <option value="" hidden>
+                    No course available
+                  </option>
+                ) : (
+                  <>
+                    <option value="" hidden>
+                      Choose Course
+                    </option>
+                    {storeCourses.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.courseName}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </div>
           <div className="flex-1 space-y-2">
@@ -349,14 +381,25 @@ export const AdminManageChapter = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Course ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Course</span>
+              <select
                 value={updateCourseId}
                 onChange={(e) => setUpdateCourseId(e.target.value)}
-                placeholder="Input Course ID"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                <option value={updateChapterDetail?.courseId} hidden>
+                  {updateChapterDetail?.course?.courseName}
+                </option>
+                {storeCourses.map((value) => (
+                  <option
+                    key={value.id}
+                    value={value.id}
+                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                  >
+                    {value?.courseName}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="flex-1 space-y-2">

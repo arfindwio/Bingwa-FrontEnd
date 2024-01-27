@@ -15,9 +15,9 @@ export const AdminSidebar = () => {
 
   return (
     <div className="fixed flex h-screen w-1/6 flex-col items-center bg-primary py-6">
-      <div className="mb-5 flex">
+      <div className="mb-5 flex items-center justify-center">
         <img src={BrandLogo} alt="Brand Logo" className="w-[2.5rem]" />
-        <span className="ms-4 text-center font-sans text-3xl text-white">
+        <span className="ms-2 text-center font-sans text-3xl text-white">
           Bingwa
         </span>
       </div>

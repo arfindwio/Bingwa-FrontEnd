@@ -2,6 +2,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
   reduxGetAllCategories,
+  reduxGetAllCategoriesByQuery,
   reduxPostCategory,
   reduxPutCategory,
   reduxDeleteCategory,
@@ -13,10 +14,16 @@ import {
   endLoading,
 } from "../../reducer/categories/getAllCategoriesSlice";
 
-export const getAllCategoriesAction = () => async (dispatch) => {
+export const getAllCategoriesAction = (fullQuery) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllCategories();
+
+    let getAllInput = `?${fullQuery}`;
+
+    const result = await (fullQuery
+      ? reduxGetAllCategoriesByQuery(getAllInput)
+      : reduxGetAllCategories());
+
     dispatch(setCategories(result.data.data.categories));
     return true;
   } catch (err) {

@@ -2,6 +2,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
   reduxGetAllChapters,
+  reduxGetAllChaptersByQuery,
   reduxPostChapter,
   reduxPutChapter,
   reduxDeleteChapter,
@@ -13,10 +14,16 @@ import {
   endLoading,
 } from "../../reducer/chapters/ChaptersSlice";
 
-export const getAllChaptersAction = () => async (dispatch) => {
+export const getAllChaptersAction = (fullQuery) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllChapters();
+
+    let getAllInput = `?${fullQuery}`;
+
+    const result = await (fullQuery
+      ? reduxGetAllChaptersByQuery(getAllInput)
+      : reduxGetAllChapters());
+
     dispatch(setChapters(result.data.data.chapters));
     return true;
   } catch (err) {
