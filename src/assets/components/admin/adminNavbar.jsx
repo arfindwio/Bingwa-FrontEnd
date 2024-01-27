@@ -1,26 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 
 // Icons
 import { BiSearchAlt } from "react-icons/bi";
 
-// Redux Actions
-import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
-
-export const AdminNavbar = () => {
-  const dispatch = useDispatch();
-
+export const AdminNavbar = ({ onSearch }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearchCourse = (searchInput) => {
-    const search = dispatch(searchCourseAction(searchInput));
-
-    if (search) {
-      setSearchInput("");
-      // navigate(`/admin/kelola-kelas?search=${searchInput}`);
-    }
+    setSearchInput(searchInput);
+    onSearch(`search=${searchInput}`);
   };
-
   return (
     <div className="flex w-full items-center justify-between bg-secondary px-14 py-4">
       <div className="flex w-full justify-between">

@@ -31,6 +31,7 @@ import {
   deleteCourseAction,
 } from "../../../redux/action/courses/CoursesAction";
 import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
+import { getAllPromotionsAction } from "../../../redux/action/promotions/PromotionsAction";
 
 export const AdminManageCourse = () => {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ export const AdminManageCourse = () => {
   const [updateCourseImg, setUpdateCourseImg] = useState("");
   const [updateCategoryId, setUpdateCategoryId] = useState("");
   const [updatePromotionId, setUpdatePromotionId] = useState("");
+  const [updateCourseDetail, setUpdateCourseDetail] = useState({});
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
@@ -75,6 +77,9 @@ export const AdminManageCourse = () => {
   const storeCategories = useSelector(
     (state) => state.dataCategories.categories,
   );
+  const storePromotions = useSelector(
+    (state) => state.promotions.promotions.promotions,
+  );
 
   const isLoading = useSelector((state) => state.dataCourses.loading);
 
@@ -86,6 +91,11 @@ export const AdminManageCourse = () => {
     dispatch(getAllDataAction());
     dispatch(getAllCoursesAction());
     dispatch(getAllCategoriesAction());
+    dispatch(getAllPromotionsAction());
+  };
+
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllCoursesAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
@@ -163,6 +173,7 @@ export const AdminManageCourse = () => {
     setUpdatePromotionId(
       courseToEdit.promotionId ? courseToEdit.promotionId : null || null,
     );
+    setUpdateCourseDetail(courseToEdit);
 
     setDialogEdit(true);
   };
@@ -244,7 +255,7 @@ export const AdminManageCourse = () => {
         <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar />
+        <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
           <AdminCard title={"Active Users"} count={adminData.countUser} />
@@ -266,7 +277,7 @@ export const AdminManageCourse = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Kelola Kelas</h2>
+                  <h2 className="text-xl font-semibold">Manage Course</h2>
                 </div>
                 <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
                   <div className="flex w-full items-center space-x-3 md:w-auto">
@@ -275,7 +286,7 @@ export const AdminManageCourse = () => {
                       onClick={handleDialogCreate}
                     >
                       <FiPlusCircle size={30} />
-                      <span className="font-semibold">Tambah</span>
+                      <span className="font-semibold">Create</span>
                     </button>
                   </div>
                 </div>
@@ -288,22 +299,22 @@ export const AdminManageCourse = () => {
                         No
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Kategori
+                        Category Name
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Nama Kelas
+                        Course Name
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Tipe Kelas
+                        Course Type
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Level
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Harga Kelas
+                        Price Course
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Aksi
+                        Action
                       </th>
                     </tr>
                   </thead>
@@ -330,7 +341,7 @@ export const AdminManageCourse = () => {
                             </span>
                           ) : (
                             <span className="font-semibold text-green">
-                              Gratis
+                              Free
                             </span>
                           )}
                         </td>
@@ -351,7 +362,7 @@ export const AdminManageCourse = () => {
                               handleDeleteCourse(value?.id);
                             }}
                           >
-                            Hapus
+                            Delete
                           </button>
                         </td>
                       </tr>
@@ -490,29 +501,56 @@ export const AdminManageCourse = () => {
                 onChange={(e) => setNewCategoryId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
-                <option value="" hidden>
-                  Choose Category
-                </option>
-                {storeCategories.map((value) => (
-                  <option
-                    key={value.id}
-                    value={value.id}
-                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
-                  >
-                    {value.categoryName}
+                {storeAllCourse.length === 0 ? (
+                  <option value="" hidden>
+                    No category available
                   </option>
-                ))}
+                ) : (
+                  <>
+                    <option value="" hidden>
+                      Choose Category
+                    </option>
+                    {storeCategories.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.categoryName}
+                      </option>
+                    ))}
+                  </>
+                )}
               </select>
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Promotion ID</span>
-              <input
-                type="number"
+              <span className="text-slate-700">Promotion</span>
+              <select
                 value={newPromotionId}
                 onChange={(e) => setNewPromotionId(e.target.value)}
-                placeholder="Masukkan Promotion ID"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                {storePromotions.length === 0 ? (
+                  <option value="" hidden>
+                    No promotion available
+                  </option>
+                ) : (
+                  <>
+                    <option value="" hidden>
+                      Choose Promotion
+                    </option>
+                    {storePromotions.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.discount * 100}%
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </div>
         </DialogBody>
@@ -530,7 +568,7 @@ export const AdminManageCourse = () => {
       <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Edit Kelas</h1>
+            <h1 className="font-semibold">Edit Course</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -648,24 +686,54 @@ export const AdminManageCourse = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Kategori ID</span>
-              <input
-                type="number"
-                value={updateCategoryId}
-                onChange={(e) => setUpdateCategoryId(e.target.value)}
-                placeholder="Masukkan Kategori ID"
+              <span className="text-slate-700">Category</span>
+              <select
+                value={newCategoryId}
+                onChange={(e) => setNewCategoryId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                <option value={updateCourseDetail?.categoryId} hidden>
+                  {updateCourseDetail?.category?.categoryName}
+                </option>
+                {storeCategories.map((value) => (
+                  <option
+                    key={value.id}
+                    value={value.id}
+                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                  >
+                    {value?.categoryName}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Promotion ID</span>
-              <input
-                type="number"
-                value={updatePromotionId}
-                onChange={(e) => setUpdatePromotionId(e.target.value)}
-                placeholder="Masukkan Promotion ID"
+              <span className="text-slate-700">Promotion</span>
+              <select
+                value={newPromotionId}
+                onChange={(e) => setNewPromotionId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
+              >
+                {storePromotions.length === 0 ? (
+                  <option value="" hidden>
+                    No promotion available
+                  </option>
+                ) : (
+                  <>
+                    <option value={updateCourseDetail?.promotionId} hidden>
+                      {updateCourseDetail?.promotion?.discount * 100}%
+                    </option>
+                    {storePromotions.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.discount * 100}%
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </div>
         </DialogBody>
