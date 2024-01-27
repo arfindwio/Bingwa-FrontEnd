@@ -23,7 +23,7 @@ import { AdminDashboard } from "../pages/admin/AdminDashboard";
 import { AdminManageCategory } from "../pages/admin/auth/AdminManageCategory";
 import { AdminManageCourse } from "../pages/admin/auth/AdminManageCourse";
 import { AdminManageChapter } from "../pages/admin/auth/AdminManageChapter";
-import { AdminManageLesson } from "../pages/admin/auth/AdminLesson";
+import { AdminManageLesson } from "../pages/admin/auth/AdminManageLesson";
 import { AdminManagePromotion } from "../pages/admin/auth/AdminManagePromotion";
 import { Pembayaran } from "../pages/user/payment/Pembayaran";
 import { PembayaranSukses } from "../pages/user/payment/PembayaranSukses";

@@ -5,6 +5,10 @@ export const reduxGetAllPromotions = async () => {
   return await http.get(`${API_ENDPOINT.PROMOTIONS}`);
 };
 
+export const reduxGetAllPromotionsByQuery = async (fullQuery) => {
+  return await http.get(`${API_ENDPOINT.PROMOTIONS}${fullQuery}`);
+};
+
 export const reduxPostPromotion = async (input) => {
   return await http.post(`${API_ENDPOINT.PROMOTIONS}`, input);
 };

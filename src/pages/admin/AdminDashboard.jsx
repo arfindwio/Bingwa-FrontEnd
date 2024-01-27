@@ -17,7 +17,6 @@ export const AdminDashboard = () => {
   // Redux Store
   const adminData = useSelector((state) => state.allAdminData);
   const storePayments = useSelector((state) => state.payment.payments);
-  console.log(storePayments);
   const isLoading = useSelector((state) => state.payment.loading);
 
   useEffect(() => {
@@ -27,6 +26,10 @@ export const AdminDashboard = () => {
   const getAllData = () => {
     dispatch(getAllDataAction());
     dispatch(getAllPaymentsAction());
+  };
+
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllPaymentsAction(formatSearch));
   };
 
   if (isLoading) {
@@ -40,7 +43,7 @@ export const AdminDashboard = () => {
       </div>
       <div className="flex w-5/6 flex-col pb-20">
         <div>
-          <AdminNavbar />
+          <AdminNavbar onSearch={handleSearch} />
         </div>
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">

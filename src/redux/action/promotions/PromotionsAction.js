@@ -2,6 +2,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
   reduxGetAllPromotions,
+  reduxGetAllPromotionsByQuery,
   reduxPostPromotion,
   reduxPutPromotions,
   reduxDeletePromotion,
@@ -13,10 +14,14 @@ import {
   endLoading,
 } from "../../reducer/promotions/PromotionsSlice";
 
-export const getAllPromotionsAction = () => async (dispatch) => {
+export const getAllPromotionsAction = (fullQuery) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllPromotions();
+    let getAllInput = `?${fullQuery}`;
+
+    const result = await (fullQuery
+      ? reduxGetAllPromotionsByQuery(getAllInput)
+      : reduxGetAllPromotions());
     dispatch(setPromotions(result.data.data));
 
     return true;

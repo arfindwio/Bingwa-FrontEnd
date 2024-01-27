@@ -63,6 +63,10 @@ export const AdminManagePromotion = () => {
     dispatch(getAllPromotionsAction());
   };
 
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllPromotionsAction(formatSearch));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
@@ -195,7 +199,7 @@ export const AdminManagePromotion = () => {
         <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar />
+        <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
           <AdminCard title={"Active Users"} count={adminData.countUser} />

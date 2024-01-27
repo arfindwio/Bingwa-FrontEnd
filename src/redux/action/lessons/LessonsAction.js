@@ -2,6 +2,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 
 import {
   reduxGetAllLessons,
+  reduxGetAllLessonsByQuery,
   reduxPostLesson,
   reduxPutLesson,
   reduxDeleteLesson,
@@ -13,10 +14,14 @@ import {
   endLoading,
 } from "../../reducer/lessons/LessonsSlice";
 
-export const getAllLessonsAction = () => async (dispatch) => {
+export const getAllLessonsAction = (fullQuery) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxGetAllLessons();
+    let getAllInput = `?${fullQuery}`;
+
+    const result = await (fullQuery
+      ? reduxGetAllLessonsByQuery(getAllInput)
+      : reduxGetAllLessons());
     dispatch(setLessons(result.data.data));
 
     return true;

@@ -77,14 +77,7 @@ export const AllCourse = () => {
       : queryParams;
 
     dispatch(getAllCoursesAction(fullQuery));
-  }, [
-    categoryFilter,
-    filters,
-    selectedCategories,
-    selectedLevels,
-    searchInput,
-    dispatch,
-  ]);
+  }, [categoryFilter, selectedCategories, searchInput, dispatch]);
 
   const getAllData = () => {
     dispatch(getAllCoursesAction());

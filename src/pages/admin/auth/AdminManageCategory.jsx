@@ -61,6 +61,10 @@ export const AdminManageCategory = () => {
     dispatch(getAllCategoriesAction());
   };
 
+  const handleSearch = (formatSearch) => {
+    dispatch(getAllCategoriesAction(formatSearch));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
@@ -159,7 +163,7 @@ export const AdminManageCategory = () => {
         <AdminSidebar />
       </div>
       <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar />
+        <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
           <AdminCard title={"Active Users"} count={adminData.countUser} />
@@ -181,7 +185,7 @@ export const AdminManageCategory = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Kelola Kelas</h2>
+                  <h2 className="text-xl font-semibold">Manage Category</h2>
                 </div>
                 <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
                   <div className="flex w-full items-center space-x-3 md:w-auto">
@@ -190,7 +194,7 @@ export const AdminManageCategory = () => {
                       onClick={handleDialogCreate}
                     >
                       <FiPlusCircle size={30} />
-                      <span className="font-semibold">Tambah</span>
+                      <span className="font-semibold">Create</span>
                     </button>
                   </div>
                 </div>

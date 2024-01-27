@@ -7,6 +7,10 @@ export const reduxGetAllCategories = async () => {
   return await http.get(API_ENDPOINT.GET_ALL_CATEGORIES);
 };
 
+export const reduxGetAllCategoriesByQuery = async (fullQuery) => {
+  return await http.get(`${API_ENDPOINT.GET_ALL_CATEGORIES}${fullQuery}`);
+};
+
 export const reduxPostCategory = async (input) => {
   return await http.post(`${API_ENDPOINT.CATEGORIES}`, input);
 };
