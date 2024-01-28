@@ -1,13 +1,26 @@
-import { reduxPostPaymentMidtrans } from "../../../services/payment/CreatePaymentMidtrans";
-import { setPaymentMidtrans } from "../../reducer/payment/PaymentSlice";
+import { showErrorToast } from "../../../helper/ToastHelper";
+
+import { reduxPostPaymentMidtrans } from "../../../services/payments/Payments";
+import {
+  setPaymentMidtrans,
+  startLoading,
+  endLoading,
+} from "../../reducer/payments/PaymentSlice";
 
 export const postPaymentMidtransAction = (courseId) => async (dispatch) => {
-  await reduxPostPaymentMidtrans(courseId)
-    .then((result) => {
-      dispatch(setPaymentMidtrans(result.data.data.payments));
-      return result;
-    })
-    .catch((err) => {
-      console.error("reduxPayment", err);
-    });
+  try {
+    dispatch(startLoading());
+
+    const response = await reduxPostPaymentMidtrans(courseId);
+    dispatch(setPaymentMidtrans(response.data.data));
+
+    return true;
+  } catch (err) {
+    console.error("getAllPromotionssAction", err);
+    if (err.response.status === 404) {
+      showErrorToast(err.response.data.message);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };

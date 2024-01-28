@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 // Components
-import { NavbarPembayaran } from "../../../assets/components/navbar/NavbarPembayaran";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { CardPembayaran } from "../../../assets/components/cards/CardPembayaran";
 import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
 
@@ -81,34 +81,31 @@ export const Pembayaran = () => {
 
   return (
     <>
-      <NavbarPembayaran />
+      <NavbarKelas />
 
       {/* First Container */}
-      <div className="mt-[5rem] h-[13rem] px-14 shadow-lg md:h-[12rem] md:px-60 lg:h-[10rem] lg:px-80">
-        {/* Button Back */}
-        <div className="relative flex items-center gap-1 pt-5 text-lg font-bold">
-          <GoArrowLeft
-            size={30}
-            className="absolute -inset-x-10 cursor-pointer md:-inset-x-14 lg:-inset-x-10"
-            onClick={() => {
-              navigate(window.history.back());
-            }}
-          />
-          Kembali
-        </div>
-
-        <div className="py-6">
-          <div className="items-center rounded-xl bg-red-500 py-4 text-center text-xl text-white">
-            <div className="font-semibold">
-              Selesaikan Pembayaran sampai 31 Desember 2023 23:59
-            </div>
+      <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-52 lg:py-4">
+        <div className="items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base text-white md:text-xl">
+          <div className="font-semibold">
+            Selesaikan Pembayaran sampai 31 Desember 2023 23:59
           </div>
         </div>
       </div>
 
-      <div className="justify-center gap-10 px-[1rem] py-10 md:px-2 lg:flex lg:px-[3rem]">
+      <div className="relative mt-10 flex items-center px-28 text-lg font-bold">
+        <GoArrowLeft
+          size={30}
+          className="absolute cursor-pointer "
+          onClick={() => {
+            navigate(window.history.back());
+          }}
+        />
+        <p className="pl-10">Back</p>
+      </div>
+
+      <div className="justify-center gap-10 px-[1rem] py-10 md:px-2 lg:flex lg:px-28">
         {/* Payment Method */}
-        <div className="flex flex-col gap-1 lg:w-[40%]">
+        <div className="flex flex-col gap-1 lg:w-[60%]">
           <div className="flex flex-col gap-2 pb-10 text-center">
             <div
               className={`flex cursor-pointer items-center rounded-xl bg-primary py-4 text-xl text-white ${
@@ -151,7 +148,7 @@ export const Pembayaran = () => {
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 shadow-lg focus:outline-none md:w-auto lg:w-[30%]">
+        <div className="flex w-full flex-col gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 shadow-lg focus:outline-none md:w-auto lg:w-[40%]">
           <div className="flex flex-col items-center gap-4 text-2xl font-bold">
             Pembayaran Kelas
           </div>

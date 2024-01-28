@@ -12,7 +12,7 @@ import { GoArrowLeft } from "react-icons/go";
 import {
   getResendOtp,
   getVerifyOtpAction,
-} from "../../../redux/action/auth/getVerifyOtpAction";
+} from "../../../redux/action/users/auth/getVerifyOtpAction";
 
 // Helper
 import { showSuccessToast } from "../../../helper/ToastHelper";

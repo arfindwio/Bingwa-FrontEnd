@@ -23,7 +23,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllDataAction } from "../../../redux/action/admin/data/getAllDataAction";
+import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
 import {
   getAllChaptersAction,
   postChapterAction,
@@ -50,21 +50,25 @@ export const AdminManageChapter = () => {
   const [dialogEdit, setDialogEdit] = useState(false);
 
   // Redux Store
-  const adminData = useSelector((state) => state.allAdminData);
+  const storeDataCount = useSelector((state) => state);
   const storeChapters = useSelector((state) => state.chapters.chapters);
   const storeCourses = useSelector(
     (state) => state.dataCourses.courses.courses,
   );
   const isLoading = useSelector((state) => state.chapters.loading);
 
+  const countPremiumCourse = storeDataCount.dataCourses.courses.courses.filter(
+    (course) => course.isPremium === true,
+  );
+
   useEffect(() => {
     getAllData();
   }, [dispatch]);
 
   const getAllData = () => {
-    dispatch(getAllDataAction());
-    dispatch(getAllChaptersAction());
+    dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
+    dispatch(getAllChaptersAction());
   };
 
   const handleSearch = (formatSearch) => {
@@ -178,15 +182,18 @@ export const AdminManageChapter = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={adminData.countUser} />
+          <AdminCard
+            title={"Active Users"}
+            count={storeDataCount.users.users.length}
+          />
           <AdminCard
             title={"Active Class"}
-            count={adminData.allCourse}
+            count={storeDataCount.dataCourses.courses.courses.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={adminData.coursePremium}
+            count={countPremiumCourse}
             cardColor={"bg-primary"}
           />
         </div>

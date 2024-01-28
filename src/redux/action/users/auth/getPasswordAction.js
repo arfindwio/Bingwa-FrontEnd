@@ -1,14 +1,12 @@
-import { showErrorToast } from "../../../helper/ToastHelper";
-import {
-  reduxOtpUser,
-  reduxResendOtpUser,
-} from "../../../services/user/auth/Otp";
-import { setResend, setVerify } from "../../reducer/auth/otpSlice";
+import { showErrorToast } from "../../../../helper/ToastHelper";
+import { reduxForgetPass } from "../../../../services/user/auth/ForgetPass";
+import { reduxUpdatePass } from "../../../../services/user/auth/UpdatePass";
+import { setForget, setUpdate } from "../../../reducer/auth/passwordSlice";
 
-export const getVerifyOtpAction = (email) => async (dispatch) => {
-  return reduxOtpUser(email)
+export const getForgetPassAction = (email) => async (dispatch) => {
+  return reduxForgetPass(email)
     .then((result) => {
-      dispatch(setVerify(result.data.data));
+      dispatch(setForget(result.data.data));
       return true;
     })
     .catch((err) => {
@@ -22,11 +20,11 @@ export const getVerifyOtpAction = (email) => async (dispatch) => {
     });
 };
 
-export const getResendOtp = (email) => async (dispatch) => {
-  return reduxResendOtpUser(email)
+export const getUpdatePass = (input, token) => async (dispatch) => {
+  reduxUpdatePass(input, token)
     .then((result) => {
-      dispatch(setResend(result.data.data));
-      return true;
+      dispatch(setUpdate(result.data.data));
+      return result;
     })
     .catch((err) => {
       if (err.response) {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { getForgetPassAction } from "../../../redux/action/auth/getPasswordAction";
+import { getForgetPassAction } from "../../../redux/action/users/auth/getPasswordAction";
 
 // Helper
 import { showSuccessToast } from "../../../helper/ToastHelper";
