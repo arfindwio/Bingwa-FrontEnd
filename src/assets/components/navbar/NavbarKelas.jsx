@@ -23,7 +23,7 @@ import {
 } from "@material-tailwind/react";
 
 // Redux Actionss
-import { logoutUserAction } from "../../../redux/action/auth/logoutUserAction";
+import { logoutUserAction } from "../../../redux/action/users/auth/logoutUserAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
 // Cookie

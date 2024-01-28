@@ -11,7 +11,7 @@ import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
 
 // Redux Actions
-import { loginUserAction } from "../../../redux/action/auth/loginUserAction";
+import { loginUserAction } from "../../../redux/action/users/auth/loginUserAction";
 
 // Helper
 import {

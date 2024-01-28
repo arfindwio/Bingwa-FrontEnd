@@ -17,7 +17,7 @@ export const PembayaranSukses = () => {
     <>
       <NavbarPembayaran />
 
-      <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-40 lg:py-4">
+      <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-52 lg:py-4">
         <div className="items-center rounded-xl bg-green px-2 py-2 text-center text-base text-white md:text-xl">
           <div className="font-semibold">
             Terimakasih atas pembayaran transaksi

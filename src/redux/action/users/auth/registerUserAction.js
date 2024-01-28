@@ -1,6 +1,6 @@
-import { setToken } from "../../reducer/auth/loginSlice";
-import { reduxRegisterUser } from "../../../services/user/auth/RegisterUser";
-import { showErrorToast } from "../../../helper/ToastHelper";
+import { setToken } from "../../../reducer/auth/loginSlice";
+import { reduxRegisterUser } from "../../../../services/user/auth/RegisterUser";
+import { showErrorToast } from "../../../../helper/ToastHelper";
 
 export const registerUserAction = (input) => async (dispatch) => {
   return reduxRegisterUser(input)

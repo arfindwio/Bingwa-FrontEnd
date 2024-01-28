@@ -9,7 +9,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 // Redux Action
-import { getUserAuthenticate } from "../../../redux/action/auth/getUserAuthenticate";
+import { getUserAuthenticateAction } from "../../../redux/action/users/UsersAction";
 
 function AdminTokenProtected({ children }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function AdminTokenProtected({ children }) {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   useEffect(() => {
-    dispatch(getUserAuthenticate());
+    dispatch(getUserAuthenticateAction());
   }, [dispatch]);
 
   if (!token) {

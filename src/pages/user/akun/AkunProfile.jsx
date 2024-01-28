@@ -21,8 +21,8 @@ import { GoArrowLeft } from "react-icons/go";
 import { IoImageOutline } from "react-icons/io5";
 
 // Redux Action
-import { putUpdateProfile } from "../../../redux/action/auth/getUserProfileAction";
-import { getUserAuthenticate } from "../../../redux/action/auth/getUserAuthenticate";
+import { putUpdateProfile } from "../../../redux/action/users/auth/getUserProfileAction";
+import { getUserAuthenticateAction } from "../../../redux/action/users/UsersAction";
 
 export const AkunProfile = () => {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export const AkunProfile = () => {
   }, [dispatch]);
 
   const getAllData = () => {
-    dispatch(getUserAuthenticate());
+    dispatch(getUserAuthenticateAction());
   };
 
   const handleImageUpload = (e) => {

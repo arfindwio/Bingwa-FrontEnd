@@ -12,7 +12,7 @@ import { FaUser } from "react-icons/fa";
 import BrandLogo from "../../img/brain.webp";
 
 // Redux Actions
-import { logoutUserAction } from "../../../redux/action/auth/logoutUserAction";
+import { logoutUserAction } from "../../../redux/action/users/auth/logoutUserAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
 // Material Tailwind Components

@@ -8,3 +8,7 @@ export const reduxGetAllPayments = async () => {
 export const reduxGetAllPaymentsByQuery = async (fullQuery) => {
   return await http.get(`${API_ENDPOINT.PAYMENTS}${fullQuery}`);
 };
+
+export const reduxPostPaymentMidtrans = async (courseId) => {
+  return await http.post(`${API_ENDPOINT.PAYMENTST}/midtrans/${courseId}`);
+};
