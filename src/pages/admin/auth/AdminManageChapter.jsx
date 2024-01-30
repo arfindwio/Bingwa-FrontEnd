@@ -50,14 +50,14 @@ export const AdminManageChapter = () => {
   const [dialogEdit, setDialogEdit] = useState(false);
 
   // Redux Store
-  const storeDataCount = useSelector((state) => state);
+  const storeCountUsers = useSelector((state) => state.users.users);
   const storeChapters = useSelector((state) => state.chapters.chapters);
   const storeCourses = useSelector(
     (state) => state.dataCourses.courses.courses,
   );
   const isLoading = useSelector((state) => state.chapters.loading);
 
-  const countPremiumCourse = storeDataCount.dataCourses.courses.courses.filter(
+  const countPremiumCourse = storeCourses.filter(
     (course) => course.isPremium === true,
   );
 
@@ -182,18 +182,15 @@ export const AdminManageChapter = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard
-            title={"Active Users"}
-            count={storeDataCount.users.users.length}
-          />
+          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeDataCount.dataCourses.courses.courses.length}
+            count={storeCourses.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse}
+            count={countPremiumCourse.length}
             cardColor={"bg-primary"}
           />
         </div>

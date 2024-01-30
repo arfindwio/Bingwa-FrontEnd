@@ -51,8 +51,9 @@ export const AdminManagePromotion = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeCountCourses = useSelector(
-    (state) => state.dataCourse.courses.courses,
+    (state) => state.dataCourses.courses.courses,
   );
+
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
   );

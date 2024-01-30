@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -15,15 +15,18 @@ import { GoChevronUp } from "react-icons/go";
 import { HiArrowCircleRight } from "react-icons/hi";
 
 // Images
-import indomaret from "../../../assets/img/INDOMARET.webp";
-import alfamart from "../../../assets/img/ALFAMART.webp";
+import mastercard from "../../../assets/img/mastercard.webp";
+import visa from "../../../assets/img/visa.webp";
+import amex from "../../../assets/img/amex.webp";
+import paypal from "../../../assets/img/paypal.webp";
+import bca from "../../../assets/img/BCA.webp";
 import bni from "../../../assets/img/BNI.webp";
 import bri from "../../../assets/img/BRI.webp";
-import bca from "../../../assets/img/BCA.webp";
 import mandiri from "../../../assets/img/MANDIRI.webp";
 
 // Redux Actions
-import { postPaymentAction } from "../../../redux/action/payments/PaymentAction";
+import { postPaymentMidtransAction } from "../../../redux/action/payments/PaymentsAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
 
 // Helper
 import {
@@ -35,20 +38,61 @@ import {
 export const Pembayaran = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
-  const [ppn, setPpn] = useState(0);
-  const [showBankInput, setShowBankInput] = useState(false);
+  const { courseId } = useParams();
+
+  const [newMethodPayment, setNewMethodPayment] = useState("");
+  const [newCardNumber, setNewCardNumber] = useState("");
+  const [newCardHolderName, setNewCardHolderName] = useState("");
+  const [newCvv, setNewCvv] = useState("");
+  const [newExpiryDate, setNewExpiryDate] = useState("");
+  const [newBankName, setNewBankName] = useState("");
+
+  const storeCourses = useSelector(
+    (state) => state.dataCourses.courses.courses,
+  );
+  const redirectUrl = useSelector(
+    (state) => state.payment.paymentMidtrans.transaction.redirect_url,
+  );
+  const isLoading = useSelector((state) => state.payment.loading);
+
+  const filteredCourses = storeCourses.find(
+    (course) => Number(course.id) === Number(courseId),
+  );
+
+  console.log(filteredCourses);
+
+  useEffect(() => {
+    dispatch(getAllCoursesAction());
+    if (!filteredCourses) {
+      return navigate("/all-kelas");
+    }
+  }, [dispatch]);
 
   // Handle Payment
   const handlePayment = async () => {
     const loadingToastId = showLoadingToast("Loading...");
 
     const payment = await dispatch(
-      postPaymentAction(
+      postPaymentMidtransAction(
         {
-          methodPayment: "Bank Transfer",
+          methodPayment: newMethodPayment, // Ini diasumsikan sebagai "Credit Card", "Bank Transfer", atau "Alfamart"
+          ...(newMethodPayment === "Credit Card"
+            ? {
+                cardNumber: newCardNumber.replace(/\s/g, ""),
+                cvv: newCvv,
+                expiryDate: newExpiryDate,
+              }
+            : newMethodPayment === "Bank Transfer"
+              ? {
+                  bankName: newBankName,
+                }
+              : newMethodPayment === "Alfamart"
+                ? {
+                    phoneNumber: "0812343564",
+                  }
+                : {}),
         },
-        storeDetailCourses?.id,
+        courseId,
       ),
     );
 
@@ -57,42 +101,64 @@ export const Pembayaran = () => {
     if (payment) {
       showSuccessToast("Payment Success...!!!");
       setTimeout(() => {
-        navigate("/pembayaran-sukses");
-      }, 2000);
-    } else {
-      showErrorToast("Anda Telah Membeli Course Ini...!!!");
-      setTimeout(() => {
-        navigate("/kelas-saya");
+        if (!isLoading) {
+          window.location.href = redirectUrl;
+        }
       }, 2000);
     }
   };
 
-  // Toggle Bank
-  const toggleBankInput = () => {
-    setShowBankInput(!showBankInput);
+  const handlePaymentMethodClick = (method) => {
+    setNewMethodPayment((prevMethod) => (prevMethod === method ? "" : method));
   };
 
-  useEffect(() => {
-    if (storeDetailCourses?.price) {
-      const ppnValue = (storeDetailCourses.price * 11) / 100;
-      setPpn(ppnValue);
-    }
-  }, [storeDetailCourses?.price]);
+  const handleCardNumberChange = (e) => {
+    const inputValue = e.target.value.replace(/\D/g, "");
+    const formattedValue = formatCardNumber(inputValue);
+    setNewCardNumber(formattedValue);
+  };
+
+  const formatCardNumber = (value) => {
+    const maxLength = 16;
+    const formattedValue = value
+      .substring(0, maxLength)
+      .match(/.{1,4}/g)
+      ?.join(" ");
+    return formattedValue || "";
+  };
+
+  const handleCvvChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setNewCvv(value.substring(0, 3));
+  };
+
+  const handleExpiryDateChange = (e) => {
+    const inputValue = e.target.value.replace(/\D/g, "");
+    const formattedValue = formatExpiryDate(inputValue);
+    setNewExpiryDate(formattedValue);
+  };
+
+  const formatExpiryDate = (value) => {
+    const maxLength = 4;
+    const formattedValue = value
+      .substring(0, maxLength)
+      .match(/.{1,2}/g)
+      ?.join("/");
+    return formattedValue || "";
+  };
 
   return (
     <>
       <NavbarKelas />
 
       {/* First Container */}
-      <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-52 lg:py-4">
-        <div className="items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base text-white md:text-xl">
-          <div className="font-semibold">
-            Selesaikan Pembayaran sampai 31 Desember 2023 23:59
-          </div>
+      <div className="md:px-30 mt-[5rem] flex justify-center py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:py-4">
+        <div className="w-fit items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base font-semibold text-white sm:px-10 md:px-20 md:text-xl lg:px-36">
+          Selesaikan Pembayaran sampai 31 Desember 2023 23:59
         </div>
       </div>
 
-      <div className="relative mt-10 flex items-center px-28 text-lg font-bold">
+      <div className="relative mt-5 flex items-center px-28 text-lg font-bold">
         <GoArrowLeft
           size={30}
           className="absolute cursor-pointer "
@@ -103,67 +169,177 @@ export const Pembayaran = () => {
         <p className="pl-10">Back</p>
       </div>
 
-      <div className="justify-center gap-10 px-[1rem] py-10 md:px-2 lg:flex lg:px-28">
+      <div className="justify-center gap-10 px-[1rem] py-10 pt-4 md:px-2 lg:flex lg:px-28 ">
         {/* Payment Method */}
-        <div className="flex flex-col gap-1 lg:w-[60%]">
-          <div className="flex flex-col gap-2 pb-10 text-center">
+        <div className="flex flex-col gap-2 lg:w-[60%]">
+          <div className="flex flex-col">
             <div
-              className={`flex cursor-pointer items-center rounded-xl bg-primary py-4 text-xl text-white ${
-                showBankInput ? "bg-primary" : "cursor-pointer"
+              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
+                newMethodPayment === "Bank Transfer"
+                  ? "bg-primary"
+                  : "bg-slate-950"
               }`}
-              onClick={toggleBankInput}
+              onClick={() => {
+                handlePaymentMethodClick("Bank Transfer");
+              }}
             >
               <div className="flex w-full items-center justify-between px-4">
                 <div className="font-semibold">Bank Transfer</div>
-                <div>{showBankInput ? <GoChevronDown /> : <GoChevronUp />}</div>
+                <div>
+                  {newMethodPayment === "Bank Transfer" ? (
+                    <GoChevronUp />
+                  ) : (
+                    <GoChevronDown />
+                  )}
+                </div>
               </div>
             </div>
 
             <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 shadow-lg ${
-                showBankInput ? "block" : "hidden"
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Bank Transfer" ? "block" : "hidden"
               }`}
             >
-              <div className="flex w-fit items-center justify-between gap-4 py-2">
+              <div className="flex items-center justify-center gap-4 px-32">
+                <div className="flex items-center">
+                  <img src={bca} className="" alt="BCA" />
+                </div>
+                <div className="flex items-center">
+                  <img src={bni} className="" alt="BNI" />
+                </div>
+                <div className="flex items-center">
+                  <img src={bri} className="" alt="BRI" />
+                </div>
+                <div className="flex items-center">
+                  <img src={mandiri} className="" alt="Mandiri" />
+                </div>
+              </div>
+              <div className="mx-auto w-full px-20 pt-4">
+                <div className="flex flex-col text-start">
+                  <span className="text-xl font-semibold">Bank Name</span>
+                  <input
+                    type="number"
+                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                    placeholder="BCA"
+                    value={newBankName}
+                    onChange={(e) => {
+                      setNewBankName(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <div
+              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
+                newMethodPayment === "Credit Card"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              }`}
+              onClick={() => {
+                handlePaymentMethodClick("Credit Card");
+              }}
+            >
+              <div className="flex w-full items-center justify-between px-4">
+                <div className="font-semibold">Credit Card</div>
+                <div>
+                  {newMethodPayment === "Credit Card" ? (
+                    <GoChevronUp />
+                  ) : (
+                    <GoChevronDown />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Credit Card" ? "block" : "hidden"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-4 px-48">
                 <div className="flex-1 items-center">
-                  <img src={bni} className="" alt="bni" />
+                  <img src={mastercard} className="" alt="Master Card" />
                 </div>
                 <div className="flex-1 items-center">
-                  <img src={bri} className="" alt="bri" />
+                  <img src={visa} className="" alt="Visa" />
                 </div>
                 <div className="flex-1 items-center">
-                  <img src={bca} className="" alt="bca" />
+                  <img src={amex} className="" alt="American Express" />
                 </div>
                 <div className="flex-1 items-center">
-                  <img src={mandiri} className="" alt="mandiri" />
+                  <img src={paypal} className="" alt="PayPal" />
                 </div>
-                <div className="flex-1 items-center">
-                  <img src={alfamart} className="" alt="alfamart" />
+              </div>
+              <div className="mx-auto w-full px-20 pt-4">
+                <div className="flex flex-col text-start">
+                  <span className="text-xl font-semibold">Card Number</span>
+                  <input
+                    type="text"
+                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                    placeholder="4811 1111 1111 1114"
+                    value={newCardNumber}
+                    onChange={handleCardNumberChange}
+                  />
                 </div>
-                <div className="flex-1 items-center">
-                  <img src={indomaret} className="" alt="indomaret" />
+                <div className="mt-8 flex flex-col text-start">
+                  <span className="text-xl font-semibold">
+                    Card Holder Name
+                  </span>
+                  <input
+                    type="text"
+                    className="mt-1 border-b-[3px] px-2 py-2 text-xl focus:outline-none"
+                    placeholder="Budi Cahyono"
+                    value={newCardHolderName}
+                    onChange={(e) => {
+                      setNewCardHolderName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex w-full gap-2 ">
+                  <div className="mt-8 flex w-full flex-col text-start">
+                    <span className="text-xl font-semibold">CVV</span>
+                    <input
+                      type="number"
+                      className="mt-1 border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                      placeholder="123"
+                      value={newCvv}
+                      onChange={handleCvvChange}
+                    />
+                  </div>
+                  <div className="mt-8 flex w-full flex-col text-start">
+                    <span className="text-xl font-semibold">Expiry date</span>
+                    <input
+                      type="text"
+                      className="mt-1 border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                      placeholder="02/25"
+                      value={newExpiryDate}
+                      onChange={handleExpiryDateChange}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-2 rounded-xl border-2 border-slate-300 px-6 py-3 shadow-lg focus:outline-none md:w-auto lg:w-[40%]">
-          <div className="flex flex-col items-center gap-4 text-2xl font-bold">
+        <div className="flex h-fit w-fit flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2  shadow-lg focus:outline-none md:w-auto lg:w-[40%]">
+          <div className="flex flex-col items-center text-2xl font-bold">
             Pembayaran Kelas
           </div>
 
           {/* Main Content */}
           <div className="w-full gap-6 px-0 md:px-44 lg:px-0">
             {/* Card Item */}
-            {storeDetailCourses === null ? (
+            {!filteredCourses ? (
               <CardCoursesSkeleton />
             ) : (
               <CardPembayaran
-                image={storeDetailCourses?.courseImg}
-                category={storeDetailCourses?.category?.categoryName}
-                title={storeDetailCourses?.courseName}
-                author={storeDetailCourses?.mentor}
+                image={filteredCourses?.courseImg}
+                category={filteredCourses?.category?.categoryName}
+                title={filteredCourses?.courseName}
+                author={filteredCourses?.mentor}
               />
             )}
           </div>
@@ -175,7 +351,11 @@ export const Pembayaran = () => {
                 Harga
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
-                Rp {storeDetailCourses?.price}
+                Rp{" "}
+                {!filteredCourses.promotion
+                  ? filteredCourses?.price
+                  : filteredCourses.price -
+                    filteredCourses.promotion.discount * filteredCourses.price}
               </div>
             </div>
 
@@ -184,7 +364,7 @@ export const Pembayaran = () => {
                 PPN 11%
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
-                Rp {ppn}
+                Rp {0.11 * filteredCourses.price}
               </div>
             </div>
 
@@ -193,7 +373,10 @@ export const Pembayaran = () => {
                 Total Bayar
               </div>
               <div className="text-base font-semibold text-primary md:text-xl lg:text-lg">
-                Rp {storeDetailCourses?.price + ppn}
+                Rp{" "}
+                {filteredCourses.price -
+                  filteredCourses.promotion.discount * filteredCourses.price +
+                  0.11 * filteredCourses.price}
               </div>
             </div>
           </div>
@@ -202,12 +385,10 @@ export const Pembayaran = () => {
             className="flex w-full cursor-pointer flex-row items-center justify-center gap-2 rounded-2xl bg-red-500 px-6 py-2 text-white"
             onClick={handlePayment}
           >
-            <div className="text-center text-xl font-bold">
+            <div className="text-center text-lg font-bold">
               Bayar dan Ikuti Kelas Selamanya
             </div>
-            <div>
-              <HiArrowCircleRight size={40} />
-            </div>
+            <HiArrowCircleRight size={40} />
           </div>
         </div>
       </div>

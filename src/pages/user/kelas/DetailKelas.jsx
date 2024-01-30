@@ -32,6 +32,7 @@ import { FaArrowCircleRight } from "react-icons/fa";
 import { TbProgressCheck } from "react-icons/tb";
 
 // Redux Actions
+import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
 import { enrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/getAllLessonsByCourseId";
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
@@ -64,6 +65,9 @@ export const DetailKelas = () => {
   const storeEnrollments = useSelector((state) => state.enrollments.course);
   const storeTrackingsCourseEnroll = useSelector(
     (state) => state.trackings.trackingsCourseId.allTrackings,
+  );
+  const storeCourses = useSelector(
+    (state) => state.dataCourses.courses.courses,
   );
   const isLoading = useSelector((state) => state.dataCourses.loading);
   const loadingTracking = useSelector((state) => state);
@@ -102,7 +106,15 @@ export const DetailKelas = () => {
       ? storeDetailCourses
       : enrollmentData.course;
 
+  const filteredCourses = storeCourses.find(
+    (course) => Number(course.id) === Number(courseId),
+  );
+
   useEffect(() => {
+    dispatch(getAllCoursesAction());
+    if (!filteredCourses) {
+      return navigate("/all-kelas");
+    }
     getAllData();
   }, [dispatch]);
 

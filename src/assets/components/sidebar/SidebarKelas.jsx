@@ -111,7 +111,7 @@ export const SidebarKelas = ({
         </div>
 
         {/* Hapus Filter */}
-        <div className="flex justify-center py-10">
+        <div className="flex justify-center pb-1 pt-3">
           <button
             className="font-semibold text-red-600"
             onClick={clearAllFilters}
