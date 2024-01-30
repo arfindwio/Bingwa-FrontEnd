@@ -8,7 +8,8 @@ export const API_ENDPOINT = {
   FORGET_PASS: "/users/forget-password", // [POST] Forgot Password
   UPDATE_PASS: "/users/update-password", // [PUT] Update Password
   CHANGE_PASS: "/users/change-password", // [PUT] Change Password
-  AUTH_USER: "/users/authenticate", // [GET] Get User by Authenticate
+  // /users/authenticate // [GET] Get User by Authenticate
+  USERS: "/users",
 
   // GOOGLE
   GOOGLE: "/users/google", // [GET] Login User With Google
@@ -32,11 +33,11 @@ export const API_ENDPOINT = {
   DELETE_COURSE: "/courses", // [DELETE] Delete Course by ID
 
   // CHAPTERS
-  // "/chapters", // [POST] Create Chapter
-  // "/chapters", // [GET] Get All Chapter
-  // "/chapters/{chapterId}", // [GET] Get Chapter by ID
-  // "/chapters/{chapterId}", // [PUT] Update Chapter by ID
-  // "/chapters/{chapterId}", // [DELETE] Delete Chapter by ID
+  // "/chapters // [POST] Create Chapter
+  // "/chapters // [GET] Get All Chapter
+  // "/chapters/{chapterId} // [GET] Get Chapter by ID
+  // "/chapters/{chapterId} // [PUT] Update Chapter by ID
+  // "/chapters/{chapterId} // [DELETE] Delete Chapter by ID
   CHAPTERS: "/chapters",
 
   // LESSONS
@@ -79,11 +80,11 @@ export const API_ENDPOINT = {
   TRACKINGS: "/trackings",
 
   // PAYMENTS
-  GET_ALL_PAYMENTS: "/payments", // [GET] Get All Payment
+  // /payments // [GET] Get All Payment
   GET_HISTORY_PAYMENTS: "/payments/history", // [GET] Get All Payment by Authentication
-  GET_PAYMENT_BY_COURSE: "/payments/{courseId}", // [GET] Get Payment by Course ID
+  // /payments/{courseId} // [GET] Get Payment by Course ID
   CREATE_PAYMENT: "/payments", // [POST] Create Payment
-  CREATE_MIDTRANS_PAYMENT: "/payment/midtrans", // [POST] Create Payment Midtrans
+  // payment/midtrans/{courseId} // [POST] Create Payment Midtrans
   PAYMENTS: "/payments",
 
   // ADMIN

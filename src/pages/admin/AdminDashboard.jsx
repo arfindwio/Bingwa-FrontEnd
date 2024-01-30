@@ -8,23 +8,30 @@ import { AdminCard } from "../../assets/components/admin/AdminCard";
 import LoadingSpinner from "../../assets/components/loading/loadingSpinner";
 
 // Redux Actions
-import { getAllDataAction } from "../../redux/action/admin/data/getAllDataAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
+import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
 import { getAllPaymentsAction } from "../../redux/action/payments/getAllPaymentsAction";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
 
   // Redux Store
-  const adminData = useSelector((state) => state.allAdminData);
+  const storeCountUsers = useSelector((state) => state.users.users);
+  const storeCountCourses = useSelector((state) => state.users.users);
   const storePayments = useSelector((state) => state.payment.payments);
   const isLoading = useSelector((state) => state.payment.loading);
+
+  const countPremiumCourse = storeCountCourses.filter(
+    (course) => course.isPremium === true,
+  );
 
   useEffect(() => {
     getAllData();
   }, [dispatch]);
 
   const getAllData = () => {
-    dispatch(getAllDataAction());
+    dispatch(getAllUsersAction());
+    dispatch(getAllCoursesAction());
     dispatch(getAllPaymentsAction());
   };
 
@@ -47,15 +54,15 @@ export const AdminDashboard = () => {
         </div>
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={adminData.countUser} />
+          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
-            count={adminData.allCourse}
+            count={storeCountCourses.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={adminData.coursePremium}
+            count={countPremiumCourse.length}
             cardColor={"bg-primary"}
           />
         </div>

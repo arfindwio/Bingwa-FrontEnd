@@ -8,11 +8,11 @@ const initialState = {
   loading: false,
 };
 
-const postPaymentSlice = createSlice({
+const paymentsSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
-    setPayment: (state, action) => {
+    setPayments: (state, action) => {
       state.payments = action.payload;
     },
     setPostPayment: (state, action) => {
@@ -34,11 +34,12 @@ const postPaymentSlice = createSlice({
 });
 
 export const {
-  setPayment,
+  setPayments,
+  setPostPayment,
   setPaymentMidtrans,
   setHistory,
   startLoading,
   endLoading,
-} = postPaymentSlice.actions;
+} = paymentsSlice.actions;
 
-export default postPaymentSlice.reducer;
+export default paymentsSlice.reducer;

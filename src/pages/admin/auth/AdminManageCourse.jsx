@@ -23,7 +23,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllDataAction } from "../../../redux/action/admin/data/getAllDataAction";
+import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
 import {
   getAllCoursesAction,
   postCourseAction,
@@ -70,7 +70,7 @@ export const AdminManageCourse = () => {
   const [dialogEdit, setDialogEdit] = useState(false);
 
   // Redux Store
-  const adminData = useSelector((state) => state.allAdminData);
+  const storeCountUsers = useSelector((state) => state.users.users);
   const storeAllCourse = useSelector(
     (state) => state.dataCourses.courses.courses,
   );
@@ -80,15 +80,18 @@ export const AdminManageCourse = () => {
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
   );
-
   const isLoading = useSelector((state) => state.dataCourses.loading);
+
+  const countPremiumCourse = storeAllCourse.filter(
+    (course) => course.isPremium === true,
+  );
 
   useEffect(() => {
     getAllData();
   }, [dispatch]);
 
   const getAllData = () => {
-    dispatch(getAllDataAction());
+    dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
     dispatch(getAllCategoriesAction());
     dispatch(getAllPromotionsAction());
@@ -258,15 +261,15 @@ export const AdminManageCourse = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={adminData.countUser} />
+          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
-            count={adminData.allCourse}
+            count={storeAllCourse.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={adminData.coursePremium}
+            count={countPremiumCourse.length}
             cardColor={"bg-primary"}
           />
         </div>

@@ -77,7 +77,14 @@ export const AllCourse = () => {
       : queryParams;
 
     dispatch(getAllCoursesAction(fullQuery));
-  }, [categoryFilter, selectedCategories, searchInput, dispatch]);
+  }, [
+    categoryFilter,
+    filters,
+    selectedCategories,
+    selectedLevels,
+    searchInput,
+    dispatch,
+  ]);
 
   const getAllData = () => {
     dispatch(getAllCoursesAction());
@@ -190,11 +197,11 @@ export const AllCourse = () => {
   return (
     <>
       {isMobile ? <NavbarMobile /> : <NavbarKelas />}
-      <div className="flex h-full flex-col justify-between bg-secondary">
+      <div className="flex h-full min-h-screen flex-col justify-between bg-secondary pb-4">
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-2 md:px-8 md:pb-0 md:pt-20 lg:px-24 lg:pb-0 lg:pt-20">
           {/* Search */}
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between pt-4">
             <div className="-mt-8 px-0 py-6 text-xl font-bold md:mt-0 md:text-3xl lg:mt-0 lg:text-3xl">
               Topik Kelas
             </div>
@@ -222,7 +229,7 @@ export const AllCourse = () => {
             )}
           </div>
 
-          <div className="flex items-start justify-center py-4 md:justify-between lg:justify-between">
+          <div className="flex  items-start justify-center py-4 md:justify-between lg:justify-between">
             {/* Filter */}
             <div className="hidden w-[30%] md:flex lg:flex">
               <SidebarKelas
@@ -238,9 +245,9 @@ export const AllCourse = () => {
             <div className="-mt-10 flex w-full flex-wrap items-center justify-between font-semibold md:mt-0 md:w-[65%] lg:mt-0 lg:w-[65%]">
               <div className="flex w-full gap-4 text-center">
                 <div
-                  className={`flex w-[20%] cursor-pointer items-center justify-center rounded-xl py-2 text-sm  md:text-base lg:text-base ${
+                  className={`flex w-[20%] cursor-pointer items-center justify-center rounded-xl py-2 text-sm   md:text-base lg:text-base ${
                     filters.premium || filters.free
-                      ? "bg-white"
+                      ? "bg-white hover:bg-primary hover:text-white"
                       : "bg-primary text-white"
                   }`}
                   onClick={() => handleFilterChange("filter", "all")}
@@ -249,7 +256,9 @@ export const AllCourse = () => {
                 </div>
                 <div
                   className={`rounded- flex w-[40%] cursor-pointer items-center justify-center rounded-xl py-2 text-sm md:w-[50%] md:text-base lg:w-[60%] lg:text-base ${
-                    filters.premium ? "bg-primary text-white" : "bg-white"
+                    filters.premium
+                      ? "bg-primary text-white"
+                      : "bg-white hover:bg-primary hover:text-white"
                   }`}
                   onClick={() => handleFilterChange("filter", "premium")}
                 >
@@ -257,7 +266,9 @@ export const AllCourse = () => {
                 </div>
                 <div
                   className={`flex w-[30%] cursor-pointer items-center justify-center rounded-xl  py-2 text-sm md:w-[40%] md:text-base lg:w-[30%] lg:text-base ${
-                    filters.free ? "bg-primary text-white" : "bg-white"
+                    filters.free
+                      ? "bg-primary text-white"
+                      : "bg-white hover:bg-primary hover:text-white"
                   }`}
                   onClick={() => handleFilterChange("filter", "free")}
                 >

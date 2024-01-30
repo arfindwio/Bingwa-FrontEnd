@@ -91,7 +91,7 @@ export const RouteList = () => {
           }
         />
         <Route
-          path="/admin/kelola-kelas"
+          path="/admin/manage-course"
           element={
             <AdminTokenProtected>
               <AdminManageCourse />

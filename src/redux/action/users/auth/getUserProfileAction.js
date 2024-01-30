@@ -1,16 +1,16 @@
-import { showErrorToast } from "../../../helper/ToastHelper";
-import { reduxGetUser } from "../../../services/user/auth/GetUser";
-import { reduxUpdateProfile } from "../../../services/user/auth/UpdateProfile";
-import { setUserProfile } from "../../reducer/auth/loginSlice";
+import { showErrorToast } from "../../../../helper/ToastHelper";
+import { reduxGetUserByAuth } from "../../../../services/user/auth/Users";
+import { reduxUpdateProfile } from "../../../../services/user/auth/UpdateProfile";
+import { setUserProfile } from "../../../reducer/auth/loginSlice";
 
 export const getUserProfileAction = () => (dispatch) => {
-  return reduxGetUser()
+  return reduxGetUserByAuth()
     .then((result) => {
       dispatch(setUserProfile(result.data.data.user));
       return result.data.data.user;
     })
     .catch((err) => {
-      console.error("reduxGetUser", err);
+      console.error("reduxGetUserByAuth", err);
     });
 };
 

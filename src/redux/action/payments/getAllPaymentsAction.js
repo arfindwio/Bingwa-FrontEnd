@@ -3,7 +3,7 @@ import {
   reduxGetAllPaymentsByQuery,
 } from "../../../services/payments/Payments";
 import {
-  setPayment,
+  setPayments,
   endLoading,
   startLoading,
 } from "../../reducer/payments/PaymentsSlice";
@@ -16,7 +16,7 @@ export const getAllPaymentsAction = (fullQuery) => async (dispatch) => {
     const result = await (fullQuery
       ? reduxGetAllPaymentsByQuery(getAllInput)
       : reduxGetAllPayments());
-    dispatch(setPayment(result.data.data.payments));
+    dispatch(setPayments(result.data.data.payments));
     return result;
   } catch (err) {
     console.error("getAllPaymentsAction", err);

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { registerUserAction } from "../../../redux/action/auth/registerUserAction";
+import { registerUserAction } from "../../../redux/action/users/auth/registerUserAction";
 
 // Helper
 import {

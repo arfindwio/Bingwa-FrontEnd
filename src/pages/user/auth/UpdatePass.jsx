@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { getUpdatePass } from "../../../redux/action/auth/getPasswordAction";
+import { getUpdatePass } from "../../../redux/action/users/auth/getPasswordAction";
 
 // Helper
 import { showErrorToast, showSuccessToast } from "../../../helper/ToastHelper";

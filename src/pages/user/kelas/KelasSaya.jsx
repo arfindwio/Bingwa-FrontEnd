@@ -11,11 +11,9 @@ import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { CardKelasSaya } from "../../../assets/components/cards/CardKelasSaya";
 import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
-import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
-// import { getUserProfileAction } from "../../../redux/action/auth/getUserProfileAction";
 import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
 import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
 
