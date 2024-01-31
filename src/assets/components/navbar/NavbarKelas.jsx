@@ -23,8 +23,8 @@ import {
 } from "@material-tailwind/react";
 
 // Redux Actionss
-import { logoutUserAction } from "../../../redux/action/users/auth/logoutUserAction";
-import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
+import { logoutUserAction } from "../../../redux/action/users/UsersAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
 // Cookie
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
@@ -41,7 +41,7 @@ export const NavbarKelas = () => {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const handleSearchCourse = (searchInput) => {
-    const search = dispatch(searchCourseAction(searchInput));
+    const search = dispatch(getAllCoursesAction(searchInput));
 
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);

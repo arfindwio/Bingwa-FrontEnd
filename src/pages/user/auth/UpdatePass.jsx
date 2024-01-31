@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { getUpdatePass } from "../../../redux/action/users/auth/getPasswordAction";
+import { putUpdatePassword } from "../../../redux/action/users/UsersAction";
 
 // Helper
 import { showErrorToast, showSuccessToast } from "../../../helper/ToastHelper";
@@ -51,7 +51,7 @@ export const UpdatePass = () => {
       return;
     }
     const updatepass = await dispatch(
-      getUpdatePass(
+      putUpdatePassword(
         {
           password: password,
           passwordConfirmation: passwordConfirmation,

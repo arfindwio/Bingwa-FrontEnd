@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { getForgetPassAction } from "../../../redux/action/users/auth/getPasswordAction";
+import { postForgetPassAction } from "../../../redux/action/users/UsersAction";
 
 // Helper
 import { showSuccessToast } from "../../../helper/ToastHelper";
@@ -25,7 +25,7 @@ export const ForgetPass = () => {
 
   const handleSave = async () => {
     const forget = await dispatch(
-      getForgetPassAction({
+      postForgetPassAction({
         email: Email,
       }),
     );

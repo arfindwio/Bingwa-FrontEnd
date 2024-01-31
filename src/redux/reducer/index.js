@@ -1,39 +1,30 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import RegisterSlice from "./auth/registerSlice";
-import PasswordSlice from "./auth/passwordSlice";
-import OtpSlice from "./auth/otpSlice";
-import LoginSlice from "./auth/loginSlice";
-import UsersSlice from "./auth/usersSlice";
-import ProfileSlice from "./akun/profileSlice";
-import ChangePassSlice from "./akun/ChangePassSlice";
-import getAllCategoriesSlice from "./categories/getAllCategoriesSlice";
+import UsersSlice from "./users/UsersSlice";
+import UserProfilesSlice from "./userProfiles/UserProfilesSlice";
+import CategoriesSlice from "./categories/CategoriesSlice";
 import adminLoginSlice from "./admin/auth/adminLoginSlice";
-import allDataSlice from "./admin/data/allDataSlice";
 import CoursesSlice from "./courses/CoursesSlice";
 import ChaptersSlice from "./chapters/ChaptersSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
-import ReviewsSlice from "./reviews/reviewsSlice";
+import ReviewsSlice from "./reviews/ReviewsSlice";
 import LessonsSlice from "./lessons/LessonsSlice";
 import PaymentSlice from "./payments/PaymentsSlice";
-import getNotificationsSlice from "./notifications/getNotificationsSlice";
+import NotificationsSlice from "./notifications/NotificationsSlice";
 import TrackingsSlice from "./trackings/TrackingsSlice";
 import PromotionsSlice from "./promotions/PromotionsSlice";
 
 export default combineReducers({
   // User
-  authLogin: LoginSlice,
-  authRegister: RegisterSlice,
-  authPassword: PasswordSlice,
-  authOtp: OtpSlice,
-  authProfile: ProfileSlice,
-  changePass: ChangePassSlice,
   users: UsersSlice,
 
+  // User Profiles
+  userProfiles: UserProfilesSlice,
+
   // Categories
-  dataCategories: getAllCategoriesSlice,
+  categories: CategoriesSlice,
 
   // Courses
-  dataCourses: CoursesSlice,
+  courses: CoursesSlice,
 
   // Chapters
   chapters: ChaptersSlice,
@@ -54,12 +45,11 @@ export default combineReducers({
   payment: PaymentSlice,
 
   // seNotifications
-  notifications: getNotificationsSlice,
+  notifications: NotificationsSlice,
 
   // Trackings
   trackings: TrackingsSlice,
 
   // Admin
   adminAuthLogin: adminLoginSlice,
-  allAdminData: allDataSlice,
 });

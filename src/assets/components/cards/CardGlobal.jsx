@@ -12,7 +12,7 @@ import { IoDiamond, IoTime } from "react-icons/io5";
 import { Progress } from "@material-tailwind/react";
 
 // Redux Actions
-import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
+import { getDetailCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
@@ -75,7 +75,7 @@ export const CardGlobal = ({
           )}
         </div>
         <div className="flex flex-col">
-          <div className="font-semibold text-slate-800">{title}</div>
+          <div className="truncate font-semibold text-slate-800">{title}</div>
           <div className="text-slate-500">by {author}</div>
         </div>
         <div className="flex items-center justify-between">

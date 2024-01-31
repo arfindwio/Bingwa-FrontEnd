@@ -2,18 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   courses: [],
-  detail: [],
+  detailCourse: [],
   enroll: [],
-  searchedCourses: [],
   loading: false,
 };
 
 const courseSlice = createSlice({
-  name: "dataCourses",
+  name: "courses",
   initialState,
   reducers: {
-    getAllCourses: (state, action) => {
+    setCourses: (state, action) => {
       state.courses = action.payload;
+    },
+    setDetailCourse: (state, action) => {
+      state.detailCourse = action.payload;
     },
     addCourse: (state, action) => {
       state.courses.push(action.payload);
@@ -21,34 +23,17 @@ const courseSlice = createSlice({
     updateCourse: (state, action) => {
       const { id, updatedData } = action.payload;
 
-      // Ensure that state.courses is an array
       state.courses = Array.isArray(state.courses) ? state.courses : [];
-
-      // Find the index of the course
       const index = state.courses.findIndex((item) => item.id === id);
-
-      // If the course is found, update it
       if (index !== -1) {
-        // Create a new array with the updated course
         const updatedCourses = [...state.courses];
         updatedCourses[index] = { ...state.courses[index], ...updatedData };
-
-        // Update the state
         state.courses = updatedCourses;
       }
     },
     deleteCourse: (state, action) => {
       const idToDelete = action.payload;
       state.courses = state.courses.filter((item) => item.id !== idToDelete);
-    },
-    setDetailCourse: (state, action) => {
-      state.detail = action.payload;
-    },
-    setEnroll: (state, action) => {
-      state.enroll = action.payload;
-    },
-    setSearchedCourses: (state, action) => {
-      state.searchedCourses = action.payload;
     },
     startLoading: (state) => {
       state.loading = true;
@@ -60,13 +45,11 @@ const courseSlice = createSlice({
 });
 
 export const {
-  getAllCourses,
+  setCourses,
+  setDetailCourse,
   addCourse,
   updateCourse,
   deleteCourse,
-  setDetailCourse,
-  setEnroll,
-  setSearchedCourses,
   startLoading,
   endLoading,
 } = courseSlice.actions;

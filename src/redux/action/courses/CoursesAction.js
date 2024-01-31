@@ -1,13 +1,15 @@
-import { showErrorToast } from "../../../helper/ToastHelper";
 import {
+  reduxGetDetailCoursesId,
   reduxGetAllCourses,
   reduxGetAllCoursesByQuery,
   reduxPostCourse,
   reduxPutCourse,
   reduxDeleteCourse,
 } from "../../../services/courses/Courses";
+
 import {
-  getAllCourses,
+  setCourses,
+  setDetailCourse,
   startLoading,
   endLoading,
 } from "../../reducer/courses/CoursesSlice";
@@ -21,12 +23,25 @@ export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
       ? reduxGetAllCoursesByQuery(getAllInput)
       : reduxGetAllCourses());
 
-    dispatch(getAllCourses(response.data.data));
+    dispatch(setCourses(response.data.data));
 
-    return response;
+    return true;
   } catch (err) {
     console.error("getAllCoursesAction", err);
     throw err;
+  } finally {
+    dispatch(endLoading());
+  }
+};
+
+export const getDetailCoursesAction = (courseId) => async (dispatch) => {
+  try {
+    dispatch(startLoading());
+    const result = await reduxGetDetailCoursesId(courseId);
+    dispatch(setDetailCourse(result.data.data.course));
+    return true;
+  } catch (err) {
+    console.error("reduxDetailCourse", err);
   } finally {
     dispatch(endLoading());
   }

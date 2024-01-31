@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { registerUserAction } from "../../../redux/action/users/auth/registerUserAction";
+import { postRegisterUserAction } from "../../../redux/action/users/UsersAction";
 
 // Helper
 import {
@@ -56,7 +56,7 @@ export const Register = () => {
     const loadingToastId = showLoadingToast("Loading...");
 
     const register = await dispatch(
-      registerUserAction({
+      postRegisterUserAction({
         fullName: FullName,
         email: Email,
         phoneNumber: PhoneNumber,

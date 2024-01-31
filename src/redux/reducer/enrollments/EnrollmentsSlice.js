@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  course: [],
+  enrollments: [],
   enrollCourseId: [],
-  enrollments: null,
   enrollmentPreparation: null,
   loading: false,
 };
@@ -18,8 +17,30 @@ const enrollmentSlice = createSlice({
     setEnrollByCourseId: (state, action) => {
       state.enrollCourseId = action.payload;
     },
-    setCourseEnroll: (state, action) => {
-      state.course = action.payload;
+    addEnrollment: (state, action) => {
+      state.enrollments.push(action.payload);
+    },
+    updateEnrollment: (state, action) => {
+      const { id, updatedData } = action.payload;
+
+      state.enrollments = Array.isArray(state.enrollments)
+        ? state.enrollments
+        : [];
+      const index = state.enrollments.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        const updatedenrollments = [...state.enrollments];
+        updatedenrollments[index] = {
+          ...state.enrollments[index],
+          ...updatedData,
+        };
+        state.enrollments = updatedenrollments;
+      }
+    },
+    deleteEnrollment: (state, action) => {
+      const idToDelete = action.payload;
+      state.Enrollments = state.enrollments.filter(
+        (item) => item.id !== idToDelete,
+      );
     },
     setEnrollmentPreparation: (state, action) => {
       state.enrollmentPreparation = action.payload;
@@ -36,8 +57,10 @@ const enrollmentSlice = createSlice({
 
 export const {
   setEnrollments,
-  setCourseEnroll,
   setEnrollByCourseId,
+  addEnrollment,
+  updateEnrollment,
+  deleteEnrollment,
   setEnrollmentPreparation,
   startLoading,
   endLoading,
