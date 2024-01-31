@@ -9,6 +9,10 @@ export const reduxGetAllPaymentsByQuery = async (fullQuery) => {
   return await http.get(`${API_ENDPOINT.PAYMENTS}${fullQuery}`);
 };
 
+export const reduxGetHistoryPayment = async () => {
+  return await http.get(API_ENDPOINT.GET_HISTORY_PAYMENTS);
+};
+
 export const reduxPostPayment = async (input, courseId) => {
   return await http.post(`${API_ENDPOINT.PAYMENTS}/${courseId}`, input);
 };

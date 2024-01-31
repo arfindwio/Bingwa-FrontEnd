@@ -49,12 +49,10 @@ export const AdminManageCategory = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeCountCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
+    (state) => state.courses.courses.courses,
   );
-  const storeCategories = useSelector(
-    (state) => state.dataCategories.categories,
-  );
-  const isLoading = useSelector((state) => state.dataCategories.loading);
+  const storeCategories = useSelector((state) => state.categories.categories);
+  const isLoading = useSelector((state) => state.categories.loading);
 
   const countPremiumCourse = storeCountCourses.filter(
     (course) => course.isPremium === true,

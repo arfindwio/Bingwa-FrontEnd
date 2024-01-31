@@ -53,7 +53,7 @@ export const AdminManageLesson = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeCountCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
+    (state) => state.courses.courses.courses,
   );
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeChapters = useSelector((state) => state.chapters.chapters);

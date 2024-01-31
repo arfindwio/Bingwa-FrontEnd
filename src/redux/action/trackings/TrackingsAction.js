@@ -1,18 +1,36 @@
-import { reduxPutTrackings } from "../../../services/trackings/Tracking";
 import {
-  setTrackings,
+  reduxGetTrackingsByCourseId,
+  reduxPutTracking,
+} from "../../../services/trackings/Tracking";
+
+import {
+  setTrackingsByCourseId,
+  updateTracking,
   startLoading,
   endLoading,
 } from "../../reducer/trackings/TrackingsSlice";
 
-export const putTrackingsAction = (lessonId) => async (dispatch) => {
+export const getTrackingsByCourseId = (courseId) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxPutTrackings(lessonId);
-    dispatch(setTrackings(result.data.data.tracking));
-    return result;
+    const result = await reduxGetTrackingsByCourseId(courseId);
+    dispatch(setTrackingsByCourseId(result.data.data));
+    return true;
   } catch (err) {
-    console.error("reduxPutTrackings", err);
+    console.error("reduxGetTrackingsByCourseId", err);
+  } finally {
+    dispatch(endLoading());
+  }
+};
+
+export const putTrackingAction = (lessonId) => async (dispatch) => {
+  try {
+    dispatch(startLoading());
+    const result = await reduxPutTracking(lessonId);
+    dispatch(updateTracking(result.data.data.tracking));
+    return true;
+  } catch (err) {
+    console.error("reduxPutTracking", err);
   } finally {
     dispatch(endLoading());
   }

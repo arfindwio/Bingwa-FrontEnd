@@ -26,11 +26,11 @@ import mandiri from "../../../assets/img/MANDIRI.webp";
 
 // Redux Actions
 import { postPaymentMidtransAction } from "../../../redux/action/payments/PaymentsAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 
 // Helper
 import {
-  showErrorToast,
   showLoadingToast,
   showSuccessToast,
 } from "../../../helper/ToastHelper";
@@ -48,25 +48,33 @@ export const Pembayaran = () => {
   const [newBankName, setNewBankName] = useState("");
 
   const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
+    (state) => state.courses.courses.courses,
   );
   const redirectUrl = useSelector(
     (state) => state.payment.paymentMidtrans.transaction.redirect_url,
   );
   const isLoading = useSelector((state) => state.payment.loading);
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
+
+  const foundEnrollment = storeEnrollments.find(
+    (enrollCourse) => enrollCourse.courseId === Number(courseId),
+  );
 
   const filteredCourses = storeCourses.find(
     (course) => Number(course.id) === Number(courseId),
   );
 
-  console.log(filteredCourses);
-
   useEffect(() => {
-    dispatch(getAllCoursesAction());
-    if (!filteredCourses) {
+    getAllData();
+    if (!filteredCourses || !filteredCourses.isPremium || foundEnrollment) {
       return navigate("/all-kelas");
     }
   }, [dispatch]);
+
+  const getAllData = () => {
+    dispatch(getAllEnrollmentsAction());
+    dispatch(getAllCoursesAction());
+  };
 
   // Handle Payment
   const handlePayment = async () => {
@@ -169,9 +177,9 @@ export const Pembayaran = () => {
         <p className="pl-10">Back</p>
       </div>
 
-      <div className="justify-center gap-10 px-[1rem] py-10 pt-4 md:px-2 lg:flex lg:px-28 ">
+      <div className=" justify-center px-[1rem] py-10 pt-4 md:px-2 lg:flex lg:px-28 ">
         {/* Payment Method */}
-        <div className="flex flex-col gap-2 lg:w-[60%]">
+        <div className="flex flex-col gap-2 pr-6 lg:w-[60%]">
           <div className="flex flex-col">
             <div
               className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
@@ -230,9 +238,10 @@ export const Pembayaran = () => {
               </div>
             </div>
           </div>
+
           <div className="flex flex-col">
             <div
-              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
+              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
                 newMethodPayment === "Credit Card"
                   ? "bg-primary"
                   : "bg-slate-950"
@@ -241,15 +250,13 @@ export const Pembayaran = () => {
                 handlePaymentMethodClick("Credit Card");
               }}
             >
-              <div className="flex w-full items-center justify-between px-4">
-                <div className="font-semibold">Credit Card</div>
-                <div>
-                  {newMethodPayment === "Credit Card" ? (
-                    <GoChevronUp />
-                  ) : (
-                    <GoChevronDown />
-                  )}
-                </div>
+              <div className="font-semibold">Credit Card</div>
+              <div>
+                {newMethodPayment === "Credit Card" ? (
+                  <GoChevronUp />
+                ) : (
+                  <GoChevronDown />
+                )}
               </div>
             </div>
 
@@ -258,7 +265,7 @@ export const Pembayaran = () => {
                 newMethodPayment === "Credit Card" ? "block" : "hidden"
               }`}
             >
-              <div className="flex items-center justify-center gap-4 px-48">
+              <div className="flex  items-center justify-center gap-4 px-48">
                 <div className="flex-1 items-center">
                   <img src={mastercard} className="" alt="Master Card" />
                 </div>
@@ -352,10 +359,11 @@ export const Pembayaran = () => {
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
                 Rp{" "}
-                {!filteredCourses.promotion
+                {!filteredCourses?.promotion
                   ? filteredCourses?.price
-                  : filteredCourses.price -
-                    filteredCourses.promotion.discount * filteredCourses.price}
+                  : filteredCourses?.price -
+                    filteredCourses?.promotion?.discount *
+                      filteredCourses?.price}
               </div>
             </div>
 
@@ -364,7 +372,7 @@ export const Pembayaran = () => {
                 PPN 11%
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
-                Rp {0.11 * filteredCourses.price}
+                Rp {0.11 * filteredCourses?.price}
               </div>
             </div>
 
@@ -374,9 +382,10 @@ export const Pembayaran = () => {
               </div>
               <div className="text-base font-semibold text-primary md:text-xl lg:text-lg">
                 Rp{" "}
-                {filteredCourses.price -
-                  filteredCourses.promotion.discount * filteredCourses.price +
-                  0.11 * filteredCourses.price}
+                {filteredCourses?.price -
+                  filteredCourses?.promotion?.discount *
+                    filteredCourses?.price +
+                  0.11 * filteredCourses?.price}
               </div>
             </div>
           </div>

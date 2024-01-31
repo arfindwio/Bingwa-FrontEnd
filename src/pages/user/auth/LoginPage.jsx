@@ -11,7 +11,7 @@ import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
 
 // Redux Actions
-import { loginUserAction } from "../../../redux/action/users/auth/loginUserAction";
+import { postLoginUserAction } from "../../../redux/action/users/UsersAction";
 
 // Helper
 import {
@@ -49,7 +49,7 @@ export const LoginPage = () => {
     const loadingToastId = showLoadingToast("Loading ...");
 
     const login = await dispatch(
-      loginUserAction({
+      postLoginUserAction({
         emailOrPhoneNumber: Email,
         password: Password,
       }),

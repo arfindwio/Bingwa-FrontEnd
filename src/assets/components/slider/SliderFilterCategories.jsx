@@ -14,9 +14,7 @@ export const SliderFilterCategories = ({
   handleCategoryFilter,
 }) => {
   const dispatch = useDispatch();
-  const storeCategories = useSelector(
-    (state) => state.dataCategories.categories,
-  );
+  const storeCategories = useSelector((state) => state.categories.categories);
 
   const getCategories = () => {
     dispatch(getAllCategoriesAction());

@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   payments: [],
+  historyPayments: [],
   postPayment: null,
-  paymentMidtrans: null,
-  history: [],
+  postPaymentMidtrans: null,
   loading: false,
 };
 
-const paymentsSlice = createSlice({
+const PaymentsSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
@@ -18,11 +18,11 @@ const paymentsSlice = createSlice({
     setPostPayment: (state, action) => {
       state.postPayment = action.payload;
     },
-    setPaymentMidtrans: (state, action) => {
+    setPostPaymentMidtrans: (state, action) => {
       state.paymentMidtrans = action.payload;
     },
-    setHistory: (state, action) => {
-      state.history = action.payload;
+    setHistoryPayments: (state, action) => {
+      state.historyPayments = action.payload;
     },
     startLoading: (state) => {
       state.loading = true;
@@ -35,11 +35,11 @@ const paymentsSlice = createSlice({
 
 export const {
   setPayments,
+  setHistoryPayments,
   setPostPayment,
-  setPaymentMidtrans,
-  setHistory,
+  setPostPaymentMidtrans,
   startLoading,
   endLoading,
-} = paymentsSlice.actions;
+} = PaymentsSlice.actions;
 
-export default paymentsSlice.reducer;
+export default PaymentsSlice.reducer;

@@ -16,7 +16,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { showSuccessToast } from "../../../helper/ToastHelper";
 
 // Redux Actions
-import { changePass } from "../../../redux/action/akun/changePassAction";
+import { putChangePasswordUser } from "../../../redux/action/users/UsersAction";
 
 export const AkunPassword = () => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ export const AkunPassword = () => {
 
   const handleSave = async () => {
     const changePassword = await dispatch(
-      changePass(
+      putChangePasswordUser(
         {
           oldPassword: oldPassword,
           newPassword: newPassword,

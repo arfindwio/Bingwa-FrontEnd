@@ -1,19 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  review: null,
+  reviews: [],
+  loading: false,
 };
 
-const reviewsSlice = createSlice({
-  name: "RegisterAuth",
+const ReviewsSlice = createSlice({
+  name: "reviews",
   initialState,
   reducers: {
-    setReviewCourse: (state, action) => {
-      state.review = action.payload;
+    addReview: (state, action) => {
+      state.reviews.push(action.payload);
+    },
+    startLoading: (state) => {
+      state.loading = true;
+    },
+    endLoading: (state) => {
+      state.loading = false;
     },
   },
 });
 
-export const { setReviewCourse } = reviewsSlice.actions;
+export const { addReview, startLoading, endLoading } = ReviewsSlice.actions;
 
-export default reviewsSlice.reducer;
+export default ReviewsSlice.reducer;

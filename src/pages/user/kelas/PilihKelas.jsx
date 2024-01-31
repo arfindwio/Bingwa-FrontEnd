@@ -5,16 +5,15 @@ import { useMediaQuery } from "react-responsive";
 // Components
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
-import { NavbarHome } from "../../../assets/components/navbar/NavbarHome";
 import { Pagination } from "../../../assets/components/pagination/Pagination";
 import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
-import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
@@ -24,15 +23,13 @@ export const PilihKelas = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   // Redux Store
-  const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
-  );
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);
   const storePaginationCourses = useSelector(
-    (state) => state.dataCourses.courses.pagination,
+    (state) => state.courses.courses.pagination,
   );
-  const isLoading = useSelector((state) => state.dataCourses.loading);
+  const isLoading = useSelector((state) => state.courses.loading);
 
   const [searchInput, setSearchInput] = useState("");
 
@@ -41,16 +38,17 @@ export const PilihKelas = () => {
 
   useEffect(() => {
     if (searchFilter) {
+      setSearchInput(searchFilter);
       const formatSearch = `search=${searchFilter}&limit=15`;
       dispatch(getAllCoursesAction(formatSearch));
 
       CookieStorage.remove(CookiesKeys.SearchFilter);
     }
-  }, [searchFilter, searchInput]);
+  }, [searchFilter]);
 
   useEffect(() => {
     getAllData();
-  }, []);
+  }, [dispatch]);
 
   const getAllData = () => {
     dispatch(getAllCoursesAction("limit=15"));

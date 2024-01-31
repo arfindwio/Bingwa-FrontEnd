@@ -11,9 +11,7 @@ export const SidebarKelas = ({
   clearAllFilters,
 }) => {
   // Redux Store
-  const storeCategories = useSelector(
-    (state) => state.dataCategories.categories,
-  );
+  const storeCategories = useSelector((state) => state.categories.categories);
 
   return (
     <>

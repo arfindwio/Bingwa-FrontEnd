@@ -14,7 +14,7 @@ import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseS
 import { GoArrowLeft } from "react-icons/go";
 
 // Redux Actions
-import { getHistoryAction } from "../../../redux/action/payments/HistoryAction";
+import { getHistoryAction } from "../../../redux/action/payments/PaymentsAction";
 
 export const AkunPembayaran = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export const AkunPembayaran = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const storeHistory = useSelector((state) => state.payment.history);
-  const storeCourses = useSelector((state) => state.dataCourses.courses);
+  const storeCourses = useSelector((state) => state.courses.courses);
 
   useEffect(() => {
     dispatch(getHistoryAction());

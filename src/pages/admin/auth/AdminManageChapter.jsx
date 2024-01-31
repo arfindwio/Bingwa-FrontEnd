@@ -52,9 +52,7 @@ export const AdminManageChapter = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeChapters = useSelector((state) => state.chapters.chapters);
-  const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
-  );
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
   const isLoading = useSelector((state) => state.chapters.loading);
 
   const countPremiumCourse = storeCourses.filter(
