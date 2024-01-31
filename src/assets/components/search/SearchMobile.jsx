@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { BiSearchAlt } from "react-icons/bi";
 
 // Redux Actions
-import { searchCourseAction } from "../../../redux/action/courses/searchCourseAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+
+// Cookie
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const SearchMobile = () => {
   const navigate = useNavigate();
@@ -15,10 +18,11 @@ export const SearchMobile = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearchCourse = (searchInput) => {
-    const search = dispatch(searchCourseAction(searchInput));
+    const search = dispatch(getAllCoursesAction(searchInput));
 
     if (search) {
-      navigate(`/pilih-kelas?search=${searchInput}`);
+      CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
+      navigate(`/pilih-kelas`);
     }
   };
   return (

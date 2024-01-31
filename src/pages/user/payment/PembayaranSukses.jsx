@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Components
-import { NavbarPembayaran } from "../../../assets/components/navbar/NavbarPembayaran";
+import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 
 // Images
 import payment from "../../../assets/img/payment.webp";
@@ -15,7 +15,7 @@ export const PembayaranSukses = () => {
   const handleDialogOpen = () => setDialogOpen(!dialogOpen);
   return (
     <>
-      <NavbarPembayaran />
+      <NavbarKelas />
 
       <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-52 lg:py-4">
         <div className="items-center rounded-xl bg-green px-2 py-2 text-center text-base text-white md:text-xl">

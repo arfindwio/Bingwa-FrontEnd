@@ -34,7 +34,6 @@ const PromotionsSlice = createSlice({
     startLoading: (state) => {
       state.loading = true;
     },
-
     endLoading: (state) => {
       state.loading = false;
     },

@@ -10,7 +10,7 @@ import LoadingSpinner from "../../assets/components/loading/loadingSpinner";
 // Redux Actions
 import { getAllUsersAction } from "../../redux/action/users/UsersAction";
 import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
-import { getAllPaymentsAction } from "../../redux/action/payments/getAllPaymentsAction";
+import { getAllPaymentsAction } from "../../redux/action/payments/PaymentsAction";
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();

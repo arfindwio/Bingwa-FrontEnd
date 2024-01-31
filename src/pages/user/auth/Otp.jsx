@@ -10,9 +10,9 @@ import { GoArrowLeft } from "react-icons/go";
 
 // Redux Actions
 import {
-  getResendOtp,
-  getVerifyOtpAction,
-} from "../../../redux/action/users/auth/getVerifyOtpAction";
+  putVerifyOtpAction,
+  putResendOtp,
+} from "../../../redux/action/users/UsersAction";
 
 // Helper
 import { showSuccessToast } from "../../../helper/ToastHelper";
@@ -75,7 +75,7 @@ export const Otp = () => {
   // Resend-Otp
   const handleResend = async () => {
     const resendData = await dispatch(
-      getResendOtp({
+      putResendOtp({
         email: Email,
       }),
     );
@@ -88,7 +88,7 @@ export const Otp = () => {
   // Verify-Otp
   const handleSave = async () => {
     const otpData = await dispatch(
-      getVerifyOtpAction({
+      putVerifyOtpAction({
         email: Email,
         otp: otpInputs.join(""),
       }),

@@ -8,8 +8,10 @@ import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 
 // Redux Actions
-import { getNotificationsAction } from "../../../redux/action/notifications/getNotificationsAction";
-import { putNotificationsAction } from "../../../redux/action/notifications/putNotificationsAction";
+import {
+  getAllNotificationsAction,
+  putNotificationsAction,
+} from "../../../redux/action/notifications/NotificationsAction";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -23,7 +25,7 @@ export const Notifikasi = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
-    dispatch(getNotificationsAction());
+    dispatch(getAllNotificationsAction());
     dispatch(putNotificationsAction());
   }, [dispatch]);
 

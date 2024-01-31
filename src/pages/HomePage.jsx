@@ -7,7 +7,6 @@ import { useMediaQuery } from "react-responsive";
 import Header from "../assets/img/Header.webp";
 
 // Components
-import { NavbarHome } from "../assets/components/navbar/NavbarHome";
 import { CardGlobal } from "../assets/components/cards/CardGlobal";
 import { NavbarKelas } from "../assets/components/navbar/NavbarKelas";
 import CardKategorySkeleton from "../assets/components/skeleton/CardKategorySkeleton";
@@ -20,9 +19,9 @@ import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 
 // Redux Actions
 import { getAllCategoriesAction } from "../redux/action/categories/CategoriesAction";
-import { getAllCoursesAction } from "../redux/action/courses/getAllCoursesAction";
+import { getAllCoursesAction } from "../redux/action/courses/CoursesAction";
 import { getAllLessonsAction } from "../redux/action/lessons/LessonsAction";
-import { getAllEnrollmentsAction } from "../redux/action/enrollments/getAllEnrollmentsAction";
+import { getAllEnrollmentsAction } from "../redux/action/enrollments/EnrollmentsAction";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../utils/cookie";
@@ -36,15 +35,11 @@ export const HomePage = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   // Redux Store
-  const storeCategories = useSelector(
-    (state) => state.dataCategories.categories,
-  );
-  const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
-  );
+  const storeCategories = useSelector((state) => state.categories.categories);
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);
-  const loading = useSelector((state) => state.authLogin.loading);
+  const loading = useSelector((state) => state.courses.loading);
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 

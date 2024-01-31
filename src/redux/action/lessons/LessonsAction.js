@@ -3,6 +3,7 @@ import { showErrorToast } from "../../../helper/ToastHelper";
 import {
   reduxGetAllLessons,
   reduxGetAllLessonsByQuery,
+  reduxGetAllLessonsByCourseId,
   reduxPostLesson,
   reduxPutLesson,
   reduxDeleteLesson,
@@ -10,6 +11,7 @@ import {
 
 import {
   setLessons,
+  setLessonsByCourseId,
   startLoading,
   endLoading,
 } from "../../reducer/lessons/LessonsSlice";
@@ -30,6 +32,19 @@ export const getAllLessonsAction = (fullQuery) => async (dispatch) => {
     if (err.response.status === 404) {
       showErrorToast(err.response.data.message);
     }
+  } finally {
+    dispatch(endLoading());
+  }
+};
+
+export const getAllLessonsByCourseIdAction = (courseId) => async (dispatch) => {
+  try {
+    dispatch(startLoading());
+    const result = await reduxGetAllLessonsByCourseId(courseId);
+    dispatch(setLessonsByCourseId(result.data.data));
+    return true;
+  } catch (err) {
+    console.error("reduxGetAllLessonsByCourseId", err);
   } finally {
     dispatch(endLoading());
   }

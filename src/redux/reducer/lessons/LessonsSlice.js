@@ -36,7 +36,6 @@ const LessonsSlice = createSlice({
     startLoading: (state) => {
       state.loading = true;
     },
-
     endLoading: (state) => {
       state.loading = false;
     },
@@ -44,8 +43,8 @@ const LessonsSlice = createSlice({
 });
 
 export const {
-  setLessonsByCourseId,
   setLessons,
+  setLessonsByCourseId,
   addLesson,
   updateLesson,
   deleteLesson,

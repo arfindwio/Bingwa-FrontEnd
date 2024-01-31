@@ -9,7 +9,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { LuLogOut } from "react-icons/lu";
 
 // Redux Actions
-import { logoutUserAction } from "../../../redux/action/users/auth/logoutUserAction";
+import { logoutUserAction } from "../../../redux/action/users/UsersAction";
 
 export const SidebarAkun = () => {
   const dispatch = useDispatch();

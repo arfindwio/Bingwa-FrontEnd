@@ -32,15 +32,21 @@ import { FaArrowCircleRight } from "react-icons/fa";
 import { TbProgressCheck } from "react-icons/tb";
 
 // Redux Actions
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
-import { enrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
-import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/getAllLessonsByCourseId";
-import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
-import { getTrackingByCourseId } from "../../../redux/action/trackings/getTrackingByCourseId";
-import { getDetailCoursesAction } from "../../../redux/action/courses/getDetailCourseAction";
-import { reviewCourseAction } from "../../../redux/action/reviews/reviewCourseAction";
-import { enrollmentPreparationAction } from "../../../redux/action/enrollments/EnrollmentPreparationAction";
-import { putTrackingsAction } from "../../../redux/action/trackings/TrackingsAction";
+import { getAllLessonsByCourseIdAction } from "../../../redux/action/lessons/LessonsAction";
+import {
+  getAllCoursesAction,
+  getDetailCoursesAction,
+} from "../../../redux/action/courses/CoursesAction";
+import { postReviewCourseAction } from "../../../redux/action/reviews/ReviewsAction";
+import {
+  getAllEnrollmentsAction,
+  postEnrollmentsAction,
+  putEnrollmentPreparationAction,
+} from "../../../redux/action/enrollments/EnrollmentsAction";
+import {
+  getTrackingsByCourseId,
+  putTrackingAction,
+} from "../../../redux/action/trackings/TrackingsAction";
 
 // Material Tailwind Components
 import {
@@ -58,20 +64,6 @@ export const DetailKelas = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
 
-  const storeDetailCourses = useSelector((state) => state.dataCourses.detail);
-  const storeLessonsCourseId = useSelector(
-    (state) => state.lessons.lessonsCourseId.lessons,
-  );
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
-  const storeTrackingsCourseEnroll = useSelector(
-    (state) => state.trackings.trackingsCourseId.allTrackings,
-  );
-  const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
-  );
-  const isLoading = useSelector((state) => state.dataCourses.loading);
-  const loadingTracking = useSelector((state) => state);
-
   const [dialogOpen, setDialogOpen] = useState(false);
   const [paymentCourseId, setPaymentCourseId] = useState(null);
   const [videoLink, setVideoLink] = useState(null);
@@ -81,6 +73,18 @@ export const DetailKelas = () => {
   const [open, setOpen] = useState(false);
   const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
   const [dialogPreparationOpen, setDialogPreparationOpen] = useState(true);
+
+  const storeDetailCourses = useSelector((state) => state.courses.detail);
+  const storeLessonsCourseId = useSelector(
+    (state) => state.lessons.lessonsCourseId.lessons,
+  );
+  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeTrackingsCourseEnroll = useSelector(
+    (state) => state.trackings.trackingsCourseId.allTrackings,
+  );
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
+  const isLoading = useSelector((state) => state.courses.loading);
+  const loadingTracking = useSelector((state) => state);
 
   const handleOpen = () => setOpen(!open);
 
@@ -127,9 +131,9 @@ export const DetailKelas = () => {
     dispatch(getAllLessonsByCourseIdAction(courseId));
     if (token) {
       dispatch(getAllEnrollmentsAction());
-      dispatch(getTrackingByCourseId(courseId));
+      dispatch(getTrackingsByCourseId(courseId));
       if (enrollmentData && !enrollmentData.preparationCheck) {
-        dispatch(enrollmentPreparationAction(courseId));
+        dispatch(putEnrollmentPreparationAction(courseId));
       }
     }
   };
@@ -154,9 +158,9 @@ export const DetailKelas = () => {
         }
 
         if (!isPremium) {
-          await dispatch(enrollmentsAction(storeDetailCourses.id));
+          await dispatch(postEnrollmentsAction(storeDetailCourses.id));
           dispatch(getAllEnrollmentsAction());
-          dispatch(getTrackingByCourseId(courseId));
+          dispatch(getTrackingsByCourseId(courseId));
           showSuccessToast("Berhasil Enrollments Course");
         }
       }
@@ -174,11 +178,11 @@ export const DetailKelas = () => {
     const loadingToastId = showLoadingToast("Loading ...");
 
     try {
-      await dispatch(putTrackingsAction(lessonId));
+      await dispatch(putTrackingAction(lessonId));
       if (!loadingTracking.trackings.isLoading) {
         setVideoLink(videoUrl.split("https://youtu.be/")[1]);
         toast.dismiss(loadingToastId);
-        dispatch(getTrackingByCourseId(courseId));
+        dispatch(getTrackingsByCourseId(courseId));
         dispatch(getAllEnrollmentsAction());
         showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
       }
@@ -203,7 +207,7 @@ export const DetailKelas = () => {
     const loadingToastId = showLoadingToast("Loading...");
 
     const review = await dispatch(
-      reviewCourseAction(courseId, {
+      postReviewCourseAction(courseId, {
         userRating: rating,
         userComment: Comment,
       }),

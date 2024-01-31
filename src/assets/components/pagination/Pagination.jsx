@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 // Redux Action
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
 let currentPage = 2;
 

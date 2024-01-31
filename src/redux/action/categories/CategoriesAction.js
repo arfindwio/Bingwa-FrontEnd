@@ -12,7 +12,7 @@ import {
   setCategories,
   startLoading,
   endLoading,
-} from "../../reducer/categories/getAllCategoriesSlice";
+} from "../../reducer/categories/CategoriesSlice";
 
 export const getAllCategoriesAction = (fullQuery) => async (dispatch) => {
   try {

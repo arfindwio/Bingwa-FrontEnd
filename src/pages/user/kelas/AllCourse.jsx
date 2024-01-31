@@ -15,9 +15,9 @@ import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
-import { getAllCoursesAction } from "../../../redux/action/courses/getAllCoursesAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
-import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/getAllEnrollmentsAction";
+import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 
 // Material Tailwind Components
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
@@ -41,10 +41,10 @@ export const AllCourse = () => {
 
   // Redux Store
   const storeCourses = useSelector(
-    (state) => state.dataCourses.courses.courses,
+    (state) => state.courses.courses.courses,
   );
   const storePaginationCourses = useSelector(
-    (state) => state.dataCourses.courses.pagination,
+    (state) => state.courses.courses.pagination,
   );
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);

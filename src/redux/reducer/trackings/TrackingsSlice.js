@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  trackings: null,
+  trackings: [],
   trackingsCourseId: [],
   loading: false,
 };
 
-const getTrackingsSlice = createSlice({
+const TrackingsSlice = createSlice({
   name: "trackings",
   initialState,
   reducers: {
@@ -15,6 +15,16 @@ const getTrackingsSlice = createSlice({
     },
     setTrackingsByCourseId: (state, action) => {
       state.trackingsCourseId = action.payload;
+    },
+    updateTracking: (state, action) => {
+      const { id, updatedData } = action.payload;
+      const index = state.trackings.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        state.trackings[index] = {
+          ...state.trackings[index],
+          ...updatedData,
+        };
+      }
     },
     startLoading: (state) => {
       state.loading = true;
@@ -28,8 +38,9 @@ const getTrackingsSlice = createSlice({
 export const {
   setTrackings,
   setTrackingsByCourseId,
+  updateTracking,
   startLoading,
   endLoading,
-} = getTrackingsSlice.actions;
+} = TrackingsSlice.actions;
 
-export default getTrackingsSlice.reducer;
+export default TrackingsSlice.reducer;
