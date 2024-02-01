@@ -130,7 +130,11 @@ export const HomePage = () => {
               className="text-md cursor-pointer font-semibold text-primary md:text-lg lg:text-lg"
               onClick={toggleShowAllCourses}
             >
-              {showAllCourses ? "Lebih Sedikit" : "Lihat Semua"}
+              {storeCourses.length <= 5
+                ? null
+                : showAllCourses
+                  ? "Show Less"
+                  : "Show All"}
             </div>
           </div>
 

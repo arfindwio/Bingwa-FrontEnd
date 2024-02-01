@@ -39,6 +39,7 @@ export const Otp = () => {
   }, []);
 
   useEffect(() => {
+    if (!Email) return navigate("/register");
     if (emailData) {
       if (!Email) {
         setEmail(emailData);
@@ -126,7 +127,10 @@ export const Otp = () => {
             </span>
 
             {/* Lingkaran Otp */}
-            <div className="flex items-center justify-center gap-4">
+            <div
+              className="flex items-center justify-center gap-4"
+              onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
+            >
               {otpInputs.map((value, index) => (
                 <div
                   key={index}
@@ -140,6 +144,7 @@ export const Otp = () => {
                     maxLength="1"
                     value={value}
                     onChange={(e) => handleChange(index, e.target.value)}
+                    autoComplete="off"
                   />
                 </div>
               ))}

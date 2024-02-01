@@ -14,7 +14,7 @@ import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseS
 import { GoArrowLeft } from "react-icons/go";
 
 // Redux Actions
-import { getHistoryAction } from "../../../redux/action/payments/PaymentsAction";
+import { getHistoryPaymentAction } from "../../../redux/action/payments/PaymentsAction";
 
 export const AkunPembayaran = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export const AkunPembayaran = () => {
   const storeCourses = useSelector((state) => state.courses.courses);
 
   useEffect(() => {
-    dispatch(getHistoryAction());
+    dispatch(getHistoryPaymentAction());
   }, [dispatch]);
 
   return (

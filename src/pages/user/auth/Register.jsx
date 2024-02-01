@@ -187,7 +187,10 @@ export const Register = () => {
           </span>
 
           {/* Nama */}
-          <div className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}
+          >
             <div className="flex flex-col gap-2">
               <span className="text-left text-lg">Nama</span>
               <input
@@ -237,6 +240,7 @@ export const Register = () => {
                   type={showPassword ? "text" : "password"}
                   value={Password}
                   id="password"
+                  autoComplete="off"
                 />
                 {showPassword ? (
                   <FiEye
@@ -280,7 +284,7 @@ export const Register = () => {
                 </span>
               </span>
             </div>
-          </div>
+          </form>
         </div>
       </div>
 
