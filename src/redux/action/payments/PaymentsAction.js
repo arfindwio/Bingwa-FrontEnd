@@ -34,14 +34,14 @@ export const getAllPaymentsAction = (fullQuery) => async (dispatch) => {
   }
 };
 
-export const getHistoryAction = () => async (dispatch) => {
+export const getHistoryPaymentAction = () => async (dispatch) => {
   try {
     dispatch(startLoading());
     const result = await reduxGetHistoryPayment();
     dispatch(setHistoryPayments(result.data.data.payments));
     return true;
   } catch (err) {
-    console.error("getHistoryAction", err);
+    console.error("getHistoryPaymentAction", err);
     return false;
   } finally {
     dispatch(endLoading());

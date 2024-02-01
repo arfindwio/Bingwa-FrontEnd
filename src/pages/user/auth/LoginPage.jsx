@@ -176,7 +176,7 @@ export const LoginPage = () => {
           </span>
 
           {/* Email atau No Telepon */}
-          <form>
+          <form onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}>
             <div className="flex flex-col gap-2">
               <span className="text-left text-lg">Email/No Telepon</span>
               <input
@@ -206,7 +206,6 @@ export const LoginPage = () => {
                 <input
                   placeholder="**********"
                   onChange={handleInput}
-                  onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}
                   className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   value={Password}
                   id="password"
