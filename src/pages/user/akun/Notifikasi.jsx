@@ -69,7 +69,7 @@ export const Notifikasi = () => {
           )}
         </div>
       ) : (
-        <div className="mt-[2rem] min-h-screen bg-secondary px-9 py-10 md:px-20 lg:px-80 ">
+        <div className="min-h-screen bg-secondary px-9 py-10 pt-20 md:px-20 lg:px-80 ">
           <div className="relative flex items-center gap-2 py-8 text-lg font-semibold text-black">
             <GoArrowLeft
               size={30}

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AdminNavbar } from "../../assets/components/admin/adminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
 import LoadingSpinner from "../../assets/components/loading/loadingSpinner";
 
 // Redux Actions
@@ -104,7 +105,7 @@ export const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {!storePayments ? (
+                    {!storePayments.payments ? (
                       <tr>
                         <td
                           className="px-4 py-3 text-center text-sm
@@ -115,7 +116,7 @@ export const AdminDashboard = () => {
                         </td>
                       </tr>
                     ) : (
-                      storePayments.map((value, index) => (
+                      storePayments.payments.map((value, index) => (
                         <tr key={index} className="text-xs">
                           <td className="px-4 py-3">
                             {value.user.userProfile.fullName.split(" ")[0]}
@@ -138,6 +139,15 @@ export const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            {/* Pagination */}
+            <div className="mx-auto pt-5 font-semibold">
+              <Pagination
+                nextLink={storePayments.pagination.links.next}
+                prevLink={storePayments.pagination.links.prev}
+                totalItems={storePayments.pagination.total_items}
+              />
             </div>
           </div>
         </section>

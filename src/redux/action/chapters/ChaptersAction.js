@@ -24,7 +24,7 @@ export const getAllChaptersAction = (fullQuery) => async (dispatch) => {
       ? reduxGetAllChaptersByQuery(getAllInput)
       : reduxGetAllChapters());
 
-    dispatch(setChapters(result.data.data.chapters));
+    dispatch(setChapters(result.data.data));
     return true;
   } catch (err) {
     console.error("getAllChaptersAction", err);

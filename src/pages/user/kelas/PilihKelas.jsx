@@ -127,15 +127,13 @@ export const PilihKelas = () => {
               </div>
 
               {/* Pagination */}
-              {storeCourses.length <= 15 ? null : (
-                <div className="mx-auto mt-10 font-bold">
-                  <Pagination
-                    nextLink={storePaginationCourses.links.next}
-                    prevLink={storePaginationCourses.links.prev}
-                    totalItems={storePaginationCourses.total_items}
-                  />
-                </div>
-              )}
+              <div className="mx-auto mt-10 font-semibold">
+                <Pagination
+                  nextLink={storePaginationCourses.links.next}
+                  prevLink={storePaginationCourses.links.prev}
+                  totalItems={storePaginationCourses.total_items}
+                />
+              </div>
             </div>
           </div>
         </div>
