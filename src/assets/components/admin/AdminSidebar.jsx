@@ -1,14 +1,16 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 // Images
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { logoutAdminAction } from "../../../redux/action/admin/auth/logoutAdminAction";
+import { logoutUserAction } from "../../../redux/action/users/UsersAction";
 
 export const AdminSidebar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const currentPath = location.pathname;
@@ -47,12 +49,12 @@ export const AdminSidebar = () => {
       </div>
       <div
         className={`w-full ${
-          currentPath === "/admin/kelola-kelas"
+          currentPath === "/admin/manage-course"
             ? "bg-blue"
             : "hover:bg-blue-hover hover:bg-opacity-50"
         } cursor-pointer px-5 py-3 font-sans text-xl text-white `}
         onClick={() => {
-          navigate("/admin/kelola-kelas");
+          navigate("/admin/manage-course");
         }}
       >
         Manage Courses
@@ -98,7 +100,7 @@ export const AdminSidebar = () => {
           "w-full cursor-pointer px-5 py-3 font-sans text-xl text-white hover:bg-blue-hover hover:bg-opacity-50"
         }
         onClick={() => {
-          logoutAdminAction();
+          dispatch(logoutUserAction());
         }}
       >
         Keluar

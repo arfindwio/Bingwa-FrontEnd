@@ -15,7 +15,9 @@ import { getAllCategoriesAction } from "../../../redux/action/categories/Categor
 export const SliderCardCategories = () => {
   const dispatch = useDispatch();
 
-  const storeCategories = useSelector((state) => state.categories.categories);
+  const storeCategories = useSelector(
+    (state) => state.categories.categories.categories,
+  );
 
   const getCategories = () => {
     dispatch(getAllCategoriesAction());

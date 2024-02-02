@@ -13,6 +13,7 @@ import {
 import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
 import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../../assets/components/admin/AdminCard";
+import { Pagination } from "../../../assets/components/pagination/Pagination";
 import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
 // Helper
@@ -53,9 +54,11 @@ export const AdminManagePromotion = () => {
   const storeCountCourses = useSelector(
     (state) => state.courses.courses.courses,
   );
-
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
+  );
+  const storePaginationPromotions = useSelector(
+    (state) => state.promotions.promotions.pagination,
   );
   const isLoading = useSelector((state) => state.promotions.loading);
 
@@ -302,6 +305,13 @@ export const AdminManagePromotion = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div className="mx-auto pt-5 font-semibold">
+              <Pagination
+                nextLink={storePaginationPromotions.links.next}
+                prevLink={storePaginationPromotions.links.prev}
+                totalItems={storePaginationPromotions.total_items}
+              />
             </div>
           </div>
         </section>

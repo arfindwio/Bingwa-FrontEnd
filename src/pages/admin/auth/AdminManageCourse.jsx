@@ -13,6 +13,7 @@ import {
 import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
 import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../../assets/components/admin/AdminCard";
+import { Pagination } from "../../../assets/components/pagination/Pagination";
 import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 
 // Helper
@@ -72,7 +73,12 @@ export const AdminManageCourse = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeAllCourse = useSelector((state) => state.courses.courses.courses);
-  const storeCategories = useSelector((state) => state.categories.categories);
+  const storePaginationCourses = useSelector(
+    (state) => state.courses.courses.pagination,
+  );
+  const storeCategories = useSelector(
+    (state) => state.categories.categories.categories,
+  );
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
   );
@@ -369,6 +375,15 @@ export const AdminManageCourse = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            {/* Pagiantion */}
+            <div className="mx-auto pt-5 font-semibold">
+              <Pagination
+                nextLink={storePaginationCourses.links.next}
+                prevLink={storePaginationCourses.links.prev}
+                totalItems={storePaginationCourses.total_items}
+              />
             </div>
           </div>
         </section>

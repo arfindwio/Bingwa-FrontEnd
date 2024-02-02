@@ -4,10 +4,12 @@ import { useDispatch } from "react-redux";
 // Redux Action
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
-let currentPage = 2;
+let currentPage = 1;
 
 export const Pagination = ({ nextLink, prevLink, totalItems }) => {
   const dispatch = useDispatch();
+
+  if (!nextLink && !prevLink) return null;
 
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);

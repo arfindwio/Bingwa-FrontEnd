@@ -40,9 +40,7 @@ export const AllCourse = () => {
   const [selectedLevels, setSelectedLevels] = useState([]);
 
   // Redux Store
-  const storeCourses = useSelector(
-    (state) => state.courses.courses.courses,
-  );
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storePaginationCourses = useSelector(
     (state) => state.courses.courses.pagination,
   );
@@ -328,15 +326,13 @@ export const AllCourse = () => {
               </div>
 
               {/* Pagination */}
-              {storeCourses.length <= 10 ? null : (
-                <div className="mx-auto">
-                  <Pagination
-                    nextLink={storePaginationCourses.links.next}
-                    prevLink={storePaginationCourses.links.prev}
-                    totalItems={storePaginationCourses.total_items}
-                  />
-                </div>
-              )}
+              <div className="mx-auto">
+                <Pagination
+                  nextLink={storePaginationCourses.links.next}
+                  prevLink={storePaginationCourses.links.prev}
+                  totalItems={storePaginationCourses.total_items}
+                />
+              </div>
             </div>
           </div>
         </div>

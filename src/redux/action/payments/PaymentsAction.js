@@ -25,7 +25,7 @@ export const getAllPaymentsAction = (fullQuery) => async (dispatch) => {
     const result = await (fullQuery
       ? reduxGetAllPaymentsByQuery(getAllInput)
       : reduxGetAllPayments());
-    dispatch(setPayments(result.data.data.payments));
+    dispatch(setPayments(result.data.data));
     return true;
   } catch (err) {
     console.error("getAllPaymentsAction", err);

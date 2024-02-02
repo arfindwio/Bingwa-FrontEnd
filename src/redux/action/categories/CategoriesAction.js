@@ -24,7 +24,7 @@ export const getAllCategoriesAction = (fullQuery) => async (dispatch) => {
       ? reduxGetAllCategoriesByQuery(getAllInput)
       : reduxGetAllCategories());
 
-    dispatch(setCategories(result.data.data.categories));
+    dispatch(setCategories(result.data.data));
     return true;
   } catch (err) {
     console.error("getAllCategoriesAction", err);
