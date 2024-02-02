@@ -35,7 +35,9 @@ export const HomePage = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   // Redux Store
-  const storeCategories = useSelector((state) => state.categories.categories);
+  const storeCategories = useSelector(
+    (state) => state.categories.categories.categories,
+  );
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);
@@ -108,7 +110,7 @@ export const HomePage = () => {
               Kategori Belajar
             </div>
           </div>
-          {storeCategories == null ? (
+          {!storeCategories ? (
             <div className="grid grid-cols-6 gap-4">
               <CardKategorySkeleton />
             </div>
@@ -130,7 +132,11 @@ export const HomePage = () => {
               className="text-md cursor-pointer font-semibold text-primary md:text-lg lg:text-lg"
               onClick={toggleShowAllCourses}
             >
-              {showAllCourses ? "Lebih Sedikit" : "Lihat Semua"}
+              {storeCourses.length <= 5
+                ? null
+                : showAllCourses
+                  ? "Show Less"
+                  : "Show All"}
             </div>
           </div>
 

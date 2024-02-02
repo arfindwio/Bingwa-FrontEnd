@@ -14,6 +14,7 @@ import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import {
   showLoadingToast,
   showSuccessToast,
+  showErrorToast,
 } from "../../../helper/ToastHelper";
 
 // Icons
@@ -28,28 +29,30 @@ export const AkunProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [image, setImage] = useState(null);
+  const [newFullName, setNewFullName] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [newCity, setNewCity] = useState("");
+  const [newCountry, setNewCountry] = useState("");
+  const [email, setEmail] = useState("");
+
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const storeUserProfile = useSelector((state) => state.users.userAuthenticate);
 
-  const [image, setImage] = useState(null);
-  const [newFullName, setNewFullName] = useState(
-    storeUserProfile?.userProfile?.fullName || "",
-  );
-  const [newPhoneNumber, setNewPhoneNumber] = useState(
-    storeUserProfile?.userProfile?.phoneNumber || "",
-  );
-  const [newCity, setNewCity] = useState(
-    storeUserProfile?.userProfile?.city || "",
-  );
-  const [newCountry, setNewCountry] = useState(
-    storeUserProfile?.userProfile?.newCountry || "",
-  );
-  const [email, setEmail] = useState(storeUserProfile?.email || "");
-
   useEffect(() => {
     getAllData();
   }, [dispatch]);
+
+  useEffect(() => {
+    setEmail(storeUserProfile?.email || email);
+    setNewFullName(storeUserProfile?.userProfile.fullName || newFullName);
+    setNewPhoneNumber(
+      storeUserProfile?.userProfile.phoneNumber || newPhoneNumber,
+    );
+    setNewCity(storeUserProfile?.userProfile.city || newCity);
+    setNewCountry(storeUserProfile?.userProfile.country || newCountry);
+  }, [storeUserProfile]);
 
   const getAllData = () => {
     dispatch(getUserAuthenticateAction());
@@ -80,6 +83,7 @@ export const AkunProfile = () => {
 
     if (update) {
       showSuccessToast("Update Profil Berhasil!");
+      dispatch(getUserAuthenticateAction());
     }
   };
 
@@ -108,7 +112,11 @@ export const AkunProfile = () => {
           {/* Isi Akun */}
           <div className="flex py-4 text-center">
             <SidebarAkun />
-            <div className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]">
+            <div
+              className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]"
+              onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
+              tabIndex={0}
+            >
               <div className="relative h-28 w-28 cursor-pointer rounded-full border-[3px] border-primary">
                 <input
                   type="file"
@@ -123,7 +131,7 @@ export const AkunProfile = () => {
                       ? URL.createObjectURL(image)
                       : storeUserProfile.userProfile?.userProfile
                           ?.profilePicture ||
-                        "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706262091020"
+                        "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706817534316"
                   }
                   alt="profile"
                   className="h-full w-full cursor-pointer rounded-full object-cover"

@@ -11,7 +11,9 @@ export const SidebarKelas = ({
   clearAllFilters,
 }) => {
   // Redux Store
-  const storeCategories = useSelector((state) => state.categories.categories);
+  const storeCategories = useSelector(
+    (state) => state.categories.categories.categories,
+  );
 
   return (
     <>
@@ -25,7 +27,7 @@ export const SidebarKelas = ({
               value={"newest"}
               checked={filters.newest}
               onChange={() => handleFilterChange("filter", "newest")}
-              className="mr-2 h-[20px] w-[20px] "
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Paling Baru
           </label>
@@ -35,7 +37,7 @@ export const SidebarKelas = ({
               value={"populer"}
               checked={filters.populer}
               onChange={() => handleFilterChange("filter", "populer")}
-              className="mr-2 h-[20px] w-[20px]"
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Paling Populer
           </label>
@@ -45,7 +47,7 @@ export const SidebarKelas = ({
               value={"promo"}
               checked={filters.promo}
               onChange={() => handleFilterChange("filter", "promo")}
-              className="mr-2 h-[20px] w-[20px]"
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Promo
           </label>
@@ -66,7 +68,7 @@ export const SidebarKelas = ({
                 onChange={() =>
                   handleFilterChange("category", value.categoryName)
                 }
-                className="mr-2 h-[20px] w-[20px]"
+                className="mr-2 h-[20px] w-[20px] cursor-pointer"
               />
               {value.categoryName}
             </label>
@@ -82,7 +84,7 @@ export const SidebarKelas = ({
               value={"Beginner Level"}
               checked={selectedLevels.includes("Beginner Level")}
               onChange={() => handleFilterChange("level", "Beginner Level")}
-              className="mr-2 h-[20px] w-[20px]"
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Beginner Level
           </label>
@@ -92,7 +94,7 @@ export const SidebarKelas = ({
               value={"Intermediate Level"}
               checked={selectedLevels.includes("Intermediate Level")}
               onChange={() => handleFilterChange("level", "Intermediate Level")}
-              className="mr-2 h-[20px] w-[20px]"
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Intermediate Level
           </label>
@@ -102,7 +104,7 @@ export const SidebarKelas = ({
               value={"Advanced Level"}
               checked={selectedLevels.includes("Advanced Level")}
               onChange={() => handleFilterChange("level", "Advanced Level")}
-              className="mr-2 h-[20px] w-[20px]"
+              className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
             Advanced Level
           </label>

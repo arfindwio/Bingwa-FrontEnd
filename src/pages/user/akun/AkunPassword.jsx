@@ -98,7 +98,10 @@ export const AkunPassword = () => {
           {/* Isi Akun*/}
           <div className="flex py-4 text-center">
             <SidebarAkun />
-            <div className="flex w-full flex-col items-center gap-10 md:w-[60%] lg:w-[60%]">
+            <form
+              className="flex w-full flex-col items-center gap-10 md:w-[60%] lg:w-[60%]"
+              onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
+            >
               <div className="py-2 text-2xl font-bold">Ubah Password</div>
               <div className="relative flex flex-col gap-1">
                 <div className="text-left">Masukkan Password Lama</div>
@@ -109,6 +112,7 @@ export const AkunPassword = () => {
                   placeholder="**********"
                   value={oldPassword}
                   id="old pass"
+                  autoComplete="off"
                 />
                 {showPassword1 ? (
                   <FiEye
@@ -133,6 +137,7 @@ export const AkunPassword = () => {
                   placeholder="**********"
                   value={newPassword}
                   id="new pass"
+                  autoComplete="off"
                 />
                 {showPassword2 ? (
                   <FiEye
@@ -157,6 +162,7 @@ export const AkunPassword = () => {
                   placeholder="**********"
                   value={confirmPassword}
                   id="confirm pass"
+                  autoComplete="off"
                 />
                 {showPassword3 ? (
                   <FiEye
@@ -178,7 +184,7 @@ export const AkunPassword = () => {
               >
                 Ubah Password
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>

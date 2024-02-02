@@ -74,7 +74,7 @@ export const DetailKelas = () => {
   const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
   const [dialogPreparationOpen, setDialogPreparationOpen] = useState(true);
 
-  const storeDetailCourses = useSelector((state) => state.courses.detail);
+  const storeDetailCourses = useSelector((state) => state.courses.detailCourse);
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
