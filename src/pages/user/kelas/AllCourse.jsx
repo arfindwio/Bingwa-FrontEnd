@@ -12,6 +12,7 @@ import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
 import { SidebarKelas } from "../../../assets/components/sidebar/SidebarKelas";
 import { Pagination } from "../../../assets/components/pagination/Pagination";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
+import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
@@ -24,6 +25,7 @@ import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
+import Skeleton from "react-loading-skeleton";
 
 export const AllCourse = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,7 @@ export const AllCourse = () => {
   );
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const isLoadingCourses = useSelector((state) => state.courses.loading);
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -201,7 +204,7 @@ export const AllCourse = () => {
           {/* Search */}
           <div className="flex items-center justify-between pt-4">
             <div className="-mt-8 px-0 py-6 text-xl font-bold md:mt-0 md:text-3xl lg:mt-0 lg:text-3xl">
-              Topik Kelas
+              Course Topics
             </div>
             {isMobile ? (
               <div
@@ -216,8 +219,8 @@ export const AllCourse = () => {
                   type="text"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="cursor-pointer rounded-3xl border-2 border-primary px-1 py-2 outline-none md:px-4 lg:px-4 "
-                  placeholder="Cari Kelas..."
+                  className="cursor-pointer rounded-3xl border-2 border-primary py-2 pl-1 pr-3 outline-none md:px-4 lg:pl-4 lg:pr-12"
+                  placeholder="Search Course..."
                 />
                 <BiSearchAlt
                   size={25}
@@ -326,13 +329,15 @@ export const AllCourse = () => {
               </div>
 
               {/* Pagination */}
-              <div className="mx-auto">
-                <Pagination
-                  nextLink={storePaginationCourses.links.next}
-                  prevLink={storePaginationCourses.links.prev}
-                  totalItems={storePaginationCourses.total_items}
-                />
-              </div>
+              {isLoadingCourses ? null : (
+                <div className="mx-auto">
+                  <Pagination
+                    nextLink={storePaginationCourses.links.next}
+                    prevLink={storePaginationCourses.links.prev}
+                    totalItems={storePaginationCourses.total_items}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

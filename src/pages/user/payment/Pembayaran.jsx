@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 // Components
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { CardPembayaran } from "../../../assets/components/cards/CardPembayaran";
-import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
+import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -47,9 +47,7 @@ export const Pembayaran = () => {
   const [newExpiryDate, setNewExpiryDate] = useState("");
   const [newBankName, setNewBankName] = useState("");
 
-  const storeCourses = useSelector(
-    (state) => state.courses.courses.courses,
-  );
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
   const redirectUrl = useSelector(
     (state) => state.payment.paymentMidtrans.transaction.redirect_url,
   );
@@ -339,16 +337,12 @@ export const Pembayaran = () => {
           {/* Main Content */}
           <div className="w-full gap-6 px-0 md:px-44 lg:px-0">
             {/* Card Item */}
-            {!filteredCourses ? (
-              <CardCoursesSkeleton />
-            ) : (
-              <CardPembayaran
-                image={filteredCourses?.courseImg}
-                category={filteredCourses?.category?.categoryName}
-                title={filteredCourses?.courseName}
-                author={filteredCourses?.mentor}
-              />
-            )}
+            <CardPembayaran
+              image={filteredCourses?.courseImg}
+              category={filteredCourses?.category?.categoryName}
+              title={filteredCourses?.courseName}
+              author={filteredCourses?.mentor}
+            />
           </div>
 
           {/* Detail Harga */}

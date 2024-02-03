@@ -68,12 +68,12 @@ export const NavbarMobile = () => {
           <div
             className="flex flex-col items-center justify-center gap-2"
             onClick={() => {
-              navigate("/notifikasi");
+              navigate("/notification");
             }}
           >
             <div
               className={
-                location.pathname === "/notifikasi"
+                location.pathname === "/notification"
                   ? `text-primary`
                   : `text-slate-500`
               }
@@ -83,38 +83,12 @@ export const NavbarMobile = () => {
             <span
               className={`text-sm
                 ${
-                  location.pathname === "/notifikasi"
+                  location.pathname === "/notification"
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
             >
               Notifikasi
-            </span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-center gap-2"
-            onClick={() => {
-              navigate("/kelas-saya");
-            }}
-          >
-            <div
-              className={
-                location.pathname === "/kelas-saya"
-                  ? `text-primary`
-                  : `text-slate-500`
-              }
-            >
-              <FaRegCirclePlay size={25} />
-            </div>
-            <span
-              className={`text-sm
-                ${
-                  location.pathname === "/kelas-saya"
-                    ? `font-semibold text-primary`
-                    : `text-slate-500`
-                }`}
-            >
-              Kelas
             </span>
           </div>
           <div

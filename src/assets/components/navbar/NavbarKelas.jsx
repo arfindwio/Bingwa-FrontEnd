@@ -45,7 +45,7 @@ export const NavbarKelas = () => {
 
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
-      navigate(`/pilih-kelas`);
+      navigate(`/search-course`);
     }
   };
 
@@ -117,7 +117,7 @@ export const NavbarKelas = () => {
 
           <div
             className={`${
-              currentPath === "/notifikasi"
+              currentPath === "/notification"
                 ? "flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
                 : "flex space-x-2 md:space-x-4 lg:space-x-4"
             }`}
@@ -125,10 +125,10 @@ export const NavbarKelas = () => {
             <IoIosNotificationsOutline
               size={30}
               onClick={() => {
-                navigate("/notifikasi");
+                navigate("/notification");
               }}
             />
-            {currentPath === "/notifikasi" ? (
+            {currentPath === "/notification" ? (
               <div className="text-lg">Notification</div>
             ) : null}
           </div>

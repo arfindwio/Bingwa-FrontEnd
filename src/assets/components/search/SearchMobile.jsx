@@ -22,7 +22,7 @@ export const SearchMobile = () => {
 
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
-      navigate(`/pilih-kelas`);
+      navigate(`/search-course`);
     }
   };
   return (
