@@ -71,7 +71,7 @@ export const AkunPassword = () => {
     );
     setTimeout(() => {
       showSuccessToast("Ganti Password telah Berhasil");
-      navigate("/kelas-saya");
+      navigate("/");
     }, 2000);
   };
 

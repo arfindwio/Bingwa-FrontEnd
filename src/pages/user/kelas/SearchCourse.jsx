@@ -6,7 +6,6 @@ import { useMediaQuery } from "react-responsive";
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
 import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
@@ -18,7 +17,7 @@ import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/Enrol
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
-export const PilihKelas = () => {
+export const SearchCourse = () => {
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -55,8 +54,6 @@ export const PilihKelas = () => {
     dispatch(getAllLessonsAction());
     if (token) dispatch(getAllEnrollmentsAction());
   };
-
-  if (isLoading) return <LoadingSpinner />;
 
   return (
     <>
@@ -127,13 +124,15 @@ export const PilihKelas = () => {
               </div>
 
               {/* Pagination */}
-              <div className="mx-auto mt-10 font-semibold">
-                <Pagination
-                  nextLink={storePaginationCourses.links.next}
-                  prevLink={storePaginationCourses.links.prev}
-                  totalItems={storePaginationCourses.total_items}
-                />
-              </div>
+              {isLoading ? null : (
+                <div className="mx-auto mt-10 font-semibold">
+                  <Pagination
+                    nextLink={storePaginationCourses.links.next}
+                    prevLink={storePaginationCourses.links.prev}
+                    totalItems={storePaginationCourses.total_items}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import { AdminLogin } from "../pages/admin/auth/AdminLogin";
 import { Otp } from "../pages/user/auth/Otp";
 import { Error404 } from "../pages/errors/Error404";
 import { Notifikasi } from "../pages/user/akun/Notifikasi";
-import { PilihKelas } from "../pages/user/kelas/PilihKelas";
+import { SearchCourse } from "../pages/user/kelas/SearchCourse";
 import { AkunProfile } from "../pages/user/akun/AkunProfile";
 import { AkunPembayaran } from "../pages/user/akun/AkunPembayaran";
 import { AkunPassword } from "../pages/user/akun/AkunPassword";
@@ -43,16 +43,16 @@ export const RouteList = () => {
         <Route path="/forget-password" element={<ForgetPass />} />
         <Route path="/otp" element={<Otp />} />
 
-        <Route path="/pilih-kelas" element={<PilihKelas />} />
+        <Route path="/search-course" element={<SearchCourse />} />
 
         {/* Belum Enroll */}
-        <Route path="/detail-kelas/:courseId" element={<DetailKelas />} />
+        <Route path="/detail-course/:courseId" element={<DetailKelas />} />
 
         <Route path="/all-kelas" element={<AllCourse />} />
 
         {/* Payment */}
-        <Route path="/pembayaran/:courseId" element={<Pembayaran />} />
-        <Route path="/pembayaran-sukses" element={<PembayaranSukses />} />
+        <Route path="/payment/:courseId" element={<Pembayaran />} />
+        <Route path="/payment-success" element={<PembayaranSukses />} />
 
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -107,7 +107,7 @@ export const RouteList = () => {
 
         {/* Data User */}
         <Route
-          path="notifikasi"
+          path="/notification"
           element={
             <TokenProtected>
               <Notifikasi />
