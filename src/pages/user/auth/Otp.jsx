@@ -102,6 +102,14 @@ export const Otp = () => {
     }
   };
 
+  const maskEmail = (email) => {
+    const prefix = email.substring(0, email.indexOf("@"));
+    const maskedPrefix = prefix.charAt(0) + "*".repeat(prefix.length - 1);
+    const maskedEmail = maskedPrefix + email.substring(email.indexOf("@"));
+
+    return maskedEmail;
+  };
+
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
@@ -123,7 +131,7 @@ export const Otp = () => {
           <div className="flex flex-col gap-2">
             <span className="py-6 text-center text-lg">
               Ketik 6 digit kode yang dikirim ke{" "}
-              <span className="font-bold">{Email}</span>
+              <span className="font-bold">{maskEmail(Email)}</span>
             </span>
 
             {/* Lingkaran Otp */}

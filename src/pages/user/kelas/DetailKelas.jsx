@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 // Components
 import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
+import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { CardDetail } from "../../../assets/components/cards/CardDetail";
 
 // Images
@@ -154,7 +154,7 @@ export const DetailKelas = () => {
         const isPremium = storeDetailCourses?.isPremium;
 
         if (isPremium) {
-          navigate(`/pembayaran/${paymentCourseId}`);
+          navigate(`/payment/${paymentCourseId}`);
         }
 
         if (!isPremium) {
@@ -655,7 +655,7 @@ export const DetailKelas = () => {
         </DialogHeader>
         <DialogBody className="w-full text-sm">
           {storeDetailCourses === null ? (
-            <CardCoursesSkeleton />
+            <CardCourseSkeleton />
           ) : (
             <CardDetail
               image={storeDetailCourses?.courseImg}
@@ -682,7 +682,7 @@ export const DetailKelas = () => {
             className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover"
             onClick={handleEnrollCourse}
           >
-            <div className="font-semibold text-white">Beli Sekarang</div>
+            <div className="font-semibold text-white">Buy Now</div>
             <FaArrowCircleRight size={17} className="text-white" />
           </div>
         </DialogFooter>

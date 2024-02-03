@@ -8,29 +8,37 @@ import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
 import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { CardRiwayat } from "../../../assets/components/cards/CardRiwayat";
-import CardCoursesSkeleton from "../../../assets/components/skeleton/CardCourseSkeleton";
+import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
 
 // Redux Actions
 import { getHistoryPaymentAction } from "../../../redux/action/payments/PaymentsAction";
+import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
 
 export const AkunPembayaran = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
-  const storeHistory = useSelector((state) => state.payment.history);
-  const storeCourses = useSelector((state) => state.courses.courses);
+  const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
+  const storeHistoryPayments = useSelector(
+    (state) => state.payment.historyPayments,
+  );
 
   useEffect(() => {
-    dispatch(getHistoryPaymentAction());
+    getAllData();
   }, [dispatch]);
+
+  const getAllData = () => {
+    dispatch(getHistoryPaymentAction());
+    dispatch(getAllLessonsAction());
+  };
 
   return (
     <>
-      <div className="min-h-screen bg-secondary px-4 py-20 pt-2 md:h-screen md:px-20 md:pt-[5rem] lg:h-fit lg:px-80 lg:pt-[5rem]">
+      <div className="min-h-screen bg-secondary px-4 pt-2 md:h-screen md:px-20 md:pt-[5rem] lg:h-fit lg:px-80 lg:pt-[5rem]">
         <div className="relative flex items-center gap-2 py-8 text-lg font-bold text-primary">
           <GoArrowLeft
             size={30}
@@ -61,34 +69,38 @@ export const AkunPembayaran = () => {
               {/* Main Content */}
               <div className="w-full space-y-6 px-3 md:px-5 lg:px-5">
                 {/* Card Item */}
-                {storeHistory == null ? (
-                  <CardCoursesSkeleton />
-                ) : (
-                  storeHistory.map((value) => {
-                    const matchedCourse = storeCourses.find(
-                      (course) => course.id === value.courseId,
-                    );
+                {storeHistoryPayments && storeHistoryPayments.length > 0 ? (
+                  storeHistoryPayments.map((value) => {
+                    const lessonsData = storeLessons
+                      ? storeLessons.filter(
+                          (lesson) =>
+                            Number(lesson.chapter.course.id) ===
+                            Number(value.courseId),
+                        )
+                      : null;
 
-                    if (matchedCourse) {
-                      return (
-                        <CardRiwayat
-                          key={value.courseId}
-                          image={matchedCourse.courseImg}
-                          category={value?.course?.category?.categoryName}
-                          rating={value.course.averageRating}
-                          title={value.course.courseName}
-                          author={value.course.mentor}
-                          level={value.course.level}
-                          modul={value.course.modul}
-                          duration={value.course.duration}
-                          courseId={value.courseId}
-                          status={value.status}
-                          price={value.amount}
-                        />
-                      );
-                    }
-                    return null;
+                    return (
+                      <CardRiwayat
+                        key={value.courseId}
+                        image={value.course.courseImg}
+                        category={value?.course?.category?.categoryName}
+                        rating={value.course.averageRating}
+                        totalRating={value.course.enrollment.length}
+                        title={value.course.courseName}
+                        author={value.course.mentor}
+                        level={value.course.level}
+                        modul={lessonsData.length}
+                        duration={value.course.totalDuration}
+                        courseId={value.courseId}
+                        status={value.status}
+                        price={value.amount}
+                      />
+                    );
                   })
+                ) : (
+                  <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
+                    - No payment transactions found -
+                  </p>
                 )}
               </div>
             </div>

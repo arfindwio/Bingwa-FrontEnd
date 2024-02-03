@@ -15,7 +15,6 @@ import { NavbarMobile } from "../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../assets/components/search/SearchMobile";
 import { SliderFilterCategories } from "../assets/components/slider/SliderFilterCategories";
 import { SliderCardCategories } from "../assets/components/slider/SliderCardCategories";
-import LoadingSpinner from "../assets/components/loading/loadingSpinner";
 
 // Redux Actions
 import { getAllCategoriesAction } from "../redux/action/categories/CategoriesAction";
@@ -41,7 +40,6 @@ export const HomePage = () => {
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector((state) => state.enrollments.course);
-  const loading = useSelector((state) => state.courses.loading);
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
@@ -68,15 +66,11 @@ export const HomePage = () => {
     setSelectedCategory(category);
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <>
       {isMobile ? <NavbarMobile /> : <NavbarKelas />}
       <div className="flex flex-col md:mt-[5rem] lg:mt-[5rem]">
-        {isMobile ? <SearchMobile /> : <></>}
+        {isMobile ? <SearchMobile /> : null}
         {/* Hero Section */}
         <div className="hidden md:flex lg:flex">
           <div className="relative -z-10 w-2/3">
