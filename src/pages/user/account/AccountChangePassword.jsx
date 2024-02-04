@@ -4,9 +4,9 @@ import { useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
-import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
+import { SidebarAccount } from "../../../assets/components/sidebar/SidebarAccount";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -18,7 +18,7 @@ import { showSuccessToast } from "../../../helper/ToastHelper";
 // Redux Actions
 import { putChangePasswordUser } from "../../../redux/action/users/UsersAction";
 
-export const AkunPassword = () => {
+export const AccountChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -92,19 +92,19 @@ export const AkunPassword = () => {
         {/* Akun */}
         <div className="rounded-xl border-2 border-primary">
           <div className="rounded-t-lg bg-primary py-4 text-center text-xl font-semibold text-white">
-            Akun
+            Account
           </div>
 
           {/* Isi Akun*/}
           <div className="flex py-4 text-center">
-            <SidebarAkun />
+            <SidebarAccount />
             <form
               className="flex w-full flex-col items-center gap-10 md:w-[60%] lg:w-[60%]"
               onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
             >
-              <div className="py-2 text-2xl font-bold">Ubah Password</div>
+              <div className="py-2 text-2xl font-bold">Change Password</div>
               <div className="relative flex flex-col gap-1">
-                <div className="text-left">Masukkan Password Lama</div>
+                <div className="text-left">Enter Old Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword1 ? "text" : "password"}
@@ -129,7 +129,7 @@ export const AkunPassword = () => {
                 )}
               </div>
               <div className="relative flex flex-col gap-1">
-                <div className="text-left">Masukkan Password Baru</div>
+                <div className="text-left">Enter New Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword2 ? "text" : "password"}
@@ -154,7 +154,7 @@ export const AkunPassword = () => {
                 )}
               </div>
               <div className="relative flex flex-col gap-1">
-                <div className="text-left">Ulangi Password Baru</div>
+                <div className="text-left">Confirm New Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword3 ? "text" : "password"}
@@ -182,13 +182,13 @@ export const AkunPassword = () => {
                 className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
                 onClick={handleSave}
               >
-                Ubah Password
+                Change Password
               </button>
             </form>
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };

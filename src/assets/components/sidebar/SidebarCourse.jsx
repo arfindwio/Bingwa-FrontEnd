@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 // Redux Action
 
-export const SidebarKelas = ({
+export const SidebarCourse = ({
   filters,
   selectedCategories,
   selectedLevels,
@@ -29,7 +29,7 @@ export const SidebarKelas = ({
               onChange={() => handleFilterChange("filter", "newest")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
-            Paling Baru
+            Latest
           </label>
           <label className="flex cursor-pointer items-center px-6">
             <input
@@ -39,7 +39,7 @@ export const SidebarKelas = ({
               onChange={() => handleFilterChange("filter", "populer")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
-            Paling Populer
+            Most Populer
           </label>
           <label className="flex cursor-pointer items-center px-6">
             <input
@@ -54,7 +54,7 @@ export const SidebarKelas = ({
         </div>
 
         {/* Kategori */}
-        <div className="flex px-4 py-3 text-xl font-bold">Kategori</div>
+        <div className="flex px-4 py-3 text-xl font-bold">Category</div>
         <div className="flex flex-col space-y-4 pb-3 font-medium">
           {storeCategories?.map((value) => (
             <label
@@ -75,8 +75,8 @@ export const SidebarKelas = ({
           ))}
         </div>
 
-        {/* Level Kesulitan */}
-        <div className="flex px-4 py-3 text-xl font-bold">Level Kesulitan</div>
+        {/* Difficulty Level */}
+        <div className="flex px-4 py-3 text-xl font-bold">Difficulty Level</div>
         <div className="flex flex-col space-y-4 pb-3 font-medium">
           <label className="flex cursor-pointer items-center px-6">
             <input
@@ -110,13 +110,13 @@ export const SidebarKelas = ({
           </label>
         </div>
 
-        {/* Hapus Filter */}
+        {/* Clear Filter */}
         <div className="flex justify-center pb-1 pt-3">
           <button
             className="font-semibold text-red-600"
             onClick={clearAllFilters}
           >
-            Hapus Filter
+            Clear Filter
           </button>
         </div>
       </div>

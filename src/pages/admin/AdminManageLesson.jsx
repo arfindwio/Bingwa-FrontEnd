@@ -10,29 +10,29 @@ import {
 } from "@material-tailwind/react";
 
 // Components
-import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
-import { AdminCard } from "../../../assets/components/admin/AdminCard";
-import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
+import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import { showSuccessToast } from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
+import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
 import {
   getAllLessonsAction,
   postLessonAction,
   putLessonAction,
   deleteLessonAction,
-} from "../../../redux/action/lessons/LessonsAction";
-import { getAllChaptersAction } from "../../../redux/action/chapters/ChaptersAction";
+} from "../../redux/action/lessons/LessonsAction";
+import { getAllChaptersAction } from "../../redux/action/chapters/ChaptersAction";
 
 export const AdminManageLesson = () => {
   const dispatch = useDispatch();
@@ -103,7 +103,7 @@ export const AdminManageLesson = () => {
     }
 
     if (newLesson) {
-      showSuccessToast("Lesson berhasil tambahkan!");
+      showSuccessToast("Lesson successfully added!");
       setDialogCreate(false);
 
       setNewLessonName("");
@@ -146,7 +146,7 @@ export const AdminManageLesson = () => {
     }
 
     if (updatedLesson) {
-      showSuccessToast("Lesson berhasil diupdate!");
+      showSuccessToast("Lesson has been successfully updated!");
       setDialogEdit(false);
 
       // Clear state variables
@@ -168,7 +168,7 @@ export const AdminManageLesson = () => {
     }
 
     if (deleteLesson) {
-      showSuccessToast("Lesson berhasil dihapus");
+      showSuccessToast("Lesson successfully deleted");
       dispatch(getAllLessonsAction());
       window.scrollTo(0, 0);
     }
@@ -301,7 +301,11 @@ export const AdminManageLesson = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex space-x-6 px-10 py-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleNewLesson() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
@@ -381,7 +385,11 @@ export const AdminManageLesson = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex space-x-6 px-10 py-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleUpdateLesson() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">

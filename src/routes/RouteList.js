@@ -3,28 +3,28 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // Pages
 import { HomePage } from "../pages/HomePage";
-import { LoginPage } from "../pages/user/auth/LoginPage";
+import { Login } from "../pages/user/auth/Login";
 import { Register } from "../pages/user/auth/Register";
-import { UpdatePass } from "../pages/user/auth/UpdatePass";
-import { AdminLogin } from "../pages/admin/auth/AdminLogin";
+import { UpdatePassword } from "../pages/user/auth/UpdatePassword";
+import { AdminLogin } from "../pages/admin/AdminLogin";
 import { Otp } from "../pages/user/auth/Otp";
 import { Error404 } from "../pages/errors/Error404";
-import { Notifikasi } from "../pages/user/akun/Notifikasi";
-import { SearchCourse } from "../pages/user/kelas/SearchCourse";
-import { AkunProfile } from "../pages/user/akun/AkunProfile";
-import { AkunPembayaran } from "../pages/user/akun/AkunPembayaran";
-import { AkunPassword } from "../pages/user/akun/AkunPassword";
-import { DetailKelas } from "../pages/user/kelas/DetailKelas";
+import { Notification } from "../pages/user/account/Notification";
+import { SearchCourse } from "../pages/user/course/SearchCourse";
+import { AccountProfile } from "../pages/user/account/AccountProfile";
+import { AccountPaymentHistory } from "../pages/user/account/AccountPaymentHistory";
+import { AccountChangePassword } from "../pages/user/account/AccountChangePassword";
+import { DetailCourse } from "../pages/user/course/DetailCourse";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
-import { AdminManageCategory } from "../pages/admin/auth/AdminManageCategory";
-import { AdminManageCourse } from "../pages/admin/auth/AdminManageCourse";
-import { AdminManageChapter } from "../pages/admin/auth/AdminManageChapter";
-import { AdminManageLesson } from "../pages/admin/auth/AdminManageLesson";
-import { AdminManagePromotion } from "../pages/admin/auth/AdminManagePromotion";
-import { Pembayaran } from "../pages/user/payment/Pembayaran";
-import { PembayaranSukses } from "../pages/user/payment/PembayaranSukses";
-import { ForgetPass } from "../pages/user/auth/ForgetPass";
-import { AllCourse } from "../pages/user/kelas/AllCourse";
+import { AdminManageCategory } from "../pages/admin/AdminManageCategory";
+import { AdminManageCourse } from "../pages/admin/AdminManageCourse";
+import { AdminManageChapter } from "../pages/admin/AdminManageChapter";
+import { AdminManageLesson } from "../pages/admin/AdminManageLesson";
+import { AdminManagePromotion } from "../pages/admin/AdminManagePromotion";
+import { Payment } from "../pages/user/payment/Payment";
+import { PaymentSuccess } from "../pages/user/payment/PaymentSuccess";
+import { ForgetPassword } from "../pages/user/auth/ForgetPassword";
+import { AllCourse } from "../pages/user/course/AllCourse";
 
 // Token Protected
 import TokenProtected from "../assets/components/protected/TokenProtected";
@@ -37,22 +37,20 @@ export const RouteList = () => {
         <Route path="/" element={<HomePage />} />
 
         {/* User */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/update-password" element={<UpdatePass />} />
-        <Route path="/forget-password" element={<ForgetPass />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/otp" element={<Otp />} />
 
-        <Route path="/search-course" element={<SearchCourse />} />
-
-        {/* Belum Enroll */}
-        <Route path="/detail-course/:courseId" element={<DetailKelas />} />
-
+        {/* Course */}
         <Route path="/all-kelas" element={<AllCourse />} />
+        <Route path="/search-course" element={<SearchCourse />} />
+        <Route path="/detail-course/:courseId" element={<DetailCourse />} />
 
         {/* Payment */}
-        <Route path="/payment/:courseId" element={<Pembayaran />} />
-        <Route path="/payment-success" element={<PembayaranSukses />} />
+        <Route path="/payment/:courseId" element={<Payment />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
 
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -110,31 +108,31 @@ export const RouteList = () => {
           path="/notification"
           element={
             <TokenProtected>
-              <Notifikasi />
+              <Notification />
             </TokenProtected>
           }
         />
         <Route
-          path="akun-profile"
+          path="/account-profile"
           element={
             <TokenProtected>
-              <AkunProfile />
+              <AccountProfile />
             </TokenProtected>
           }
         />
         <Route
-          path="akun-password"
+          path="/change-password"
           element={
             <TokenProtected>
-              <AkunPassword />
+              <AccountChangePassword />
             </TokenProtected>
           }
         />
         <Route
-          path="akun-pembayaran"
+          path="/payment-history"
           element={
             <TokenProtected>
-              <AkunPembayaran />
+              <AccountPaymentHistory />
             </TokenProtected>
           }
         />

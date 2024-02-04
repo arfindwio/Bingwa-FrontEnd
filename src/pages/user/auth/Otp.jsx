@@ -124,13 +124,13 @@ export const Otp = () => {
             />
           </div>
           <span className="items-center py-4 text-3xl font-bold text-primary">
-            Masukkan OTP
+            Enter OTP
           </span>
 
           {/* Masukkan Kode OTP */}
           <div className="flex flex-col gap-2">
             <span className="py-6 text-center text-lg">
-              Ketik 6 digit kode yang dikirim ke{" "}
+              Type the 6 digit code sent to{" "}
               <span className="font-bold">{maskEmail(Email)}</span>
             </span>
 
@@ -160,7 +160,7 @@ export const Otp = () => {
 
             {seconds > 0 ? (
               <span className="py-6 text-center text-lg">
-                Kirim ulang OTP dalam{" "}
+                Resend OTP in{" "}
                 <span className="font-bold text-primary">{seconds}</span> detik
               </span>
             ) : (
@@ -168,7 +168,7 @@ export const Otp = () => {
                 className="cursor-pointer py-6 text-center text-xl font-bold text-red-500"
                 onClick={handleResend}
               >
-                Kirim Ulang OTP
+                Resend OTP
               </span>
             )}
           </div>
@@ -180,7 +180,7 @@ export const Otp = () => {
               className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
               onClick={handleSave}
             >
-              Simpan
+              Submit
             </button>
           </div>
         </div>

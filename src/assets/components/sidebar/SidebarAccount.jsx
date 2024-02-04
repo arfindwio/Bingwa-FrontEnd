@@ -11,7 +11,7 @@ import { LuLogOut } from "react-icons/lu";
 // Redux Actions
 import { logoutUserAction } from "../../../redux/action/users/UsersAction";
 
-export const SidebarAkun = () => {
+export const SidebarAccount = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,18 +28,20 @@ export const SidebarAkun = () => {
     <div className="hidden w-[40%] flex-col px-4 md:flex lg:flex">
       {/* Sidebar Item */}
       <div
-        className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
+        className={`flex cursor-pointer items-center gap-3 border-b-2  py-4 hover:text-primary ${
+          currentPath === "/account-profile"
+            ? "border-primary"
+            : "border-slate-300"
+        }`}
         onClick={() => {
-          navigate("/akun-profile");
+          navigate("/account-profile");
         }}
       >
-        <div className="text-primary">
-          <LuPenLine size={25} />
-        </div>
+        <LuPenLine size={25} className="text-primary" />
         <div
           className={`${
-            currentPath === "/akun-profile"
-              ? "text-lg font-bold text-primary"
+            currentPath === "/account-profile"
+              ? "text-lg font-bold text-primary "
               : "text-md font-semibold"
           }`}
         >
@@ -48,18 +50,20 @@ export const SidebarAkun = () => {
       </div>
       {/* Sidebar Item */}
       <div
-        className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
+        className={`flex cursor-pointer items-center gap-3 border-b-2 py-4 hover:text-primary ${
+          currentPath === "/change-password"
+            ? "border-primary"
+            : "border-slate-300"
+        }`}
         onClick={() => {
-          navigate("/akun-password");
+          navigate("/change-password");
         }}
       >
-        <div className="text-primary">
-          <IoSettingsOutline size={25} />
-        </div>
+        <IoSettingsOutline size={25} className="text-primary" />
         <div
           className={`${
-            currentPath === "/akun-password"
-              ? "text-lg font-bold text-primary"
+            currentPath === "/change-password"
+              ? "text-lg font-bold text-primary "
               : "text-md font-semibold"
           }`}
         >
@@ -68,18 +72,20 @@ export const SidebarAkun = () => {
       </div>
       {/* Sidebar Item */}
       <div
-        className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
+        className={`flex cursor-pointer items-center gap-3 border-b-2 py-4 hover:text-primary ${
+          currentPath === "/payment-history"
+            ? "border-primary"
+            : "border-slate-300"
+        }`}
         onClick={() => {
-          navigate("/akun-pembayaran");
+          navigate("/payment-history");
         }}
       >
-        <div className="text-primary">
-          <MdOutlineShoppingCart size={25} />
-        </div>
+        <MdOutlineShoppingCart size={25} className="text-primary" />
         <div
           className={`${
-            currentPath === "/akun-pembayaran"
-              ? "text-lg font-bold text-primary"
+            currentPath === "/payment-history"
+              ? "text-lg font-bold text-primary "
               : "text-md font-semibold"
           }`}
         >
@@ -91,9 +97,7 @@ export const SidebarAkun = () => {
         className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
         onClick={handleLogout}
       >
-        <div className="text-primary">
-          <LuLogOut size={25} />
-        </div>
+        <LuLogOut size={25} className="text-primary" />
         <div className="text-md font-semibold">Keluar</div>
       </div>
       <div className="py-6 text-gray-400">Version 1.1.0</div>

@@ -127,9 +127,9 @@ export const NavbarMobile = () => {
           >
             <div
               className={
-                location.pathname === "/akun-profile" ||
-                location.pathname === "/akun-password" ||
-                location.pathname === "/akun-pembayaran"
+                location.pathname === "/account-profile" ||
+                location.pathname === "/change-password" ||
+                location.pathname === "/payment-history"
                   ? `text-primary`
                   : `text-slate-500`
               }
@@ -139,9 +139,9 @@ export const NavbarMobile = () => {
             <span
               className={`text-sm
                 ${
-                  location.pathname === "/akun-profile" ||
-                  location.pathname === "/akun-password" ||
-                  location.pathname === "/akun-pembayaran"
+                  location.pathname === "/account-profile" ||
+                  location.pathname === "/change-password" ||
+                  location.pathname === "/payment-history"
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
@@ -160,7 +160,7 @@ export const NavbarMobile = () => {
               <div
                 className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
                 onClick={() => {
-                  navigate("/akun-profile");
+                  navigate("/account-profile");
                 }}
               >
                 <div className="text-primary">
@@ -172,7 +172,7 @@ export const NavbarMobile = () => {
               <div
                 className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
                 onClick={() => {
-                  navigate("/akun-password");
+                  navigate("/change-password");
                 }}
               >
                 <div className="text-primary">
@@ -184,7 +184,7 @@ export const NavbarMobile = () => {
               <div
                 className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
                 onClick={() => {
-                  navigate("/akun-pembayaran");
+                  navigate("/payment-history");
                 }}
               >
                 <div className="text-primary">

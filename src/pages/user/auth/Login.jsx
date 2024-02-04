@@ -7,7 +7,11 @@ import toast from "react-hot-toast";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Icons
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiEye } from "react-icons/fi";
+import { FiEyeOff } from "react-icons/fi";
+
+// Redux Actions
+import { postLoginUserAction } from "../../../redux/action/users/UsersAction";
 
 // Helper
 import {
@@ -16,16 +20,19 @@ import {
   showSuccessToast,
 } from "../../../helper/ToastHelper";
 
-// Redux Actions
-import { loginAdminAction } from "../../../redux/action/admin/auth/loginAdminAction";
+// Components
+import { LoginGoogle } from "../../../assets/components/google/LoginGoogle";
 
-export const AdminLogin = () => {
+export const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
-
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleInput = (e) => {
     if (e) {
@@ -42,7 +49,7 @@ export const AdminLogin = () => {
     const loadingToastId = showLoadingToast("Loading ...");
 
     const login = await dispatch(
-      loginAdminAction({
+      postLoginUserAction({
         emailOrPhoneNumber: Email,
         password: Password,
       }),
@@ -53,7 +60,7 @@ export const AdminLogin = () => {
     if (login) {
       showSuccessToast("Login Berhasil!");
       setTimeout(() => {
-        navigate("/admin/dashboard");
+        navigate("/");
       }, 2000);
     }
   };
@@ -160,54 +167,50 @@ export const AdminLogin = () => {
     handleLogin();
   };
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
-    <div className="flex">
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
+    <div className="flex h-screen items-center justify-center">
+      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
+        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
+          <span className="items-center py-8 text-4xl font-bold text-primary">
+            Masuk
           </span>
-        </div>
-      </div>
-      <div className="flex h-screen items-center justify-center">
-        <div className="mx-4 w-full rounded-lg text-center md:w-3/6 lg:w-2/6">
-          <div className="mx-auto flex w-[22rem] flex-col md:w-[33rem] lg:w-[30rem]">
-            <span className="pb-10 text-4xl font-bold text-primary">
-              Admin Login
-            </span>
 
-            {/* Email */}
-            <div className="flex flex-col gap-2 ">
-              <span className="text-left text-lg">Email</span>
+          {/* Email atau No Telepon */}
+          <form onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}>
+            <div className="flex flex-col gap-2">
+              <span className="text-left text-lg">Email/No Telepon</span>
               <input
-                onChange={handleInput}
-                id="email"
                 placeholder="bingwa@gmail.com"
-                className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                onChange={handleInput}
+                className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                type="email"
+                value={Email}
+                id="email"
               />
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-2 pt-8">
-              <div className="flex justify-between">
+            <div className="flex flex-col gap-2 py-6">
+              <div className="flex items-center justify-between">
                 <span className="text-left text-lg">Password</span>
-                <span className="cursor-pointer text-lg font-semibold text-primary">
+                <span
+                  className="text-md cursor-pointer font-semibold text-primary"
+                  onClick={() => {
+                    navigate("/forget-password");
+                  }}
+                >
                   Lupa Kata Sandi
                 </span>
               </div>
               <div className="relative flex flex-col">
                 <input
-                  onChange={handleInput}
-                  onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}
-                  id="password"
                   placeholder="**********"
-                  className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                  value={Password}
+                  id="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="off"
                 />
                 {showPassword ? (
                   <FiEye
@@ -226,18 +229,45 @@ export const AdminLogin = () => {
             </div>
 
             {/* Button Masuk */}
-            <div className="flex flex-col py-4">
+            <div className="flex flex-col py-2">
               <button
                 type="button"
-                className="mt-2 w-full rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
+                className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
                 onClick={() => {
                   validateForm();
                 }}
               >
                 Masuk
               </button>
+
+              <div className="flex items-center justify-center py-6">
+                <LoginGoogle />
+              </div>
+
+              <div className="text-center">
+                <span className="items-center justify-center py-8 text-center text-black">
+                  Belum punya akun?
+                  <span
+                    className="cursor-pointer px-2 font-bold text-primary"
+                    onClick={() => {
+                      navigate("/Register");
+                    }}
+                  >
+                    Daftar di sini.
+                  </span>
+                </span>
+              </div>
             </div>
-          </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
+        <div className="flex items-center justify-center gap-6">
+          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+          <span className="text-center font-sans text-6xl text-white">
+            Bingwa
+          </span>
         </div>
       </div>
     </div>

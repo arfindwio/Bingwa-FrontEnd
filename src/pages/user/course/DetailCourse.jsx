@@ -4,9 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
-import { CardDetail } from "../../../assets/components/cards/CardDetail";
+import { CardDetailCourse } from "../../../assets/components/cards/CardDetailCourse";
 
 // Images
 import onboarding from "../../../assets/img/onboarding.webp";
@@ -17,7 +17,7 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../../helper/ToastHelper";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import LoadingSpinner from "../../../assets/components/loading/LoadingSpinner";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -59,7 +59,7 @@ import {
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
-export const DetailKelas = () => {
+export const DetailCourse = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId } = useParams();
@@ -161,16 +161,16 @@ export const DetailKelas = () => {
           await dispatch(postEnrollmentsAction(storeDetailCourses.id));
           dispatch(getAllEnrollmentsAction());
           dispatch(getTrackingsByCourseId(courseId));
-          showSuccessToast("Berhasil Enrollments Course");
+          showSuccessToast("Successful Course Enrollments");
         }
       }
 
       if (!token) {
-        showErrorToast("Anda harus login terlebih dahulu");
+        showErrorToast("You need to log in first!");
       }
     } catch (err) {
       console.error("Error during enrollment:", err);
-      showErrorToast("Pendaftaran gagal. Silakan coba lagi.");
+      showErrorToast("Registration failed. Please try again!");
     }
   };
 
@@ -184,7 +184,6 @@ export const DetailKelas = () => {
         toast.dismiss(loadingToastId);
         dispatch(getTrackingsByCourseId(courseId));
         dispatch(getAllEnrollmentsAction());
-        showSuccessToast("Selamat Telah Menyelesaikan Lesson Ini...!!!");
       }
     } catch (error) {
       console.error("Error handling trackings:", error);
@@ -193,14 +192,6 @@ export const DetailKelas = () => {
 
   const handleStarClick = (star) => {
     setRating(star);
-  };
-
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "comment") {
-        setComment(e.target.value);
-      }
-    }
   };
 
   const handleReview = async () => {
@@ -244,7 +235,7 @@ export const DetailKelas = () => {
 
   return (
     <>
-      <NavbarKelas />
+      <NavbarCourse />
 
       {/* Parent Container */}
       <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-20">
@@ -261,7 +252,7 @@ export const DetailKelas = () => {
               <GoArrowLeft size={30} />
             </div>
             <div className="flex w-full justify-between">
-              <div className="font-semibold">Kelas Lainnya</div>
+              <div className="font-semibold">Other Courses</div>
               <div
                 className="font-bold text-primary md:hidden lg:hidden"
                 onClick={handleOpen}
@@ -309,7 +300,7 @@ export const DetailKelas = () => {
               <div className="flex items-center gap-1">
                 <LiaBookSolid size={20} color="#22c55e" />
                 <div className="text-sm font-semibold">
-                  {storeLessonsCourseId.length} Modul
+                  {storeLessonsCourseId.length} Module
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -322,7 +313,7 @@ export const DetailKelas = () => {
           </div>
           <div className="flex">
             <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
-              <div className="font-semibold">Join Grup Telegram</div>
+              <div className="font-semibold">Join Telegram Grup</div>
               <div>
                 <HiChatAlt2 size={20} />
               </div>
@@ -358,10 +349,7 @@ export const DetailKelas = () => {
                 </div>
               </div>
             ) : (
-              <div
-                className="relative h-0 overflow-hidden rounded-2xl"
-                style={{ paddingBottom: "56.25%" }}
-              >
+              <div className="relative h-0 overflow-hidden rounded-2xl pb-[56.25%]">
                 <iframe
                   title="YouTube Video"
                   className="absolute left-0 top-0 h-full w-full"
@@ -375,7 +363,7 @@ export const DetailKelas = () => {
             <div className="flex flex-col gap-3">
               {/* Tentang Kelas */}
               <div className="flex flex-col gap-2">
-                <h1 className="text-xl font-bold">Tentang Kelas</h1>
+                <h1 className="text-xl font-bold">About Course</h1>
                 <p className="text-slate-600">
                   {storeDetailCourses?.aboutCourse}
                 </p>
@@ -383,7 +371,9 @@ export const DetailKelas = () => {
 
               {/* Kelas ini ditujukan untuk */}
               <div className="flex flex-col gap-2">
-                <h1 className="text-xl font-bold">Kelas Ini Ditujukan Untuk</h1>
+                <h1 className="text-xl font-bold">
+                  This course is targeted for
+                </h1>
                 <ol className="list-decimal pl-4">
                   <li>{storeDetailCourses?.targetAudience}</li>
                 </ol>
@@ -398,7 +388,7 @@ export const DetailKelas = () => {
           <div className="mt-8 flex flex-col gap-6 rounded-2xl p-6 shadow-lg">
             {/* Materi Belajar */}
             <div className="flex justify-between">
-              <h1 className="text-xl font-bold">Materi Belajar</h1>
+              <h1 className="text-xl font-bold">Learning Materials</h1>
               <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
                 {!token ? (
                   <div
@@ -564,7 +554,7 @@ export const DetailKelas = () => {
             className="flex w-64 cursor-pointer items-center justify-center gap-3 rounded-full bg-primary py-2 transition-all hover:bg-primary-hover"
             onClick={handleDialogPreparationOpen}
           >
-            <div className="font-semibold text-white">Ikuti Kelas</div>
+            <div className="font-semibold text-white">Join Course</div>
           </div>
         </DialogFooter>
       </Dialog>
@@ -614,7 +604,7 @@ export const DetailKelas = () => {
               <span className="text-center text-lg">Review</span>
               <textarea
                 placeholder="Share your experience with this course..."
-                onChange={handleInput}
+                onChange={(e) => setComment(e.target.value)}
                 className="rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
                 value={Comment}
                 id="comment"
@@ -647,17 +637,17 @@ export const DetailKelas = () => {
             onClick={handleDetail}
           />
           <h1 className="text-lg font-semibold text-slate-700">
-            Selangkah lagi menuju
+            One step closer to
           </h1>
           <h1 className="text-lg font-semibold text-primary">
-            Course Kebanggaan Anda
+            Your Pride Course
           </h1>
         </DialogHeader>
         <DialogBody className="w-full text-sm">
           {storeDetailCourses === null ? (
             <CardCourseSkeleton />
           ) : (
-            <CardDetail
+            <CardDetailCourse
               image={storeDetailCourses?.courseImg}
               category={storeDetailCourses?.category?.categoryName}
               rating={storeDetailCourses?.averageRating}

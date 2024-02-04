@@ -14,7 +14,7 @@ import { showSuccessToast } from "../../../helper/ToastHelper";
 // Icons
 import { GoArrowLeft } from "react-icons/go";
 
-export const ForgetPass = () => {
+export const ForgetPassword = () => {
   const [Email, setEmail] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ export const ForgetPass = () => {
               className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
               onClick={handleSave}
             >
-              Masuk
+              Submit
             </button>
           </div>
         </div>

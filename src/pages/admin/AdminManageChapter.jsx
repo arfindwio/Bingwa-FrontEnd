@@ -10,57 +10,58 @@ import {
 } from "@material-tailwind/react";
 
 // Components
-import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
-import { AdminCard } from "../../../assets/components/admin/AdminCard";
-import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
+import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import { showSuccessToast } from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
 import {
-  getAllCategoriesAction,
-  postCategoryAction,
-  putCategoryAction,
-  deleteCategoryAction,
-} from "../../../redux/action/categories/CategoriesAction";
+  getAllChaptersAction,
+  postChapterAction,
+  putChapterAction,
+  deleteChapterAction,
+} from "../../redux/action/chapters/ChaptersAction";
+import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
 
-export const AdminManageCategory = () => {
+export const AdminManageChapter = () => {
   const dispatch = useDispatch();
 
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [newCategoryImage, setNewCategoryImage] = useState("");
+  const [newChapterName, setNewChapterName] = useState("");
+  const [newCourseId, setNewCourseId] = useState("");
+  const [newDuration, setNewDuration] = useState("");
 
   // Edit Category
-  const [editCategoryId, setEditCategoryId] = useState(null);
-  const [updateCategoryName, setUpdateCategoryName] = useState("");
-  const [updateCategoryImage, setUpdateCategoryImage] = useState("");
+  const [editChapterId, setEditChapterId] = useState(null);
+  const [updateChapterName, setUpdateChapterName] = useState("");
+  const [updateDuration, setUpdateDuration] = useState("");
+  const [updateCourseId, setUpdateCourseId] = useState("");
+  const [updateChapterDetail, setUpdateChapterDetail] = useState("");
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
 
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
-  const storeCountCourses = useSelector(
-    (state) => state.courses.courses.courses,
+  const storeChapters = useSelector(
+    (state) => state.chapters.chapters.chapters,
   );
-  const storeCategories = useSelector(
-    (state) => state.categories.categories.categories,
+  const storePaginationChapters = useSelector(
+    (state) => state.chapters.chapters.pagination,
   );
-  const storePaginationCategories = useSelector(
-    (state) => state.categories.categories.pagination,
-  );
-  const isLoading = useSelector((state) => state.categories.loading);
+  const storeCourses = useSelector((state) => state.courses.courses.courses);
+  const isLoading = useSelector((state) => state.chapters.loading);
 
-  const countPremiumCourse = storeCountCourses.filter(
+  const countPremiumCourse = storeCourses.filter(
     (course) => course.isPremium === true,
   );
 
@@ -71,98 +72,104 @@ export const AdminManageCategory = () => {
   const getAllData = () => {
     dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
-    dispatch(getAllCategoriesAction());
+    dispatch(getAllChaptersAction());
   };
 
   const handleSearch = (formatSearch) => {
-    dispatch(getAllCategoriesAction(formatSearch));
+    dispatch(getAllChaptersAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
-  // New Category
-  const handleNewCategory = async () => {
-    const newCategory = await dispatch(
-      postCategoryAction({
-        categoryName: newCategoryName,
-        categoryImg: newCategoryImage,
+  // New Chapter
+  const handleNewChapter = async () => {
+    const newChapter = await dispatch(
+      postChapterAction({
+        name: newChapterName,
+        courseId: parseInt(newCourseId),
+        duration: parseInt(newDuration),
       }),
     );
 
-    if (!newCategory) {
+    if (!newChapter) {
       setDialogCreate(false);
-      dispatch(getAllCategoriesAction());
+      dispatch(getAllChaptersAction());
     }
 
-    if (newCategory) {
-      showSuccessToast("Category berhasil tambahkan!");
+    if (newChapter) {
+      showSuccessToast("Chapter successfully added!");
       setDialogCreate(false);
 
-      setNewCategoryName("");
-      setNewCategoryImage("");
+      setNewChapterName("");
+      setNewCourseId("");
+      setNewDuration("");
 
-      dispatch(getAllCategoriesAction());
+      dispatch(getAllChaptersAction());
     }
   };
 
-  // Edit Category
-  const handleEditCategory = (categoryId) => {
-    const categoryToEdit = storeCategories?.find(
-      (category) => category.id === categoryId,
+  // Edit Chapter
+  const handleEditChapter = (chapterId) => {
+    const chapterToEdit = storeChapters?.find(
+      (chapter) => chapter.id === chapterId,
     );
 
-    setEditCategoryId(categoryId);
-    setUpdateCategoryName(categoryToEdit.categoryName);
-    setUpdateCategoryImage(categoryToEdit.categoryImg);
+    setEditChapterId(chapterId);
+    setUpdateChapterName(chapterToEdit.name);
+    setUpdateDuration(chapterToEdit.duration);
+    setUpdateCourseId(chapterToEdit.courseId);
+    setUpdateChapterDetail(chapterToEdit);
 
     setDialogEdit(true);
   };
 
-  // Update Category
-  const handleUpdateCategory = async () => {
-    const updatedCategory = await dispatch(
-      putCategoryAction(
+  // Update Chapter
+  const handleUpdateChapter = async () => {
+    const updatedChapter = await dispatch(
+      putChapterAction(
         {
-          categoryName: updateCategoryName,
-          categoryImg: updateCategoryImage,
+          name: updateChapterName,
+          duration: updateDuration,
+          courseId: updateCourseId,
         },
-        editCategoryId,
+        editChapterId,
       ),
     );
 
-    if (!updatedCategory) {
+    if (!updatedChapter) {
       setDialogEdit(false);
-      dispatch(getAllCategoriesAction());
+      dispatch(getAllChaptersAction());
     }
 
-    if (updatedCategory) {
-      showSuccessToast("Category berhasil diupdate!");
+    if (updatedChapter) {
+      showSuccessToast("Chapter has been successfully updated!");
       setDialogEdit(false);
 
       // Clear state variables
-      setEditCategoryId(null);
-      setUpdateCategoryName("");
-      setUpdateCategoryImage("");
+      setEditChapterId(null);
+      setUpdateChapterName("");
+      setUpdateDuration("");
+      setUpdateCourseId("");
 
-      dispatch(getAllCategoriesAction());
+      dispatch(getAllChaptersAction());
     }
   };
 
-  // Delete Category
-  const handleDeleteCategory = async (categoryId) => {
-    const deleteCategory = await dispatch(deleteCategoryAction(categoryId));
+  // Delete Chapter
+  const handleDeleteChapter = async (chapterId) => {
+    const deleteChapter = await dispatch(deleteChapterAction(chapterId));
 
-    if (!deleteCategory) {
-      dispatch(getAllCategoriesAction());
+    if (!deleteChapter) {
+      dispatch(getAllChaptersAction());
     }
 
-    if (deleteCategory) {
-      showSuccessToast("Category berhasil dihapus");
+    if (deleteChapter) {
+      showSuccessToast("Chapter successfully deleted");
 
       window.scrollTo(0, 0);
 
-      dispatch(getAllCategoriesAction());
+      dispatch(getAllChaptersAction());
     }
   };
 
@@ -182,7 +189,7 @@ export const AdminManageCategory = () => {
           <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCountCourses.length}
+            count={storeCourses.length}
             cardColor={"bg-green"}
           />
           <AdminCard
@@ -198,7 +205,7 @@ export const AdminManageCategory = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Manage Category</h2>
+                  <h2 className="text-xl font-semibold">Manage Chapter</h2>
                 </div>
                 <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
                   <div className="flex w-full items-center space-x-3 md:w-auto">
@@ -220,10 +227,13 @@ export const AdminManageCategory = () => {
                         No
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Category Image
+                        Chapter Name
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Category Name
+                        Duration
+                      </th>
+                      <th scope="col" className="px-4 py-3">
+                        Course Name
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Action
@@ -231,7 +241,7 @@ export const AdminManageCategory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storeCategories?.map((value, index) => (
+                    {storeChapters?.map((value, index) => (
                       <tr
                         className="border-b dark:border-gray-700"
                         key={value?.id}
@@ -242,19 +252,22 @@ export const AdminManageCategory = () => {
                         >
                           {index + 1}
                         </th>
-                        <td className="px-4 py-3">{value?.categoryImg}</td>
-                        <td className="px-4 py-3">{value?.categoryName}</td>
+                        <td className="px-4 py-3">{value?.name}</td>
+                        <td className="px-4 py-3">{value?.duration} Minute</td>
+                        <td className="px-4 py-3">
+                          {value?.course.courseName}
+                        </td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditCategory(value?.id)}
+                            onClick={() => handleEditChapter(value?.id)}
                           >
                             Edit
                           </button>
                           <button
                             className="rounded-full bg-red-400 px-3 py-1"
                             onClick={() => {
-                              handleDeleteCategory(value?.id);
+                              handleDeleteChapter(value?.id);
                             }}
                           >
                             Delete
@@ -266,13 +279,11 @@ export const AdminManageCategory = () => {
                 </table>
               </div>
             </div>
-
-            {/* Pagiantion */}
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationCategories.links.next}
-                prevLink={storePaginationCategories.links.prev}
-                totalItems={storePaginationCategories.total_items}
+                nextLink={storePaginationChapters.links.next}
+                prevLink={storePaginationChapters.links.prev}
+                totalItems={storePaginationChapters.total_items}
               />
             </div>
           </div>
@@ -283,7 +294,7 @@ export const AdminManageCategory = () => {
       <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Tambah Kelas</h1>
+            <h1 className="font-semibold">Create Chapter</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -293,26 +304,59 @@ export const AdminManageCategory = () => {
         </DialogHeader>
         <DialogBody className="flex space-x-6 px-10 py-10">
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div
+            className="flex-1 space-y-2"
+            onKeyPress={(e) => (e.key === "Enter" ? handleNewChapter() : "")}
+            tabIndex={0}
+          >
             <div className="flex flex-col">
-              <span className="text-slate-700">Category Image</span>
+              <span className="text-slate-700">Chapter Name</span>
               <input
                 type="text"
-                value={newCategoryImage}
-                onChange={(e) => setNewCategoryImage(e.target.value)}
-                placeholder="Input Category Image"
+                value={newChapterName}
+                onChange={(e) => setNewChapterName(e.target.value)}
+                placeholder="Input Chapter Image"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-slate-700">Course</span>
+              <select
+                value={newCourseId}
+                onChange={(e) => setNewCourseId(e.target.value)}
+                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+              >
+                {storeCourses.length === 0 ? (
+                  <option value="" hidden>
+                    No course available
+                  </option>
+                ) : (
+                  <>
+                    <option value="" hidden>
+                      Choose Course
+                    </option>
+                    {storeCourses.map((value) => (
+                      <option
+                        key={value.id}
+                        value={value.id}
+                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                      >
+                        {value?.courseName}
+                      </option>
+                    ))}
+                  </>
+                )}
+              </select>
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Category Name</span>
+              <span className="text-slate-700">Duration</span>
               <input
-                type="text"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="Input Category Name"
+                type="number"
+                value={newDuration}
+                onChange={(e) => setNewDuration(e.target.value)}
+                placeholder="Input Duration"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -320,7 +364,7 @@ export const AdminManageCategory = () => {
         </DialogBody>
         <DialogFooter className="flex justify-center gap-4">
           <div
-            onClick={() => handleNewCategory()}
+            onClick={() => handleNewChapter()}
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
             <button className="flex font-semibold text-white">Create</button>
@@ -332,7 +376,7 @@ export const AdminManageCategory = () => {
       <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Edit Category</h1>
+            <h1 className="font-semibold">Edit Chapter</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -344,26 +388,51 @@ export const AdminManageCategory = () => {
         </DialogHeader>
         <DialogBody className="flex space-x-6 px-10 py-10">
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div
+            className="flex-1 space-y-2"
+            onKeyPress={(e) => (e.key === "Enter" ? handleUpdateChapter() : "")}
+            tabIndex={0}
+          >
             <div className="flex flex-col">
-              <span className="text-slate-700">Category Image</span>
+              <span className="text-slate-700">Chapter Name</span>
               <input
                 type="text"
-                value={updateCategoryImage}
-                onChange={(e) => setUpdateCategoryImage(e.target.value)}
-                placeholder="Input Category Image"
+                value={updateChapterName}
+                onChange={(e) => setUpdateChapterName(e.target.value)}
+                placeholder="Input Chapter Name"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-slate-700">Course</span>
+              <select
+                value={updateCourseId}
+                onChange={(e) => setUpdateCourseId(e.target.value)}
+                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+              >
+                <option value={updateChapterDetail?.courseId} hidden>
+                  {updateChapterDetail?.course?.courseName}
+                </option>
+                {storeCourses.map((value) => (
+                  <option
+                    key={value.id}
+                    value={value.id}
+                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                  >
+                    {value?.courseName}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Category Name</span>
+              <span className="text-slate-700">Duration</span>
               <input
-                type="text"
-                value={updateCategoryName}
-                onChange={(e) => setUpdateCategoryName(e.target.value)}
-                placeholder="Input Category Name"
+                type="number"
+                value={updateDuration}
+                onChange={(e) => setUpdateDuration(e.target.value)}
+                placeholder="Input Duration"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -372,7 +441,7 @@ export const AdminManageCategory = () => {
         <DialogFooter className="flex justify-center gap-4">
           <div
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
-            onClick={handleUpdateCategory}
+            onClick={handleUpdateChapter}
           >
             <button className="flex font-semibold text-white">Edit</button>
           </div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // Cookie
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
-export const CardKategory = ({ thumbnail, category }) => {
+export const CardCategory = ({ thumbnail, category }) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = () => {
