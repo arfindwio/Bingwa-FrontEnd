@@ -7,12 +7,11 @@ import { BiSearchAlt } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 
 // Component
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
-import { SidebarKelas } from "../../../assets/components/sidebar/SidebarKelas";
+import { SidebarCourse } from "../../../assets/components/sidebar/SidebarCourse";
 import { Pagination } from "../../../assets/components/pagination/Pagination";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
-import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
 
 // Redux Actions
@@ -25,7 +24,6 @@ import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 
 // Cookies
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
-import Skeleton from "react-loading-skeleton";
 
 export const AllCourse = () => {
   const dispatch = useDispatch();
@@ -197,7 +195,7 @@ export const AllCourse = () => {
 
   return (
     <>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse />}
       <div className="flex h-full min-h-screen flex-col justify-between bg-secondary pb-4">
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-2 md:px-8 md:pb-0 md:pt-20 lg:px-24 lg:pb-0 lg:pt-20">
@@ -233,7 +231,7 @@ export const AllCourse = () => {
           <div className="flex  items-start justify-center py-4 md:justify-between lg:justify-between">
             {/* Filter */}
             <div className="hidden w-[30%] md:flex lg:flex">
-              <SidebarKelas
+              <SidebarCourse
                 filters={filters}
                 selectedCategories={selectedCategories}
                 selectedLevels={selectedLevels}
@@ -263,7 +261,7 @@ export const AllCourse = () => {
                   }`}
                   onClick={() => handleFilterChange("filter", "premium")}
                 >
-                  <button>Kelas Premium</button>
+                  <button>Premium Course</button>
                 </div>
                 <div
                   className={`flex w-[30%] cursor-pointer items-center justify-center rounded-xl  py-2 text-sm md:w-[40%] md:text-base lg:w-[30%] lg:text-base ${
@@ -273,14 +271,14 @@ export const AllCourse = () => {
                   }`}
                   onClick={() => handleFilterChange("filter", "free")}
                 >
-                  <button>Kelas Gratis</button>
+                  <button>Free Course</button>
                 </div>
               </div>
 
               {/* Main Content */}
               {searchInput ? (
                 <div className="-mt-12 truncate font-medium md:mt-0 md:pt-4 md:text-lg lg:mt-0 lg:text-lg">
-                  Menampilkan
+                  Result for
                   <span className="ms-3 font-bold text-primary ">
                     "{searchInput}"
                   </span>
@@ -289,7 +287,7 @@ export const AllCourse = () => {
               <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 lg:grid-cols-2">
                 {storeCourses.length === 0 ? (
                   <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
-                    - Course tidak ditemukan -
+                    - Course not found -
                   </p>
                 ) : (
                   storeCourses.map((value) => {
@@ -349,7 +347,7 @@ export const AllCourse = () => {
           <IoClose size={30} onClick={handleOpen} />
         </DialogHeader>
         <DialogBody>
-          <SidebarKelas
+          <SidebarCourse
             filters={filters}
             selectedCategories={selectedCategories}
             selectedLevels={selectedLevels}

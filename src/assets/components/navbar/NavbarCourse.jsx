@@ -29,7 +29,7 @@ import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction
 // Cookie
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
-export const NavbarKelas = () => {
+export const NavbarCourse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -91,7 +91,7 @@ export const NavbarKelas = () => {
         <div
           className="flex cursor-pointer gap-2 font-semibold text-white"
           onClick={() => {
-            navigate("/Login");
+            navigate("/login");
           }}
         >
           <CgLogIn size={30} className="hidden md:flex lg:flex" />
@@ -132,9 +132,9 @@ export const NavbarKelas = () => {
               <div className="text-lg">Notification</div>
             ) : null}
           </div>
-          {currentPath === "/akun-profile" ||
-          currentPath === "/akun-password" ||
-          currentPath === "/akun-pembayaran" ? (
+          {currentPath === "/account-profile" ||
+          currentPath === "/change-password" ||
+          currentPath === "/payment-history" ? (
             <div className="flex rounded-xl bg-blue-400 px-2 py-1 font-bold lg:gap-2 lg:px-6">
               <LuUser size={28} />
               <div className="text-lg">Account</div>
@@ -153,7 +153,7 @@ export const NavbarKelas = () => {
               <MenuList>
                 <MenuItem
                   onClick={() => {
-                    navigate("/akun-profile");
+                    navigate("/account-profile");
                   }}
                 >
                   <div className="flex items-center gap-3">

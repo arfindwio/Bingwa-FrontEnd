@@ -14,7 +14,7 @@ import { showErrorToast, showSuccessToast } from "../../../helper/ToastHelper";
 // Icons
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-export const UpdatePass = () => {
+export const UpdatePassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -47,7 +47,7 @@ export const UpdatePass = () => {
 
   const handleSave = async () => {
     if (password !== passwordConfirmation) {
-      showErrorToast("Password baru dan konfirmasi password tidak sesuai");
+      showErrorToast("Passwords do not match. Please try again!");
       return;
     }
     const updatepass = await dispatch(
@@ -59,10 +59,12 @@ export const UpdatePass = () => {
         token,
       ),
     );
-    setTimeout(() => {
-      showSuccessToast("Update Password Berhasil");
-      navigate("/login");
-    }, 2000);
+    if (updatepass) {
+      showSuccessToast("Password Updated Successfully!");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    }
   };
 
   return (
@@ -76,7 +78,7 @@ export const UpdatePass = () => {
           {/* Password Baru */}
           <div className="flex flex-col gap-2 pt-8">
             <div className="flex justify-between">
-              <span className="text-left text-lg">Masukkan Password Baru</span>
+              <span className="text-left text-lg">Enter New Password</span>
             </div>
             <div className="relative flex flex-col">
               <input
@@ -106,12 +108,12 @@ export const UpdatePass = () => {
           {/* Konfirmasi Password Baru */}
           <div className="flex flex-col gap-2 pt-8">
             <div className="flex justify-between">
-              <span className="text-left text-lg">Ulangi Password Baru</span>
+              <span className="text-left text-lg">Confrim New Password</span>
             </div>
             <div className="relative flex flex-col">
               <input
                 onChange={handleInput}
-                placeholder="Ulangi Password Baru"
+                placeholder="Confirm New Password"
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type={showPassword2 ? "text" : "password"}
                 value={passwordConfirmation}
@@ -140,7 +142,7 @@ export const UpdatePass = () => {
               className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
               onClick={handleSave}
             >
-              Simpan
+              Submit
             </button>
           </div>
         </div>

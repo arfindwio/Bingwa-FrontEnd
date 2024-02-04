@@ -10,58 +10,59 @@ import {
 } from "@material-tailwind/react";
 
 // Components
-import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
-import { AdminCard } from "../../../assets/components/admin/AdminCard";
-import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
+import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import { showSuccessToast } from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
+import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
 import {
-  getAllChaptersAction,
-  postChapterAction,
-  putChapterAction,
-  deleteChapterAction,
-} from "../../../redux/action/chapters/ChaptersAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+  getAllPromotionsAction,
+  postPromotionAction,
+  putPromotionAction,
+  deletePromotionAction,
+} from "../../redux/action/promotions/PromotionsAction";
 
-export const AdminManageChapter = () => {
+export const AdminManagePromotion = () => {
   const dispatch = useDispatch();
 
-  const [newChapterName, setNewChapterName] = useState("");
-  const [newCourseId, setNewCourseId] = useState("");
-  const [newDuration, setNewDuration] = useState("");
+  const [newDiscount, setNewDiscount] = useState("");
+  const [newStartDate, setNewStartDate] = useState("");
+  const [newEndDate, setNewEndDate] = useState("");
 
   // Edit Category
-  const [editChapterId, setEditChapterId] = useState(null);
-  const [updateChapterName, setUpdateChapterName] = useState("");
-  const [updateDuration, setUpdateDuration] = useState("");
-  const [updateCourseId, setUpdateCourseId] = useState("");
-  const [updateChapterDetail, setUpdateChapterDetail] = useState("");
+  const [editPromotionId, setEditPromotionId] = useState(null);
+  const [updateDiscount, setUpdateDiscount] = useState("");
+  const [updateStartDate, setUpdateStartDate] = useState("");
+  const [updateEndDate, setUpdateEndDate] = useState("");
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
 
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
-  const storeChapters = useSelector(
-    (state) => state.chapters.chapters.chapters,
+  const storeCountCourses = useSelector(
+    (state) => state.courses.courses.courses,
   );
-  const storePaginationChapters = useSelector(
-    (state) => state.chapters.chapters.pagination,
+  const storePromotions = useSelector(
+    (state) => state.promotions.promotions.promotions,
   );
-  const storeCourses = useSelector((state) => state.courses.courses.courses);
-  const isLoading = useSelector((state) => state.chapters.loading);
+  const storePaginationPromotions = useSelector(
+    (state) => state.promotions.promotions.pagination,
+  );
+  const isLoading = useSelector((state) => state.promotions.loading);
 
-  const countPremiumCourse = storeCourses.filter(
+  const countPremiumCourse = storeCountCourses.filter(
     (course) => course.isPremium === true,
   );
 
@@ -72,104 +73,132 @@ export const AdminManageChapter = () => {
   const getAllData = () => {
     dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
-    dispatch(getAllChaptersAction());
+    dispatch(getAllPromotionsAction());
   };
 
   const handleSearch = (formatSearch) => {
-    dispatch(getAllChaptersAction(formatSearch));
+    dispatch(getAllPromotionsAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
-  // New Chapter
-  const handleNewChapter = async () => {
-    const newChapter = await dispatch(
-      postChapterAction({
-        name: newChapterName,
-        courseId: parseInt(newCourseId),
-        duration: parseInt(newDuration),
+  // New Promotion
+  const handleNewPromotion = async () => {
+    const newPromotion = await dispatch(
+      postPromotionAction({
+        discount: newDiscount,
+        startDate: newStartDate,
+        endDate: newEndDate,
       }),
     );
 
-    if (!newChapter) {
+    if (!newPromotion) {
       setDialogCreate(false);
-      dispatch(getAllChaptersAction());
+      dispatch(getAllPromotionsAction());
     }
 
-    if (newChapter) {
-      showSuccessToast("Chapter berhasil tambahkan!");
+    if (newPromotion) {
+      showSuccessToast("Promotion successfully added!");
       setDialogCreate(false);
 
-      setNewChapterName("");
-      setNewCourseId("");
-      setNewDuration("");
+      setNewDiscount("");
+      setNewStartDate("");
+      setNewEndDate("");
 
-      dispatch(getAllChaptersAction());
+      dispatch(getAllPromotionsAction());
     }
   };
 
-  // Edit Chapter
-  const handleEditChapter = (chapterId) => {
-    const chapterToEdit = storeChapters?.find(
-      (chapter) => chapter.id === chapterId,
+  // Edit Promotion
+  const handleEditPromotion = (promotionId) => {
+    const promotionToEdit = storePromotions.find(
+      (promotion) => promotion.id === promotionId,
     );
 
-    setEditChapterId(chapterId);
-    setUpdateChapterName(chapterToEdit.name);
-    setUpdateDuration(chapterToEdit.duration);
-    setUpdateCourseId(chapterToEdit.courseId);
-    setUpdateChapterDetail(chapterToEdit);
+    setEditPromotionId(promotionId);
+    setUpdateDiscount(promotionToEdit.discount);
+    setUpdateStartDate(convertToISOFormat(promotionToEdit.startDate));
+    setUpdateEndDate(convertToISOFormat(promotionToEdit.endDate));
 
     setDialogEdit(true);
   };
 
-  // Update Chapter
-  const handleUpdateChapter = async () => {
-    const updatedChapter = await dispatch(
-      putChapterAction(
+  // Update Promotion
+  const handleUpdatePromotion = async () => {
+    const updatedPromotion = await dispatch(
+      putPromotionAction(
         {
-          name: updateChapterName,
-          duration: updateDuration,
-          courseId: updateCourseId,
+          discount: updateDiscount,
+          startDate: updateStartDate,
+          endDate: updateEndDate,
         },
-        editChapterId,
+        editPromotionId,
       ),
     );
 
-    if (!updatedChapter) {
+    if (!updatedPromotion) {
       setDialogEdit(false);
-      dispatch(getAllChaptersAction());
+      dispatch(getAllPromotionsAction());
     }
 
-    if (updatedChapter) {
-      showSuccessToast("Chapter berhasil diupdate!");
+    if (updatedPromotion) {
+      showSuccessToast("Promotion has been successfully updated!");
       setDialogEdit(false);
 
       // Clear state variables
-      setEditChapterId(null);
-      setUpdateChapterName("");
-      setUpdateDuration("");
-      setUpdateCourseId("");
+      setEditPromotionId(null);
+      setUpdateDiscount("");
+      setUpdateStartDate("");
+      setUpdateEndDate("");
 
-      dispatch(getAllChaptersAction());
+      dispatch(getAllPromotionsAction());
     }
   };
 
-  // Delete Chapter
-  const handleDeleteChapter = async (chapterId) => {
-    const deleteChapter = await dispatch(deleteChapterAction(chapterId));
+  // Delete Promotion
+  const handleDeletePromotion = async (promotionId) => {
+    const deletePromotion = await dispatch(deletePromotionAction(promotionId));
 
-    if (!deleteChapter) {
-      dispatch(getAllChaptersAction());
+    if (!deletePromotion) {
+      dispatch(getAllPromotionsAction());
     }
 
-    if (deleteChapter) {
-      showSuccessToast("Chapter berhasil dihapus");
-
+    if (deletePromotion) {
+      showSuccessToast("Promotion successfully deleted");
+      dispatch(getAllPromotionsAction());
       window.scrollTo(0, 0);
+    }
+  };
 
-      dispatch(getAllChaptersAction());
+  const convertToISOFormat = (originalDate) => {
+    // Mendefinisikan array nama bulan
+    const monthNames = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    const parts = originalDate.split(" ");
+    const monthIndex = monthNames.indexOf(parts[1]);
+
+    if (monthIndex !== -1) {
+      const isoFormattedDate = `${parts[2]}-${(monthIndex + 1)
+        .toString()
+        .padStart(2, "0")}-${parts[0]}`;
+      return isoFormattedDate;
+    } else {
+      console.error("Format tanggal tidak valid");
+      return null;
     }
   };
 
@@ -189,7 +218,7 @@ export const AdminManageChapter = () => {
           <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCourses.length}
+            count={storeCountCourses.length}
             cardColor={"bg-green"}
           />
           <AdminCard
@@ -205,7 +234,7 @@ export const AdminManageChapter = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Manage Chapter</h2>
+                  <h2 className="text-xl font-semibold">Manage Promotion</h2>
                 </div>
                 <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
                   <div className="flex w-full items-center space-x-3 md:w-auto">
@@ -227,13 +256,13 @@ export const AdminManageChapter = () => {
                         No
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Chapter Name
+                        Discount
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Duration
+                        Start Date
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Course Name
+                        End Date
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Action
@@ -241,7 +270,7 @@ export const AdminManageChapter = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storeChapters?.map((value, index) => (
+                    {storePromotions.map((value, index) => (
                       <tr
                         className="border-b dark:border-gray-700"
                         key={value?.id}
@@ -252,22 +281,20 @@ export const AdminManageChapter = () => {
                         >
                           {index + 1}
                         </th>
-                        <td className="px-4 py-3">{value?.name}</td>
-                        <td className="px-4 py-3">{value?.duration} Minute</td>
-                        <td className="px-4 py-3">
-                          {value?.course.courseName}
-                        </td>
+                        <td className="px-4 py-3">{value?.discount * 100}%</td>
+                        <td className="px-4 py-3">{value?.startDate}</td>
+                        <td className="px-4 py-3">{value?.endDate}</td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditChapter(value?.id)}
+                            onClick={() => handleEditPromotion(value?.id)}
                           >
                             Edit
                           </button>
                           <button
                             className="rounded-full bg-red-400 px-3 py-1"
                             onClick={() => {
-                              handleDeleteChapter(value?.id);
+                              handleDeletePromotion(value?.id);
                             }}
                           >
                             Delete
@@ -281,9 +308,9 @@ export const AdminManageChapter = () => {
             </div>
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationChapters.links.next}
-                prevLink={storePaginationChapters.links.prev}
-                totalItems={storePaginationChapters.total_items}
+                nextLink={storePaginationPromotions.links.next}
+                prevLink={storePaginationPromotions.links.prev}
+                totalItems={storePaginationPromotions.total_items}
               />
             </div>
           </div>
@@ -294,7 +321,7 @@ export const AdminManageChapter = () => {
       <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Create Chapter</h1>
+            <h1 className="font-semibold">Create Promotion</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -302,57 +329,45 @@ export const AdminManageChapter = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex space-x-6 px-10 py-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleNewPromotion() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Chapter Name</span>
+              <span className="text-slate-700">Discount</span>
               <input
-                type="text"
-                value={newChapterName}
-                onChange={(e) => setNewChapterName(e.target.value)}
-                placeholder="Input Chapter Image"
+                type="number"
+                value={newDiscount}
+                min={0}
+                max={1}
+                step={0.1}
+                onChange={(e) => setNewDiscount(e.target.value)}
+                placeholder="Input Discount"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Course</span>
-              <select
-                value={newCourseId}
-                onChange={(e) => setNewCourseId(e.target.value)}
+              <span className="text-slate-700">Start Date</span>
+              <input
+                type="date"
+                value={newStartDate}
+                onChange={(e) => setNewStartDate(e.target.value)}
+                placeholder="Input Start Date"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              >
-                {storeCourses.length === 0 ? (
-                  <option value="" hidden>
-                    No course available
-                  </option>
-                ) : (
-                  <>
-                    <option value="" hidden>
-                      Choose Course
-                    </option>
-                    {storeCourses.map((value) => (
-                      <option
-                        key={value.id}
-                        value={value.id}
-                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
-                      >
-                        {value?.courseName}
-                      </option>
-                    ))}
-                  </>
-                )}
-              </select>
+              />
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Duration</span>
+              <span className="text-slate-700">End Date</span>
               <input
-                type="number"
-                value={newDuration}
-                onChange={(e) => setNewDuration(e.target.value)}
-                placeholder="Input Duration"
+                type="date"
+                value={newEndDate}
+                onChange={(e) => setNewEndDate(e.target.value)}
+                placeholder="Input End Date"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -360,7 +375,7 @@ export const AdminManageChapter = () => {
         </DialogBody>
         <DialogFooter className="flex justify-center gap-4">
           <div
-            onClick={() => handleNewChapter()}
+            onClick={() => handleNewPromotion()}
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
             <button className="flex font-semibold text-white">Create</button>
@@ -369,10 +384,16 @@ export const AdminManageChapter = () => {
       </Dialog>
 
       {/* Dialog Edit */}
-      <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
+      <Dialog
+        open={dialogEdit}
+        handler={handleDialogEdit}
+        size="xxl"
+        onKeyPress={(e) => (e.key === "Enter" ? handleUpdatePromotion() : "")}
+        tabIndex={0}
+      >
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Edit Chapter</h1>
+            <h1 className="font-semibold">Edit Promotion</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -386,45 +407,37 @@ export const AdminManageChapter = () => {
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Chapter Name</span>
+              <span className="text-slate-700">Discount</span>
               <input
-                type="text"
-                value={updateChapterName}
-                onChange={(e) => setUpdateChapterName(e.target.value)}
-                placeholder="Input Chapter Name"
+                type="number"
+                value={updateDiscount}
+                min={0}
+                max={1}
+                step={0.1}
+                onChange={(e) => setUpdateDiscount(e.target.value)}
+                placeholder="Input Discount"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Course</span>
-              <select
-                value={updateCourseId}
-                onChange={(e) => setUpdateCourseId(e.target.value)}
+              <span className="text-slate-700">Start Date</span>
+              <input
+                type="date"
+                value={updateStartDate}
+                onChange={(e) => setUpdateStartDate(e.target.value)}
+                placeholder="Input Start Date"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              >
-                <option value={updateChapterDetail?.courseId} hidden>
-                  {updateChapterDetail?.course?.courseName}
-                </option>
-                {storeCourses.map((value) => (
-                  <option
-                    key={value.id}
-                    value={value.id}
-                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
-                  >
-                    {value?.courseName}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Duration</span>
+              <span className="text-slate-700">End Date</span>
               <input
-                type="number"
-                value={updateDuration}
-                onChange={(e) => setUpdateDuration(e.target.value)}
-                placeholder="Input Duration"
+                type="date"
+                value={updateEndDate}
+                onChange={(e) => setUpdateEndDate(e.target.value)}
+                placeholder="Input End Date"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -433,7 +446,7 @@ export const AdminManageChapter = () => {
         <DialogFooter className="flex justify-center gap-4">
           <div
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
-            onClick={handleUpdateChapter}
+            onClick={handleUpdatePromotion}
           >
             <button className="flex font-semibold text-white">Edit</button>
           </div>

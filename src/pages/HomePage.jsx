@@ -8,8 +8,8 @@ import Header from "../assets/img/Header.webp";
 
 // Components
 import { CardGlobal } from "../assets/components/cards/CardGlobal";
-import { NavbarKelas } from "../assets/components/navbar/NavbarKelas";
-import CardKategorySkeleton from "../assets/components/skeleton/CardKategorySkeleton";
+import { NavbarCourse } from "../assets/components/navbar/NavbarCourse";
+import { CardCategorySkeleton } from "../assets/components/skeleton/CardCategorySkeleton";
 import { Footer } from "../assets/components/footer/Footer";
 import { NavbarMobile } from "../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../assets/components/search/SearchMobile";
@@ -30,6 +30,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [showAllCourses, setShowAllCourses] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [shuffledCourses, setShuffledCourses] = useState([]);
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -51,6 +52,14 @@ export const HomePage = () => {
     getAllData();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (storeCourses?.length > 0) {
+      // Acak daftar kursus saat komponen dimount atau storeCourses berubah
+      const shuffledCourses = shuffleArray(storeCourses);
+      setShuffledCourses(shuffledCourses);
+    }
+  }, [storeCourses]);
+
   const getAllData = () => {
     dispatch(getAllCoursesAction());
     dispatch(getAllCategoriesAction());
@@ -66,9 +75,61 @@ export const HomePage = () => {
     setSelectedCategory(category);
   };
 
+  const shuffleArray = (array) => {
+    let shuffledArray = [...array];
+    for (let i = shuffledArray?.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
+  };
+
+  const renderCourseCards = (courses, limit) => {
+    return courses.slice(0, limit).map((value) => {
+      const lessonsData = storeLessons
+        ? storeLessons?.filter(
+            (lesson) => lesson.chapter.course.id === value.id,
+          )
+        : null;
+      const enrollmentData = storeEnrollments
+        ? storeEnrollments.find(
+            (enrollCourse) => enrollCourse.courseId === Number(value.id),
+          )
+        : null;
+      return (
+        <CardGlobal
+          key={value.id}
+          image={value.courseImg}
+          category={value.category.categoryName}
+          rating={value.averageRating}
+          title={value.courseName}
+          author={value.mentor}
+          level={value.level}
+          duration={value.totalDuration}
+          price={value.price}
+          courseId={value.id}
+          isPremium={value.isPremium}
+          promotion={!value.promotion ? "" : value.promotion}
+          totalRating={value.enrollment?.length}
+          modul={lessonsData?.length}
+          enrollmentData={enrollmentData}
+        />
+      );
+    });
+  };
+
+  const renderNoCourseMessage = () => (
+    <p className="col-span-3 py-10 text-center text-lg italic text-slate-500">
+      - Course Belum Tersedia -
+    </p>
+  );
+
   return (
     <>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse />}
       <div className="flex flex-col md:mt-[5rem] lg:mt-[5rem]">
         {isMobile ? <SearchMobile /> : null}
         {/* Hero Section */}
@@ -106,7 +167,7 @@ export const HomePage = () => {
           </div>
           {!storeCategories ? (
             <div className="grid grid-cols-6 gap-4">
-              <CardKategorySkeleton />
+              <CardCategorySkeleton />
             </div>
           ) : (
             <div className="-ms-6">
@@ -126,7 +187,7 @@ export const HomePage = () => {
               className="text-md cursor-pointer font-semibold text-primary md:text-lg lg:text-lg"
               onClick={toggleShowAllCourses}
             >
-              {storeCourses.length <= 5
+              {storeCourses?.length <= 5
                 ? null
                 : showAllCourses
                   ? "Show Less"
@@ -145,107 +206,13 @@ export const HomePage = () => {
 
           {/* Container Card Kelas */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {showAllCourses ? (
-              storeCourses?.filter(
-                (value) =>
-                  selectedCategory === "All" ||
-                  value.category.categoryName === selectedCategory,
-              ).length > 0 ? (
-                storeCourses
-                  ?.filter(
-                    (value) =>
-                      selectedCategory === "All" ||
-                      value.category.categoryName === selectedCategory,
-                  )
-                  .slice(0, 6)
-                  .map((value) => {
-                    const lessonsData = storeLessons
-                      ? storeLessons?.filter(
-                          (lesson) => lesson.chapter.course.id === value.id,
-                        )
-                      : null;
-                    const enrollmentData = storeEnrollments
-                      ? storeEnrollments.find(
-                          (enrollCourse) =>
-                            enrollCourse.courseId === Number(value.id),
-                        )
-                      : null;
-                    return (
-                      <CardGlobal
-                        key={value.id}
-                        image={value.courseImg}
-                        category={value.category.categoryName}
-                        rating={value.averageRating}
-                        title={value.courseName}
-                        author={value.mentor}
-                        level={value.level}
-                        duration={value.totalDuration}
-                        price={value.price}
-                        courseId={value.id}
-                        isPremium={value.isPremium}
-                        promotion={!value.promotion ? "" : value.promotion}
-                        totalRating={value.enrollment?.length}
-                        modul={lessonsData?.length}
-                        enrollmentData={enrollmentData}
-                      />
-                    );
-                  })
-              ) : (
-                <p className="col-span-3 py-10 text-center text-lg italic text-slate-500">
-                  - Course Belum Tersedia -
-                </p>
-              )
-            ) : storeCourses
-                ?.filter(
-                  (value) =>
-                    selectedCategory === "All" ||
-                    value.category.categoryName === selectedCategory,
-                )
-                .slice(0, 3).length > 0 ? (
-              storeCourses
-                ?.filter(
-                  (value) =>
-                    selectedCategory === "All" ||
-                    value.category.categoryName === selectedCategory,
-                )
-                .slice(0, 3)
-                .map((value) => {
-                  const lessonsData = storeLessons
-                    ? storeLessons?.filter(
-                        (lesson) => lesson.chapter.course.id === value.id,
-                      )
-                    : null;
-                  const enrollmentData = storeEnrollments
-                    ? storeEnrollments.find(
-                        (enrollCourse) =>
-                          enrollCourse.courseId === Number(value.id),
-                      )
-                    : null;
-                  return (
-                    <CardGlobal
-                      key={value.id}
-                      image={value.courseImg}
-                      category={value.category.categoryName}
-                      rating={value.averageRating}
-                      title={value.courseName}
-                      author={value.mentor}
-                      level={value.level}
-                      duration={value.totalDuration}
-                      price={value.price}
-                      courseId={value.id}
-                      isPremium={value.isPremium}
-                      promotion={!value.promotion ? "" : value.promotion}
-                      totalRating={value.enrollment?.length}
-                      modul={lessonsData?.length}
-                      enrollmentData={enrollmentData}
-                    />
-                  );
-                })
-            ) : (
-              <p className="col-span-3 py-10 text-center text-lg italic text-slate-500">
-                - Course Belum Tersedia -
-              </p>
-            )}
+            {showAllCourses
+              ? shuffledCourses?.length > 0
+                ? renderCourseCards(shuffledCourses, 6)
+                : renderNoCourseMessage()
+              : shuffledCourses?.length > 0
+                ? renderCourseCards(shuffledCourses, 3)
+                : renderNoCourseMessage()}
           </div>
         </div>
         {/* End Kursus Populer */}
@@ -254,3 +221,5 @@ export const HomePage = () => {
     </>
   );
 };
+
+export default HomePage;

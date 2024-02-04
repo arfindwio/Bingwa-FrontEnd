@@ -10,41 +10,39 @@ import {
 } from "@material-tailwind/react";
 
 // Components
-import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
-import { AdminCard } from "../../../assets/components/admin/AdminCard";
-import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
+import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import { showSuccessToast } from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
+import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
 import {
-  getAllPromotionsAction,
-  postPromotionAction,
-  putPromotionAction,
-  deletePromotionAction,
-} from "../../../redux/action/promotions/PromotionsAction";
+  getAllCategoriesAction,
+  postCategoryAction,
+  putCategoryAction,
+  deleteCategoryAction,
+} from "../../redux/action/categories/CategoriesAction";
 
-export const AdminManagePromotion = () => {
+export const AdminManageCategory = () => {
   const dispatch = useDispatch();
 
-  const [newDiscount, setNewDiscount] = useState("");
-  const [newStartDate, setNewStartDate] = useState("");
-  const [newEndDate, setNewEndDate] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryImage, setNewCategoryImage] = useState("");
 
   // Edit Category
-  const [editPromotionId, setEditPromotionId] = useState(null);
-  const [updateDiscount, setUpdateDiscount] = useState("");
-  const [updateStartDate, setUpdateStartDate] = useState("");
-  const [updateEndDate, setUpdateEndDate] = useState("");
+  const [editCategoryId, setEditCategoryId] = useState(null);
+  const [updateCategoryName, setUpdateCategoryName] = useState("");
+  const [updateCategoryImage, setUpdateCategoryImage] = useState("");
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
@@ -54,13 +52,13 @@ export const AdminManagePromotion = () => {
   const storeCountCourses = useSelector(
     (state) => state.courses.courses.courses,
   );
-  const storePromotions = useSelector(
-    (state) => state.promotions.promotions.promotions,
+  const storeCategories = useSelector(
+    (state) => state.categories.categories.categories,
   );
-  const storePaginationPromotions = useSelector(
-    (state) => state.promotions.promotions.pagination,
+  const storePaginationCategories = useSelector(
+    (state) => state.categories.categories.pagination,
   );
-  const isLoading = useSelector((state) => state.promotions.loading);
+  const isLoading = useSelector((state) => state.categories.loading);
 
   const countPremiumCourse = storeCountCourses.filter(
     (course) => course.isPremium === true,
@@ -73,132 +71,98 @@ export const AdminManagePromotion = () => {
   const getAllData = () => {
     dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
-    dispatch(getAllPromotionsAction());
+    dispatch(getAllCategoriesAction());
   };
 
   const handleSearch = (formatSearch) => {
-    dispatch(getAllPromotionsAction(formatSearch));
+    dispatch(getAllCategoriesAction(formatSearch));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
 
-  // New Promotion
-  const handleNewPromotion = async () => {
-    const newPromotion = await dispatch(
-      postPromotionAction({
-        discount: newDiscount,
-        startDate: newStartDate,
-        endDate: newEndDate,
+  // New Category
+  const handleNewCategory = async () => {
+    const newCategory = await dispatch(
+      postCategoryAction({
+        categoryName: newCategoryName,
+        categoryImg: newCategoryImage,
       }),
     );
 
-    if (!newPromotion) {
+    if (!newCategory) {
       setDialogCreate(false);
-      dispatch(getAllPromotionsAction());
+      dispatch(getAllCategoriesAction());
     }
 
-    if (newPromotion) {
-      showSuccessToast("Promotion berhasil tambahkan!");
+    if (newCategory) {
+      showSuccessToast("Category successfully added!");
       setDialogCreate(false);
 
-      setNewDiscount("");
-      setNewStartDate("");
-      setNewEndDate("");
+      setNewCategoryName("");
+      setNewCategoryImage("");
 
-      dispatch(getAllPromotionsAction());
+      dispatch(getAllCategoriesAction());
     }
   };
 
-  // Edit Promotion
-  const handleEditPromotion = (promotionId) => {
-    const promotionToEdit = storePromotions.find(
-      (promotion) => promotion.id === promotionId,
+  // Edit Category
+  const handleEditCategory = (categoryId) => {
+    const categoryToEdit = storeCategories?.find(
+      (category) => category.id === categoryId,
     );
 
-    setEditPromotionId(promotionId);
-    setUpdateDiscount(promotionToEdit.discount);
-    setUpdateStartDate(convertToISOFormat(promotionToEdit.startDate));
-    setUpdateEndDate(convertToISOFormat(promotionToEdit.endDate));
+    setEditCategoryId(categoryId);
+    setUpdateCategoryName(categoryToEdit.categoryName);
+    setUpdateCategoryImage(categoryToEdit.categoryImg);
 
     setDialogEdit(true);
   };
 
-  // Update Promotion
-  const handleUpdatePromotion = async () => {
-    const updatedPromotion = await dispatch(
-      putPromotionAction(
+  // Update Category
+  const handleUpdateCategory = async () => {
+    const updatedCategory = await dispatch(
+      putCategoryAction(
         {
-          discount: updateDiscount,
-          startDate: updateStartDate,
-          endDate: updateEndDate,
+          categoryName: updateCategoryName,
+          categoryImg: updateCategoryImage,
         },
-        editPromotionId,
+        editCategoryId,
       ),
     );
 
-    if (!updatedPromotion) {
+    if (!updatedCategory) {
       setDialogEdit(false);
-      dispatch(getAllPromotionsAction());
+      dispatch(getAllCategoriesAction());
     }
 
-    if (updatedPromotion) {
-      showSuccessToast("Promotion berhasil diupdate!");
+    if (updatedCategory) {
+      showSuccessToast("Category has been successfully updated!");
       setDialogEdit(false);
 
       // Clear state variables
-      setEditPromotionId(null);
-      setUpdateDiscount("");
-      setUpdateStartDate("");
-      setUpdateEndDate("");
+      setEditCategoryId(null);
+      setUpdateCategoryName("");
+      setUpdateCategoryImage("");
 
-      dispatch(getAllPromotionsAction());
+      dispatch(getAllCategoriesAction());
     }
   };
 
-  // Delete Promotion
-  const handleDeletePromotion = async (promotionId) => {
-    const deletePromotion = await dispatch(deletePromotionAction(promotionId));
+  // Delete Category
+  const handleDeleteCategory = async (categoryId) => {
+    const deleteCategory = await dispatch(deleteCategoryAction(categoryId));
 
-    if (!deletePromotion) {
-      dispatch(getAllPromotionsAction());
+    if (!deleteCategory) {
+      dispatch(getAllCategoriesAction());
     }
 
-    if (deletePromotion) {
-      showSuccessToast("Promotion berhasil dihapus");
-      dispatch(getAllPromotionsAction());
+    if (deleteCategory) {
+      showSuccessToast("Category successfully deleted!");
+
       window.scrollTo(0, 0);
-    }
-  };
 
-  const convertToISOFormat = (originalDate) => {
-    // Mendefinisikan array nama bulan
-    const monthNames = [
-      "Januari",
-      "Februari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Agustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ];
-
-    const parts = originalDate.split(" ");
-    const monthIndex = monthNames.indexOf(parts[1]);
-
-    if (monthIndex !== -1) {
-      const isoFormattedDate = `${parts[2]}-${(monthIndex + 1)
-        .toString()
-        .padStart(2, "0")}-${parts[0]}`;
-      return isoFormattedDate;
-    } else {
-      console.error("Format tanggal tidak valid");
-      return null;
+      dispatch(getAllCategoriesAction());
     }
   };
 
@@ -234,7 +198,7 @@ export const AdminManagePromotion = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Manage Promotion</h2>
+                  <h2 className="text-xl font-semibold">Manage Category</h2>
                 </div>
                 <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
                   <div className="flex w-full items-center space-x-3 md:w-auto">
@@ -256,13 +220,10 @@ export const AdminManagePromotion = () => {
                         No
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Discount
+                        Category Image
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Start Date
-                      </th>
-                      <th scope="col" className="px-4 py-3">
-                        End Date
+                        Category Name
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Action
@@ -270,7 +231,7 @@ export const AdminManagePromotion = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storePromotions.map((value, index) => (
+                    {storeCategories?.map((value, index) => (
                       <tr
                         className="border-b dark:border-gray-700"
                         key={value?.id}
@@ -281,20 +242,19 @@ export const AdminManagePromotion = () => {
                         >
                           {index + 1}
                         </th>
-                        <td className="px-4 py-3">{value?.discount * 100}%</td>
-                        <td className="px-4 py-3">{value?.startDate}</td>
-                        <td className="px-4 py-3">{value?.endDate}</td>
+                        <td className="px-4 py-3">{value?.categoryImg}</td>
+                        <td className="px-4 py-3">{value?.categoryName}</td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditPromotion(value?.id)}
+                            onClick={() => handleEditCategory(value?.id)}
                           >
                             Edit
                           </button>
                           <button
                             className="rounded-full bg-red-400 px-3 py-1"
                             onClick={() => {
-                              handleDeletePromotion(value?.id);
+                              handleDeleteCategory(value?.id);
                             }}
                           >
                             Delete
@@ -306,11 +266,13 @@ export const AdminManagePromotion = () => {
                 </table>
               </div>
             </div>
+
+            {/* Pagiantion */}
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationPromotions.links.next}
-                prevLink={storePaginationPromotions.links.prev}
-                totalItems={storePaginationPromotions.total_items}
+                nextLink={storePaginationCategories.links.next}
+                prevLink={storePaginationCategories.links.prev}
+                totalItems={storePaginationCategories.total_items}
               />
             </div>
           </div>
@@ -321,7 +283,7 @@ export const AdminManagePromotion = () => {
       <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Create Promotion</h1>
+            <h1 className="font-semibold">Create Category</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -331,39 +293,30 @@ export const AdminManagePromotion = () => {
         </DialogHeader>
         <DialogBody className="flex space-x-6 px-10 py-10">
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div
+            className="flex-1 space-y-2"
+            onKeyPress={(e) => (e.key === "Enter" ? handleNewCategory() : "")}
+            tabIndex={0}
+          >
             <div className="flex flex-col">
-              <span className="text-slate-700">Discount</span>
+              <span className="text-slate-700">Category Image</span>
               <input
-                type="number"
-                value={newDiscount}
-                min={0}
-                max={1}
-                step={0.1}
-                onChange={(e) => setNewDiscount(e.target.value)}
-                placeholder="Input Discount"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Start Date</span>
-              <input
-                type="date"
-                value={newStartDate}
-                onChange={(e) => setNewStartDate(e.target.value)}
-                placeholder="Input Start Date"
+                type="text"
+                value={newCategoryImage}
+                onChange={(e) => setNewCategoryImage(e.target.value)}
+                placeholder="Input Category Image"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">End Date</span>
+              <span className="text-slate-700">Category Name</span>
               <input
-                type="date"
-                value={newEndDate}
-                onChange={(e) => setNewEndDate(e.target.value)}
-                placeholder="Input End Date"
+                type="text"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="Input Category Name"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -371,7 +324,7 @@ export const AdminManagePromotion = () => {
         </DialogBody>
         <DialogFooter className="flex justify-center gap-4">
           <div
-            onClick={() => handleNewPromotion()}
+            onClick={() => handleNewCategory()}
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
             <button className="flex font-semibold text-white">Create</button>
@@ -383,7 +336,7 @@ export const AdminManagePromotion = () => {
       <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
-            <h1 className="font-semibold">Edit Promotion</h1>
+            <h1 className="font-semibold">Edit Category</h1>
             <IoCloseSharp
               size={30}
               className="cursor-pointer"
@@ -395,39 +348,32 @@ export const AdminManagePromotion = () => {
         </DialogHeader>
         <DialogBody className="flex space-x-6 px-10 py-10">
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div
+            className="flex-1 space-y-2"
+            onKeyPress={(e) =>
+              e.key === "Enter" ? handleUpdateCategory() : ""
+            }
+            tabIndex={0}
+          >
             <div className="flex flex-col">
-              <span className="text-slate-700">Discount</span>
+              <span className="text-slate-700">Category Image</span>
               <input
-                type="number"
-                value={updateDiscount}
-                min={0}
-                max={1}
-                step={0.1}
-                onChange={(e) => setUpdateDiscount(e.target.value)}
-                placeholder="Input Discount"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Start Date</span>
-              <input
-                type="date"
-                value={updateStartDate}
-                onChange={(e) => setUpdateStartDate(e.target.value)}
-                placeholder="Input Start Date"
+                type="text"
+                value={updateCategoryImage}
+                onChange={(e) => setUpdateCategoryImage(e.target.value)}
+                placeholder="Input Category Image"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
           </div>
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">End Date</span>
+              <span className="text-slate-700">Category Name</span>
               <input
-                type="date"
-                value={updateEndDate}
-                onChange={(e) => setUpdateEndDate(e.target.value)}
-                placeholder="Input End Date"
+                type="text"
+                value={updateCategoryName}
+                onChange={(e) => setUpdateCategoryName(e.target.value)}
+                placeholder="Input Category Name"
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -436,7 +382,7 @@ export const AdminManagePromotion = () => {
         <DialogFooter className="flex justify-center gap-4">
           <div
             className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
-            onClick={handleUpdatePromotion}
+            onClick={handleUpdateCategory}
           >
             <button className="flex font-semibold text-white">Edit</button>
           </div>

@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import { CardPembayaran } from "../../../assets/components/cards/CardPembayaran";
-import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
+import { CardPembayaran } from "../../../assets/components/cards/CardPayment";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -35,7 +34,7 @@ import {
   showSuccessToast,
 } from "../../../helper/ToastHelper";
 
-export const Pembayaran = () => {
+export const Payment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId } = useParams();
@@ -155,7 +154,7 @@ export const Pembayaran = () => {
 
   return (
     <>
-      <NavbarKelas />
+      <NavbarCourse />
 
       {/* First Container */}
       <div className="md:px-30 mt-[5rem] flex justify-center py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:py-4">

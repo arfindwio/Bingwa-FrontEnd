@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 
 // Redux Actions
@@ -17,7 +17,7 @@ import {
 import { GoArrowLeft } from "react-icons/go";
 import { IoNotificationsCircleSharp } from "react-icons/io5";
 
-export const Notifikasi = () => {
+export const Notification = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const storeNotif = useSelector((state) => state.notifications.notifications);
@@ -31,10 +31,10 @@ export const Notifikasi = () => {
 
   return (
     <>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse />}
       {isMobile ? (
         <div className="flex min-h-screen flex-col p-4">
-          <h1 className="pb-8 text-2xl font-bold">Notifikasi</h1>
+          <h1 className="pb-8 text-2xl font-bold">Notification</h1>
           {/* Notif Item */}
           {storeNotif && storeNotif.length > 0 ? (
             storeNotif.map((notification) => (
@@ -64,7 +64,7 @@ export const Notifikasi = () => {
             ))
           ) : (
             <div className="text-center text-slate-500">
-              Tidak ada notifikasi saat ini.
+              No notifications at this time
             </div>
           )}
         </div>
@@ -78,13 +78,13 @@ export const Notifikasi = () => {
                 navigate("/");
               }}
             />
-            Kembali Ke Beranda
+            Back to home
           </div>
 
-          {/* Notifikasi */}
+          {/* Notification */}
           <div className="rounded-xl border-2 border-primary">
             <div className="rounded-t-lg bg-primary py-4 text-center text-xl font-semibold text-white">
-              Notifikasi
+              Notification
             </div>
 
             {/* Isi Notifikasi */}
@@ -113,7 +113,7 @@ export const Notifikasi = () => {
             ) : (
               <div className="flex items-center justify-center py-10">
                 <div className="text-center text-slate-500">
-                  Tidak ada notifikasi saat ini.
+                  No notifications at this time
                 </div>
               </div>
             )}

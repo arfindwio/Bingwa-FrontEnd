@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 // CSS
 import "react-alice-carousel/lib/alice-carousel.css";
-import "./SliderFilterCategories.css";
 
 // Redux Actions
 import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
@@ -36,7 +35,7 @@ export const SliderFilterCategories = ({
     categoriesWithAll?.map((value) => (
       <div
         key={value.id}
-        className={`custom-carousel-item cursor-pointer rounded-xl px-5 py-1 text-base font-semibold transition-all ${
+        className={`mx-2 flex h-auto cursor-pointer items-center justify-center rounded-xl px-5 py-1 text-base font-semibold transition-all ${
           selectedCategory === value.categoryName
             ? "bg-primary text-white"
             : "bg-secondary hover:bg-primary hover:text-white"

@@ -1,5 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import { useMediaQuery } from "react-responsive";
+
+// Icon
+import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 
 // Redux Action
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
@@ -8,6 +12,8 @@ let currentPage = 1;
 
 export const Pagination = ({ nextLink, prevLink, totalItems }) => {
   const dispatch = useDispatch();
+
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   if (!nextLink && !prevLink) return null;
 
@@ -46,8 +52,10 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
         <button
           key={1}
           onClick={() => handleNumberPageChange(1)}
-          className={`mx-1 cursor-pointer ${
-            currentPage === 1 ? "text-blue-500" : "text-gray-400"
+          className={`mx-1 cursor-pointer rounded-full px-3 py-1 md:px-4 md:py-2 ${
+            currentPage === 1
+              ? "bg-blue-500 text-white"
+              : "text-blue-500 hover:bg-blue-500 hover:bg-opacity-20"
           }`}
         >
           1
@@ -55,7 +63,11 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
       );
 
       if (currentPage > Math.floor(visiblePages / 2) + 2) {
-        pageNumbers.push(<span key="ellipsis1">...</span>);
+        pageNumbers.push(
+          <span key="ellipsis1" className="py-1 md:py-2">
+            ...
+          </span>,
+        );
       }
     }
 
@@ -64,8 +76,10 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
         <button
           key={i}
           onClick={() => handleNumberPageChange(i)}
-          className={`mx-1 cursor-pointer ${
-            currentPage === i ? "text-blue-500" : "text-gray-400"
+          className={`mx-1 cursor-pointer rounded-full px-3 py-1 md:px-4 md:py-2 ${
+            currentPage === i
+              ? "rounded-full bg-blue-500 text-white"
+              : "text-blue-500 hover:bg-blue-500 hover:bg-opacity-20"
           }`}
         >
           {i}
@@ -75,15 +89,21 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
 
     if (endPage < totalPage) {
       if (totalPage - endPage > 1) {
-        pageNumbers.push(<span key="ellipsis2">...</span>);
+        pageNumbers.push(
+          <span key="ellipsis2" className="py-1 md:py-2">
+            ...
+          </span>,
+        );
       }
 
       pageNumbers.push(
         <button
           key={totalPage}
           onClick={() => handleNumberPageChange(totalPage)}
-          className={`mx-1 cursor-pointer ${
-            currentPage === totalPage ? "text-blue-500" : "text-gray-400"
+          className={`mx-1 cursor-pointer rounded-full px-3 py-1 md:px-4 md:py-2 ${
+            currentPage === totalPage
+              ? "rounded-full bg-blue-500 text-white"
+              : "text-blue-500 hover:bg-blue-500 hover:bg-opacity-20"
           }`}
         >
           {totalPage}
@@ -95,26 +115,32 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
   };
 
   return (
-    <div className="mt-4 flex justify-center">
-      <button
-        onClick={() => handlePageChange(prevLink)}
-        className={`mx-1 cursor-pointer ${
-          prevLink ? "text-blue-500" : "pointer-events-none text-gray-400"
-        }`}
-        disabled={!prevLink}
-      >
-        Previous
-      </button>
-      {renderPageNumbers()}
-      <button
-        onClick={() => handlePageChange(nextLink)}
-        className={`mx-1 cursor-pointer ${
-          nextLink ? "text-blue-500" : "pointer-events-none text-gray-400"
-        }`}
-        disabled={!nextLink}
-      >
-        Next
-      </button>
+    <div className="mt-4 flex flex-wrap items-center justify-center">
+      <div className="flex items-center">
+        <button
+          onClick={() => handlePageChange(prevLink)}
+          className={`flex cursor-pointer items-center rounded-full px-2 py-1 hover:bg-blue-500 hover:bg-opacity-20 ${
+            prevLink ? "text-blue-500" : "pointer-events-none text-gray-400"
+          }`}
+          disabled={!prevLink}
+        >
+          <GoArrowLeft size={20} className="mr-1" />
+          {isMobile ? "" : "Previous"}
+        </button>
+      </div>
+      <div className="mx-2 flex">{renderPageNumbers()}</div>
+      <div className="flex items-center ">
+        <button
+          onClick={() => handlePageChange(nextLink)}
+          className={`flex cursor-pointer items-center rounded-full px-3 py-1 hover:bg-blue-500 hover:bg-opacity-20 ${
+            nextLink ? "text-blue-500" : "pointer-events-none text-gray-400"
+          }`}
+          disabled={!nextLink}
+        >
+          {isMobile ? "" : "Next"}
+          <GoArrowRight size={20} className="ml-1" />
+        </button>
+      </div>
     </div>
   );
 };
