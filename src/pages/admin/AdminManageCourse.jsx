@@ -10,29 +10,29 @@ import {
 } from "@material-tailwind/react";
 
 // Components
-import { AdminNavbar } from "../../../assets/components/admin/adminNavbar";
-import { AdminSidebar } from "../../../assets/components/admin/AdminSidebar";
-import { AdminCard } from "../../../assets/components/admin/AdminCard";
-import { Pagination } from "../../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../../assets/components/loading/loadingSpinner";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
+import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
+import { AdminCard } from "../../assets/components/admin/AdminCard";
+import { Pagination } from "../../assets/components/pagination/Pagination";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import { showSuccessToast } from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
 
 // Redux Actions
-import { getAllUsersAction } from "../../../redux/action/users/UsersAction";
+import { getAllUsersAction } from "../../redux/action/users/UsersAction";
 import {
   getAllCoursesAction,
   postCourseAction,
   putCourseAction,
   deleteCourseAction,
-} from "../../../redux/action/courses/CoursesAction";
-import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
-import { getAllPromotionsAction } from "../../../redux/action/promotions/PromotionsAction";
+} from "../../redux/action/courses/CoursesAction";
+import { getAllCategoriesAction } from "../../redux/action/categories/CategoriesAction";
+import { getAllPromotionsAction } from "../../redux/action/promotions/PromotionsAction";
 
 export const AdminManageCourse = () => {
   const dispatch = useDispatch();
@@ -131,7 +131,7 @@ export const AdminManageCourse = () => {
     }
 
     if (newCourse) {
-      showSuccessToast("Course berhasil tambahkan!");
+      showSuccessToast("Course successfully added!");
       setDialogCreate(false);
 
       setNewCourseName("");
@@ -211,7 +211,7 @@ export const AdminManageCourse = () => {
     }
 
     if (updatedCourse) {
-      showSuccessToast("Course berhasil diupdate!");
+      showSuccessToast("Course has been successfully updated!");
       setDialogEdit(false);
 
       // Clear state variables
@@ -242,7 +242,7 @@ export const AdminManageCourse = () => {
     }
 
     if (deleteCourse) {
-      showSuccessToast("Course berhasil dihapus");
+      showSuccessToast("Course successfully deleted");
 
       window.scrollTo(0, 0);
 
@@ -401,7 +401,11 @@ export const AdminManageCourse = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex space-x-6 px-10 py-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleNewCourse() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">
@@ -592,7 +596,11 @@ export const AdminManageCourse = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex space-x-6 px-10 py-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleUpdateCourse() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
           <div className="flex-1 space-y-2">
             <div className="flex flex-col">

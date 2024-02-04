@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import { AdminNavbar } from "../../assets/components/admin/adminNavbar";
+import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import { Pagination } from "../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../assets/components/loading/loadingSpinner";
+import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
 
 // Redux Actions
 import { getAllUsersAction } from "../../redux/action/users/UsersAction";
@@ -74,7 +74,7 @@ export const AdminDashboard = () => {
             <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
                 <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Status Pembayaran</h2>
+                  <h2 className="text-xl font-semibold">Payment Status</h2>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -85,22 +85,22 @@ export const AdminDashboard = () => {
                         ID
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Kategori
+                        Category
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Nama Course
+                        Course Name
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Kode Pembayaran
+                        Code Payment
                       </th>
                       <th scope="col" className="px-4 py-3">
                         Status
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Metode Pembayaran
+                        Payment Method
                       </th>
                       <th scope="col" className="px-4 py-3">
-                        Tanggal Bayar
+                        Payment Date
                       </th>
                     </tr>
                   </thead>
@@ -112,7 +112,7 @@ export const AdminDashboard = () => {
                       italic"
                           colSpan={7}
                         >
-                          Data tidak ditemukan
+                          Data Not Found
                         </td>
                       </tr>
                     ) : (

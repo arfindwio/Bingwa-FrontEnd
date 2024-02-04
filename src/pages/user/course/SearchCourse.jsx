@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { CardGlobal } from "../../../assets/components/cards/CardGlobal";
 import { Pagination } from "../../../assets/components/pagination/Pagination";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
@@ -57,7 +57,7 @@ export const SearchCourse = () => {
 
   return (
     <>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse />}
       <div className="flex h-fit min-h-screen flex-col justify-between bg-secondary">
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-4 md:px-4 md:pt-20 lg:px-24 lg:pt-20">

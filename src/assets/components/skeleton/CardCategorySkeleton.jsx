@@ -1,7 +1,7 @@
 // Skeleton Component
 import Skeleton from "react-loading-skeleton";
 
-const CardKategorySkeleton = () => {
+export const CardCategorySkeleton = () => {
   const loadCards = Array(6).fill(null);
 
   return loadCards.map((_, i) => (
@@ -11,4 +11,3 @@ const CardKategorySkeleton = () => {
     </div>
   ));
 };
-export default CardKategorySkeleton;

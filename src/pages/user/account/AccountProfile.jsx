@@ -6,15 +6,14 @@ import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
+import { SidebarAccount } from "../../../assets/components/sidebar/SidebarAccount";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 
 // Helper
 import {
   showLoadingToast,
   showSuccessToast,
-  showErrorToast,
 } from "../../../helper/ToastHelper";
 
 // Icons
@@ -25,7 +24,7 @@ import { IoImageOutline } from "react-icons/io5";
 import { getUserAuthenticateAction } from "../../../redux/action/users/UsersAction";
 import { putUpdateProfile } from "../../../redux/action/userProfiles/UserProfilesAction";
 
-export const AkunProfile = () => {
+export const AccountProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -100,18 +99,18 @@ export const AkunProfile = () => {
             size={30}
             className="absolute -inset-x-1 cursor-pointer md:-inset-x-12 lg:-inset-x-16"
           />
-          <span className="hidden lg:flex">Kembali Ke Beranda</span>
+          <span className="hidden lg:flex">Back to home</span>
         </div>
 
         {/* Akun */}
         <div className="rounded-xl border-2 border-primary">
           <div className="rounded-t-lg bg-primary py-4 text-center text-xl font-semibold text-white">
-            Akun
+            Account
           </div>
 
           {/* Isi Akun */}
           <div className="flex py-4 text-center">
-            <SidebarAkun />
+            <SidebarAccount />
             <div
               className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]"
               onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
@@ -167,7 +166,7 @@ export const AkunProfile = () => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <div className="text-left">Nomor Telepon</div>
+                <div className="text-left">Phone Number</div>
                 <input
                   type="text"
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
@@ -178,7 +177,7 @@ export const AkunProfile = () => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <div className="text-left">Kota</div>
+                <div className="text-left">City</div>
                 <input
                   type="text"
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
@@ -189,7 +188,7 @@ export const AkunProfile = () => {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <div className="text-left">Negara</div>
+                <div className="text-left">Country</div>
                 <input
                   type="text"
                   className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
@@ -203,13 +202,13 @@ export const AkunProfile = () => {
                 className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
                 onClick={handleSave}
               >
-                Simpan Profil Saya
+                Save My Profile Data
               </button>
             </div>
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };

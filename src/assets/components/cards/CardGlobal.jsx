@@ -151,7 +151,7 @@ export const CardGlobal = ({
                 ) : null}
               </div>
             ) : // Non-premium content
-            !token ? (
+            !token || !enrollmentData ? (
               <div
                 className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
                 onClick={handleCardClick}
@@ -160,26 +160,15 @@ export const CardGlobal = ({
               </div>
             ) : (
               <>
-                {!enrollmentData ? (
-                  <div
-                    className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
-                    onClick={handleCardClick}
-                  >
-                    Free
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex w-full">
-                      <Progress
-                        value={Math.floor(enrollmentData.progress * 100)}
-                        size="lg"
-                        label="Completed"
-                        color="blue"
-                        className="h-7 text-sm font-bold"
-                      />
-                    </div>
-                  </>
-                )}
+                <div className="flex w-full">
+                  <Progress
+                    value={Math.floor(enrollmentData.progress * 100)}
+                    size="lg"
+                    label="Completed"
+                    color="blue"
+                    className="text-md h-8 font-semibold"
+                  />
+                </div>
               </>
             )}
           </div>

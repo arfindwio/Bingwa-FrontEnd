@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 // CSS
 import "react-alice-carousel/lib/alice-carousel.css";
-import "./SliderCardCategories.css";
 
 // Component
-import { CardKategory } from "../cards/CardKategory";
+import { CardCategory } from "../cards/CardCategory";
 
 // Redux Action
 import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
@@ -30,7 +29,7 @@ export const SliderCardCategories = () => {
   const items =
     storeCategories &&
     storeCategories?.map((value) => (
-      <CardKategory
+      <CardCategory
         key={value.id}
         category={value.categoryName}
         thumbnail={value.categoryImg}

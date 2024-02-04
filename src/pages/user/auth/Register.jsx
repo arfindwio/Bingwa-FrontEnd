@@ -192,9 +192,9 @@ export const Register = () => {
             onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}
           >
             <div className="flex flex-col gap-2">
-              <span className="text-left text-lg">Nama</span>
+              <span className="text-left text-lg">Name</span>
               <input
-                placeholder="Nama Lengkap"
+                placeholder="Full Name"
                 onChange={handleInput}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="text"
@@ -218,9 +218,9 @@ export const Register = () => {
 
             {/* Nomor Telepon */}
             <div className="flex flex-col gap-2">
-              <span className="text-left text-lg">Nomor Telepon</span>
+              <span className="text-left text-lg">Phone Number</span>
               <input
-                placeholder="08"
+                placeholder="08123456789"
                 onChange={handleInput}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="tel"
@@ -267,20 +267,20 @@ export const Register = () => {
                   validateForm();
                 }}
               >
-                Daftar
+                Register
               </button>
             </div>
 
             <div className="text-center">
               <span className="items-center justify-center py-6 text-center text-black">
-                Sudah punya akun?
+                Already have an account?
                 <span
                   className="cursor-pointer px-2 font-bold text-primary"
                   onClick={() => {
-                    navigate("/Login");
+                    navigate("/login");
                   }}
                 >
-                  Masuk di sini
+                  Sign in here
                 </span>
               </span>
             </div>

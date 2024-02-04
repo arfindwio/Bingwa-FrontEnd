@@ -28,7 +28,9 @@ export const Footer = () => {
                   123 Main Street, Anytown, CA 91234, United States of America
                 </p>
                 <p>arfindwioctavianto@gmail.com</p>
-                <p>081-233-334-808</p>
+                <p>
+                  <span className="mr-1 font-bold">+62</span>812-3333-4808
+                </p>
               </div>
             </div>
 

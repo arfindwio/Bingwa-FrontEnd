@@ -4,35 +4,28 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
 // Images
-import BrandLogo from "../../../assets/img/brain.webp";
+import BrandLogo from "../../assets/img/brain.webp";
 
 // Icons
-import { FiEye } from "react-icons/fi";
-import { FiEyeOff } from "react-icons/fi";
-
-// Redux Actions
-import { postLoginUserAction } from "../../../redux/action/users/UsersAction";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 // Helper
 import {
   showErrorToast,
   showLoadingToast,
   showSuccessToast,
-} from "../../../helper/ToastHelper";
+} from "../../helper/ToastHelper";
 
-// Components
-import { LoginGoogle } from "../../../assets/components/google/LoginGoogle";
+// Redux Actions
+import { postLoginUserAction } from "../../redux/action/users/UsersAction";
 
-export const LoginPage = () => {
+export const AdminLogin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   const handleInput = (e) => {
     if (e) {
@@ -60,7 +53,7 @@ export const LoginPage = () => {
     if (login) {
       showSuccessToast("Login Berhasil!");
       setTimeout(() => {
-        navigate("/");
+        navigate("/admin/dashboard");
       }, 2000);
     }
   };
@@ -69,12 +62,12 @@ export const LoginPage = () => {
     // Check if the Email is an Empty string or not.
 
     if (Email.length === 0) {
-      return showErrorToast("Email harus di isi");
+      return showErrorToast("Email is required");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(Email)) {
-      return showErrorToast("Format Email tidak valid");
+      return showErrorToast("Invalid Email Format");
     }
 
     // check if the password follows constraints or not.
@@ -82,11 +75,11 @@ export const LoginPage = () => {
     // if password length is less than 8 characters, alert invalid form.
 
     if (Password.length < 8) {
-      return showErrorToast("Password minimal 8 karakter");
+      return showErrorToast("Minimum password length 8 characters");
     }
 
     if (Password.length > 12) {
-      return showErrorToast("Password maksimal 12 karakter");
+      return showErrorToast("Maximum password length 12 characters");
     }
 
     // variable to count upper case characters in the password.
@@ -144,22 +137,28 @@ export const LoginPage = () => {
 
     if (countLowerCase === 0) {
       // invalid form, 0 lowercase characters
-      return showErrorToast("Password harus memiliki lower case");
+      return showErrorToast(
+        "Password must contain at least one lowercase letter (a-z)",
+      );
     }
 
     if (countUpperCase === 0) {
       // invalid form, 0 upper case characters
-      return showErrorToast("Password harus memiliki upper case");
+      return showErrorToast(
+        "Password must contain at least one uppercase letter (A-Z)",
+      );
     }
 
     if (countDigit === 0) {
       // invalid form, 0 digit characters
-      return showErrorToast("Password harus memiliki angka");
+      return showErrorToast("Password must contain at least one number (0-9)");
     }
 
     if (countSpecialCharacters === 0) {
       // invalid form, 0 special characters characters
-      return showErrorToast("Passwsord harus memiliki simbol");
+      return showErrorToast(
+        "Password must contain at least one symbol (e.g., !@#$%^&*)",
+      );
     }
 
     // if all the conditions are valid, this means that the form is valid
@@ -167,50 +166,57 @@ export const LoginPage = () => {
     handleLogin();
   };
 
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
-          <span className="items-center py-8 text-4xl font-bold text-primary">
-            Masuk
-          </span>
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-          {/* Email atau No Telepon */}
-          <form onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}>
-            <div className="flex flex-col gap-2">
-              <span className="text-left text-lg">Email/No Telepon</span>
+  return (
+    <div className="flex">
+      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary lg:flex">
+        <div className="flex items-center justify-center gap-6">
+          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+          <span className="text-center font-sans text-6xl text-white">
+            Bingwa
+          </span>
+        </div>
+      </div>
+      <div className="flex h-screen items-center justify-center">
+        <div className="mx-4 w-full rounded-lg text-center md:w-3/6 lg:w-2/6">
+          <div
+            className="mx-auto flex w-[22rem] flex-col focus:outline-none md:w-[33rem] lg:w-[30rem]"
+            onKeyPress={(e) => (e.key === "Enter" ? validateForm() : "")}
+            tabIndex={0}
+          >
+            <span className="pb-10 text-4xl font-bold text-primary">
+              Admin Login
+            </span>
+
+            {/* Email */}
+            <div className="flex flex-col gap-2 ">
+              <span className="text-left text-lg">Email</span>
               <input
-                placeholder="bingwa@gmail.com"
                 onChange={handleInput}
-                className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
-                type="email"
-                value={Email}
                 id="email"
+                placeholder="bingwa@gmail.com"
+                className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
               />
             </div>
 
             {/* Password */}
-            <div className="flex flex-col gap-2 py-6">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 pt-8">
+              <div className="flex justify-between">
                 <span className="text-left text-lg">Password</span>
-                <span
-                  className="text-md cursor-pointer font-semibold text-primary"
-                  onClick={() => {
-                    navigate("/forget-password");
-                  }}
-                >
-                  Lupa Kata Sandi
+                <span className="cursor-pointer text-lg font-semibold text-primary">
+                  Forgot Password
                 </span>
               </div>
               <div className="relative flex flex-col">
                 <input
-                  placeholder="**********"
                   onChange={handleInput}
-                  className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
-                  value={Password}
                   id="password"
+                  placeholder="**********"
+                  className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   type={showPassword ? "text" : "password"}
-                  autoComplete="off"
                 />
                 {showPassword ? (
                   <FiEye
@@ -229,45 +235,18 @@ export const LoginPage = () => {
             </div>
 
             {/* Button Masuk */}
-            <div className="flex flex-col py-2">
+            <div className="flex flex-col py-4">
               <button
                 type="button"
-                className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
+                className="mt-2 w-full rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
                 onClick={() => {
                   validateForm();
                 }}
               >
-                Masuk
+                Login
               </button>
-
-              <div className="flex items-center justify-center py-6">
-                <LoginGoogle />
-              </div>
-
-              <div className="text-center">
-                <span className="items-center justify-center py-8 text-center text-black">
-                  Belum punya akun?
-                  <span
-                    className="cursor-pointer px-2 font-bold text-primary"
-                    onClick={() => {
-                      navigate("/Register");
-                    }}
-                  >
-                    Daftar di sini.
-                  </span>
-                </span>
-              </div>
             </div>
-          </form>
-        </div>
-      </div>
-
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
+          </div>
         </div>
       </div>
     </div>

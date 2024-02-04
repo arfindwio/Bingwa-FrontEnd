@@ -4,11 +4,10 @@ import { useMediaQuery } from "react-responsive";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import { NavbarKelas } from "../../../assets/components/navbar/NavbarKelas";
-import { SidebarAkun } from "../../../assets/components/sidebar/SidebarAkun";
+import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
+import { SidebarAccount } from "../../../assets/components/sidebar/SidebarAccount";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
-import { CardRiwayat } from "../../../assets/components/cards/CardRiwayat";
-import { CardCourseSkeleton } from "../../../assets/components/skeleton/CardCourseSkeleton";
+import { CardPaymentHistory } from "../../../assets/components/cards/CardPaymentHistory";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
@@ -17,7 +16,7 @@ import { GoArrowLeft } from "react-icons/go";
 import { getHistoryPaymentAction } from "../../../redux/action/payments/PaymentsAction";
 import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
 
-export const AkunPembayaran = () => {
+export const AccountPaymentHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -47,23 +46,23 @@ export const AkunPembayaran = () => {
               navigate("/");
             }}
           />
-          <span className="hidden lg:block">Kembali ke Beranda</span>
+          <span className="hidden lg:block">Back to home</span>
         </div>
 
         {/* Akun */}
         <div className="rounded-xl border-2 border-primary">
           <div className="rounded-t-lg bg-primary py-4 text-center text-xl font-semibold text-white">
-            Akun
+            Account
           </div>
 
           {/* Isi Akun */}
           <div className="flex py-4 text-center">
-            <SidebarAkun />
+            <SidebarAccount />
 
             {/* Riwayat Pembayaran */}
             <div className="flex w-full flex-col items-center md:w-[60%] lg:w-[60%]">
               <div className="py-4 text-center text-2xl font-bold">
-                Riwayat Pembayaran
+                Payment History
               </div>
 
               {/* Main Content */}
@@ -80,7 +79,7 @@ export const AkunPembayaran = () => {
                       : null;
 
                     return (
-                      <CardRiwayat
+                      <CardPaymentHistory
                         key={value.courseId}
                         image={value.course.courseImg}
                         category={value?.course?.category?.categoryName}
@@ -107,7 +106,7 @@ export const AkunPembayaran = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarKelas style={{ zIndex: 1 }} />}
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };
