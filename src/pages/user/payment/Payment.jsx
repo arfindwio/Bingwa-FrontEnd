@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -22,6 +22,10 @@ import bca from "../../../assets/img/BCA.webp";
 import bni from "../../../assets/img/BNI.webp";
 import bri from "../../../assets/img/BRI.webp";
 import mandiri from "../../../assets/img/MANDIRI.webp";
+import gopay from "../../../assets/img/Gopay.webp";
+import permata from "../../../assets/img/Permata.webp";
+import alfamart from "../../../assets/img/ALFAMART.webp";
+import indomaret from "../../../assets/img/INDOMARET.webp";
 
 // Redux Actions
 import { postPaymentMidtransAction } from "../../../redux/action/payments/PaymentsAction";
@@ -37,6 +41,7 @@ import {
 export const Payment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { courseId } = useParams();
 
   const [newMethodPayment, setNewMethodPayment] = useState("");
@@ -45,6 +50,10 @@ export const Payment = () => {
   const [newCvv, setNewCvv] = useState("");
   const [newExpiryDate, setNewExpiryDate] = useState("");
   const [newBankName, setNewBankName] = useState("");
+  const [newStore, setNewStore] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+
+  const [timeRemaining, setTimeRemaining] = useState(null);
 
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const redirectUrl = useSelector(
@@ -73,6 +82,20 @@ export const Payment = () => {
     dispatch(getAllCoursesAction());
   };
 
+  useEffect(() => {
+    if (!location.state) return navigate(`/detail-course/${courseId}`);
+    if (!timeRemaining) setTimeRemaining(location.state.time);
+    const countdownInterval = setInterval(
+      () => setTimeRemaining((prevTime) => prevTime - 1),
+      1000,
+    );
+
+    return () => {
+      clearInterval(countdownInterval);
+      if (timeRemaining < 0) window.history.back();
+    };
+  }, [timeRemaining, setTimeRemaining]);
+
   // Handle Payment
   const handlePayment = async () => {
     const loadingToastId = showLoadingToast("Loading...");
@@ -80,7 +103,7 @@ export const Payment = () => {
     const payment = await dispatch(
       postPaymentMidtransAction(
         {
-          methodPayment: newMethodPayment, // Ini diasumsikan sebagai "Credit Card", "Bank Transfer", atau "Alfamart"
+          methodPayment: newMethodPayment,
           ...(newMethodPayment === "Credit Card"
             ? {
                 cardNumber: newCardNumber.replace(/\s/g, ""),
@@ -91,9 +114,10 @@ export const Payment = () => {
               ? {
                   bankName: newBankName,
                 }
-              : newMethodPayment === "Alfamart"
+              : newMethodPayment === "Counter"
                 ? {
-                    phoneNumber: "0812343564",
+                    store: newStore,
+                    message: newMessage,
                   }
                 : {}),
         },
@@ -152,6 +176,11 @@ export const Payment = () => {
     return formattedValue || "";
   };
 
+  const formatTime = (seconds) =>
+    `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(
+      seconds % 60,
+    ).padStart(2, "0")}`;
+
   return (
     <>
       <NavbarCourse />
@@ -159,7 +188,7 @@ export const Payment = () => {
       {/* First Container */}
       <div className="md:px-30 mt-[5rem] flex justify-center py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:py-4">
         <div className="w-fit items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base font-semibold text-white sm:px-10 md:px-20 md:text-xl lg:px-36">
-          Selesaikan Pembayaran sampai 31 Desember 2023 23:59
+          Complete the payment within {formatTime(timeRemaining)}
         </div>
       </div>
 
@@ -326,11 +355,172 @@ export const Payment = () => {
               </div>
             </div>
           </div>
+
+          <div className="flex flex-col">
+            <div
+              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
+                newMethodPayment === "Mandiri Bill"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              }`}
+              onClick={() => {
+                handlePaymentMethodClick("Mandiri Bill");
+              }}
+            >
+              <div className="font-semibold">Mandiri Bill</div>
+              <div>
+                {newMethodPayment === "Mandiri Bill" ? (
+                  <GoChevronUp />
+                ) : (
+                  <GoChevronDown />
+                )}
+              </div>
+            </div>
+
+            <div
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Mandiri Bill" ? "block" : "hidden"
+              }`}
+            >
+              <div className="flex  items-center justify-center gap-4 px-60">
+                <div className="flex-1 items-center">
+                  <img src={mandiri} className="" alt="Mandiri Bill" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div
+              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
+                newMethodPayment === "Permata" ? "bg-primary" : "bg-slate-950"
+              }`}
+              onClick={() => {
+                handlePaymentMethodClick("Permata");
+              }}
+            >
+              <div className="font-semibold">Permata</div>
+              <div>
+                {newMethodPayment === "Permata" ? (
+                  <GoChevronUp />
+                ) : (
+                  <GoChevronDown />
+                )}
+              </div>
+            </div>
+
+            <div
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Permata" ? "block" : "hidden"
+              }`}
+            >
+              <div className="flex  items-center justify-center gap-4 px-60">
+                <div className="flex-1 items-center">
+                  <img src={permata} className="" alt="Permata" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div
+              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
+                newMethodPayment === "Gopay" ? "bg-primary" : "bg-slate-950"
+              }`}
+              onClick={() => {
+                handlePaymentMethodClick("Gopay");
+              }}
+            >
+              <div className="font-semibold">Gopay</div>
+              <div>
+                {newMethodPayment === "Gopay" ? (
+                  <GoChevronUp />
+                ) : (
+                  <GoChevronDown />
+                )}
+              </div>
+            </div>
+
+            <div
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Gopay" ? "block" : "hidden"
+              }`}
+            >
+              <div className="flex  items-center justify-center gap-4 px-60">
+                <div className="flex-1 items-center">
+                  <img src={gopay} className="" alt="PayPal" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div
+              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
+                newMethodPayment === "Counter" ? "bg-primary" : "bg-slate-950"
+              }`}
+              onClick={() => {
+                handlePaymentMethodClick("Counter");
+              }}
+            >
+              <div className="flex w-full items-center justify-between px-4">
+                <div className="font-semibold">Counter</div>
+                <div>
+                  {newMethodPayment === "Counter" ? (
+                    <GoChevronUp />
+                  ) : (
+                    <GoChevronDown />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
+                newMethodPayment === "Counter" ? "block" : "hidden"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-4 px-40">
+                <div className="flex items-center">
+                  <img src={alfamart} className="" alt="Alfamart" />
+                </div>
+                <div className="flex items-center">
+                  <img src={indomaret} className="" alt="Indomaret" />
+                </div>
+              </div>
+              <div className="mx-auto w-full px-20 pt-4">
+                <div className="flex flex-col text-start">
+                  <span className="text-xl font-semibold">Store</span>
+                  <input
+                    type="number"
+                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                    placeholder="Alfamart"
+                    value={newStore}
+                    onChange={(e) => {
+                      setNewStore(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col text-start">
+                  <span className="text-xl font-semibold">Message</span>
+                  <input
+                    type="number"
+                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
+                    placeholder="I want to make a payment for order"
+                    value={newMessage}
+                    onChange={(e) => {
+                      setNewMessage(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex h-fit w-fit flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2  shadow-lg focus:outline-none md:w-auto lg:w-[40%]">
           <div className="flex flex-col items-center text-2xl font-bold">
-            Pembayaran Kelas
+            Course Payment
           </div>
 
           {/* Main Content */}
@@ -348,7 +538,7 @@ export const Payment = () => {
           <div className="flex items-center justify-center gap-4 py-3 md:gap-10 lg:gap-6">
             <div className="flex flex-col">
               <div className="text-lg font-bold md:text-2xl lg:text-xl">
-                Harga
+                Price
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
                 Rp{" "}
@@ -362,7 +552,7 @@ export const Payment = () => {
 
             <div className="flex flex-col">
               <div className="text-lg font-bold md:text-2xl lg:text-xl">
-                PPN 11%
+                Tax 11%
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
                 Rp {0.11 * filteredCourses?.price}
@@ -371,7 +561,7 @@ export const Payment = () => {
 
             <div className="flex flex-col">
               <div className="text-lg font-bold md:text-2xl lg:text-xl">
-                Total Bayar
+                Total Amount
               </div>
               <div className="text-base font-semibold text-primary md:text-xl lg:text-lg">
                 Rp{" "}
@@ -388,7 +578,7 @@ export const Payment = () => {
             onClick={handlePayment}
           >
             <div className="text-center text-lg font-bold">
-              Bayar dan Ikuti Kelas Selamanya
+              Lifetime Access to the Course
             </div>
             <HiArrowCircleRight size={40} />
           </div>

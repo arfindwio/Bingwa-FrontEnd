@@ -74,7 +74,7 @@ export const NavbarCourse = () => {
             onKeyDown={(e) =>
               e.key === "Enter" ? handleSearchCourse(searchInput) : ""
             }
-            placeholder="Cari kursus terbaik..."
+            placeholder="Search best courses..."
             className="h-[3rem] w-[12rem] cursor-pointer rounded-xl bg-white px-3 py-2 md:w-[20rem] lg:w-[30rem]"
           />
           <BiSearchAlt

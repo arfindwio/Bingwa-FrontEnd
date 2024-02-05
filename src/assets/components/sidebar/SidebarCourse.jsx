@@ -29,7 +29,7 @@ export const SidebarCourse = ({
               onChange={() => handleFilterChange("filter", "newest")}
               className="mr-2 h-[20px] w-[20px] cursor-pointer"
             />
-            Latest
+            Newest
           </label>
           <label className="flex cursor-pointer items-center px-6">
             <input
