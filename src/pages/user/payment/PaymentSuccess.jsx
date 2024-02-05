@@ -19,15 +19,13 @@ export const PaymentSuccess = () => {
 
       <div className="md:px-30 mt-[5rem] px-20 py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:px-52 lg:py-4">
         <div className="items-center rounded-xl bg-green px-2 py-2 text-center text-base text-white md:text-xl">
-          <div className="font-semibold">
-            Terimakasih atas pembayaran transaksi
-          </div>
+          <div className="font-semibold">Thank you for your payment</div>
         </div>
       </div>
 
       <div className="mt-5 items-center bg-white py-2">
         <div className="font-montserrat text-center text-3xl font-extrabold text-primary md:text-4xl">
-          Selamat!
+          Congratulation!
         </div>
 
         <div className=" mx-auto my-5 flex w-[25%] items-center justify-center pl-14">
@@ -36,10 +34,10 @@ export const PaymentSuccess = () => {
 
         <div className="flex flex-col">
           <div className="font-montserrat py-6 text-center text-lg font-bold md:py-10 md:text-xl lg:py-2 lg:text-xl">
-            Transaksi pembayaran kelas premium berhasil!
+            Premium course payment has been successfully!
           </div>
           <div className="text-center text-xl">
-            E-receipt telah dikirimkan ke email.
+            E-receipt has been sent to your email.
           </div>
         </div>
 
@@ -48,7 +46,7 @@ export const PaymentSuccess = () => {
             className="mb-3 w-fit cursor-pointer items-center rounded-full bg-primary px-20 py-2 text-center text-lg font-semibold text-white"
             onClick={handleDialogOpen}
           >
-            Mulai Belajar
+            Start Learning
           </div>
 
           <div
@@ -57,7 +55,7 @@ export const PaymentSuccess = () => {
               navigate("/");
             }}
           >
-            Kembali ke Beranda
+            Back to Home
           </div>
         </div>
       </div>

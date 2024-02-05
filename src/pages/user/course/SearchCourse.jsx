@@ -64,7 +64,7 @@ export const SearchCourse = () => {
           {/* Search */}
           <div className="flex items-center justify-between py-4">
             <div className="-mt-8 py-6 text-xl font-bold md:mt-0 md:px-4 md:text-3xl lg:mt-0 lg:px-0 lg:text-3xl">
-              Topik Kelas
+              Courses Topics
             </div>
           </div>
 
@@ -73,7 +73,7 @@ export const SearchCourse = () => {
             <div className="flex w-full flex-wrap items-center justify-between px-0 md:px-5 lg:px-0">
               {searchInput ? (
                 <div className="-mt-12 font-medium md:mt-0 md:py-4 md:text-lg lg:mt-0 lg:pb-4 lg:pt-0 lg:text-lg">
-                  Menampilkan{" "}
+                  Result for{" "}
                   <span className="font-bold text-primary">
                     "{searchInput}"
                   </span>
@@ -85,7 +85,7 @@ export const SearchCourse = () => {
                 {/* Card Item */}
                 {storeCourses.length === 0 ? (
                   <p className="col-span-3 py-10 text-center text-lg font-semibold italic text-slate-500">
-                    - Course tidak ditemukan -
+                    - Course Not Found -
                   </p>
                 ) : (
                   storeCourses.map((value) => {

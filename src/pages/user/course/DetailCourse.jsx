@@ -65,7 +65,6 @@ export const DetailCourse = () => {
   const { courseId } = useParams();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [paymentCourseId, setPaymentCourseId] = useState(null);
   const [videoLink, setVideoLink] = useState(null);
   const [rating, setRating] = useState(0);
   const [Comment, setComment] = useState("");
@@ -144,7 +143,6 @@ export const DetailCourse = () => {
   };
 
   const handleDialogOpen = () => {
-    setPaymentCourseId(storeDetailCourses?.id);
     setDialogOpen(true);
   };
 
@@ -154,7 +152,7 @@ export const DetailCourse = () => {
         const isPremium = storeDetailCourses?.isPremium;
 
         if (isPremium) {
-          navigate(`/payment/${paymentCourseId}`);
+          navigate(`/payment/${courseId}`, { state: { time: 60 * 60 } });
         }
 
         if (!isPremium) {
