@@ -202,7 +202,7 @@ export const AllCourse = () => {
           {/* Search */}
           <div className="flex items-center justify-between pt-4">
             <div className="-mt-8 px-0 py-6 text-xl font-bold md:mt-0 md:text-3xl lg:mt-0 lg:text-3xl">
-              Course Topics
+              Courses Topics
             </div>
             {isMobile ? (
               <div
