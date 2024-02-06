@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { SidebarAccount } from "../../../assets/components/sidebar/SidebarAccount";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
+import { AccountProfileSkeleton } from "../../../assets/components/skeleton/AccountProfileSkeleton";
 
 // Helper
 import {
@@ -38,6 +39,7 @@ export const AccountProfile = () => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const storeUserProfile = useSelector((state) => state.users.userAuthenticate);
+  const isLoading = useSelector((state) => state.users.loading);
 
   useEffect(() => {
     getAllData();
@@ -111,100 +113,105 @@ export const AccountProfile = () => {
           {/* Isi Akun */}
           <div className="flex py-4 text-center">
             <SidebarAccount />
-            <div
-              className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]"
-              onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
-              tabIndex={0}
-            >
-              <div className="relative h-28 w-28 cursor-pointer rounded-full border-[3px] border-primary">
-                <input
-                  type="file"
-                  id="image"
-                  accept="image/*"
-                  className="absolute inset-x-0 h-full w-full cursor-pointer rounded-full opacity-0"
-                  onChange={(e) => handleImageUpload(e)}
-                />
-                <img
-                  src={
-                    image
-                      ? URL.createObjectURL(image)
-                      : storeUserProfile.userProfile?.userProfile
-                          ?.profilePicture ||
-                        "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706817534316"
-                  }
-                  alt="profile"
-                  className="h-full w-full cursor-pointer rounded-full object-cover"
-                />
-                {storeUserProfile?.userProfile?.userProfile?.profilePicture ? (
-                  <></>
-                ) : (
-                  <div className="absolute bottom-0 right-0 rounded-full bg-slate-100 p-1 text-primary">
-                    <IoImageOutline size={30} />
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-left">Nama</div>
-                <input
-                  type="text"
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
-                  placeholder="Bingwa"
-                  id="name"
-                  onChange={(e) => setNewFullName(e.target.value)}
-                  value={newFullName}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-left">Email</div>
-                <input
-                  type="text"
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
-                  placeholder="bingwa@gmail.com"
-                  id="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-left">Phone Number</div>
-                <input
-                  type="text"
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
-                  placeholder="08123456789"
-                  id="phone"
-                  onChange={(e) => setNewPhoneNumber(e.target.value)}
-                  value={newPhoneNumber}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-left">City</div>
-                <input
-                  type="text"
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
-                  placeholder="Jakarta"
-                  id="city"
-                  onChange={(e) => setNewCity(e.target.value)}
-                  value={newCity}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <div className="text-left">Country</div>
-                <input
-                  type="text"
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
-                  placeholder="Indonesia"
-                  id="country"
-                  onChange={(e) => setNewCountry(e.target.value)}
-                  value={newCountry}
-                />
-              </div>
-              <button
-                className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
-                onClick={handleSave}
+            {isLoading ? (
+              <AccountProfileSkeleton />
+            ) : (
+              <div
+                className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]"
+                onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
+                tabIndex={0}
               >
-                Save My Profile Data
-              </button>
-            </div>
+                <div className="relative h-28 w-28 cursor-pointer rounded-full border-[3px] border-primary">
+                  <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    className="absolute inset-x-0 h-full w-full cursor-pointer rounded-full opacity-0"
+                    onChange={(e) => handleImageUpload(e)}
+                  />
+                  <img
+                    src={
+                      image
+                        ? URL.createObjectURL(image)
+                        : storeUserProfile.userProfile?.userProfile
+                            ?.profilePicture ||
+                          "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706817534316"
+                    }
+                    alt="profile"
+                    className="h-full w-full cursor-pointer rounded-full object-cover"
+                  />
+                  {storeUserProfile?.userProfile?.userProfile
+                    ?.profilePicture ? (
+                    <></>
+                  ) : (
+                    <div className="absolute bottom-0 right-0 rounded-full bg-slate-100 p-1 text-primary">
+                      <IoImageOutline size={30} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-left">Name</div>
+                  <input
+                    type="text"
+                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    placeholder="Bingwa"
+                    id="name"
+                    onChange={(e) => setNewFullName(e.target.value)}
+                    value={newFullName}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-left">Email</div>
+                  <input
+                    type="text"
+                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    placeholder="bingwa@gmail.com"
+                    id="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-left">Phone Number</div>
+                  <input
+                    type="text"
+                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    placeholder="08123456789"
+                    id="phone"
+                    onChange={(e) => setNewPhoneNumber(e.target.value)}
+                    value={newPhoneNumber}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-left">City</div>
+                  <input
+                    type="text"
+                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    placeholder="Jakarta"
+                    id="city"
+                    onChange={(e) => setNewCity(e.target.value)}
+                    value={newCity}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="text-left">Country</div>
+                  <input
+                    type="text"
+                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    placeholder="Indonesia"
+                    id="country"
+                    onChange={(e) => setNewCountry(e.target.value)}
+                    value={newCountry}
+                  />
+                </div>
+                <button
+                  className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

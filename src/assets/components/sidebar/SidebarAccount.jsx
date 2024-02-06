@@ -45,7 +45,7 @@ export const SidebarAccount = () => {
               : "text-md font-semibold"
           }`}
         >
-          Profil Saya
+          Account Profile
         </div>
       </div>
       {/* Sidebar Item */}
@@ -67,7 +67,7 @@ export const SidebarAccount = () => {
               : "text-md font-semibold"
           }`}
         >
-          Ubah Password
+          Change Password
         </div>
       </div>
       {/* Sidebar Item */}
@@ -89,7 +89,7 @@ export const SidebarAccount = () => {
               : "text-md font-semibold"
           }`}
         >
-          Riwayat Pembayaran
+          Payment History
         </div>
       </div>
       {/* Sidebar Item */}
@@ -98,7 +98,7 @@ export const SidebarAccount = () => {
         onClick={handleLogout}
       >
         <LuLogOut size={25} className="text-primary" />
-        <div className="text-md font-semibold">Keluar</div>
+        <div className="text-md font-semibold">Logout</div>
       </div>
       <div className="py-6 text-gray-400">Version 1.1.0</div>
     </div>

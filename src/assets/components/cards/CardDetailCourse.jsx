@@ -8,7 +8,6 @@ import { LiaBookSolid } from "react-icons/lia";
 import { RiShieldStarLine } from "react-icons/ri";
 
 // Component
-import { getDetailCoursesAction } from "../../../redux/action/courses/CoursesAction";
 import { CardCourseSkeleton } from "../skeleton/CardCourseSkeleton";
 
 export const CardDetailCourse = ({
