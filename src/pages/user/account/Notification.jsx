@@ -6,6 +6,7 @@ import { useMediaQuery } from "react-responsive";
 // Components
 import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
+import { NotificationSkeleton } from "../../../assets/components/skeleton/NotificationSkeleton";
 
 // Redux Actions
 import {
@@ -21,6 +22,7 @@ export const Notification = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const storeNotif = useSelector((state) => state.notifications.notifications);
+  const isLoading = useSelector((state) => state.notifications.loading);
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
@@ -40,26 +42,32 @@ export const Notification = () => {
             storeNotif.map((notification) => (
               <div
                 key={notification.id}
-                className="flex gap-4 border-b-2 border-slate-300 pb-5"
+                className="mb-2 flex gap-4 border-b-2 border-slate-300 pb-5"
               >
-                <div className="text-primary">
-                  <IoNotificationsCircleSharp size={30} />
-                </div>
-                <div className="flex w-full flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-semibold text-primary">
-                      {notification.title}
-                    </h4>
-                    <div className="flex items-center justify-center gap-2">
-                      <h5 className="text-sm text-slate-500">
-                        {notification.createdAt}
-                      </h5>
+                {isLoading ? (
+                  <NotificationSkeleton />
+                ) : (
+                  <>
+                    <div className="text-primary">
+                      <IoNotificationsCircleSharp size={30} />
                     </div>
-                  </div>
-                  <p className="text-sm font-semibold">
-                    {notification.message}
-                  </p>
-                </div>
+                    <div className="flex w-full flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-primary">
+                          {notification.title}
+                        </h4>
+                        <div className="flex items-center justify-center gap-2">
+                          <h5 className="text-sm text-slate-500">
+                            {notification.createdAt}
+                          </h5>
+                        </div>
+                      </div>
+                      <p className="text-sm font-semibold">
+                        {notification.message}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             ))
           ) : (
@@ -94,20 +102,26 @@ export const Notification = () => {
                   key={notification.id}
                   className="flex items-center justify-between px-10 py-6"
                 >
-                  <div className="flex flex-col space-y-2">
-                    <div className="flex gap-4 text-lg font-semibold text-primary">
-                      <IoNotificationsCircleSharp size={30} />
-                      {notification.title}
-                    </div>
-                    <div className="flex px-11 font-semibold">
-                      {notification.message}
-                    </div>
-                  </div>
+                  {isLoading ? (
+                    <NotificationSkeleton />
+                  ) : (
+                    <>
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex gap-4 text-lg font-semibold text-primary">
+                          <IoNotificationsCircleSharp size={30} />
+                          {notification.title}
+                        </div>
+                        <div className="flex px-11 font-semibold">
+                          {notification.message}
+                        </div>
+                      </div>
 
-                  {/* Tanggal */}
-                  <div className="flex gap-2 font-thin">
-                    {notification.createdAt}
-                  </div>
+                      {/* Tanggal */}
+                      <div className="flex gap-2 font-thin">
+                        {notification.createdAt}
+                      </div>
+                    </>
+                  )}
                 </div>
               ))
             ) : (
