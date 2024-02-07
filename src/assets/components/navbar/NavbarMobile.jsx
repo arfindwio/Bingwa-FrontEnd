@@ -8,7 +8,6 @@ import { Dialog, DialogBody } from "@material-tailwind/react";
 // Icons
 import { IoHomeOutline } from "react-icons/io5";
 import { IoNotificationsOutline } from "react-icons/io5";
-import { FaRegCirclePlay } from "react-icons/fa6";
 import { CiCircleList } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { LuPenLine } from "react-icons/lu";
@@ -39,105 +38,104 @@ export const NavbarMobile = () => {
 
   return (
     <>
-      <div className="fixed bottom-0 z-50 w-full shadow-2xl">
-        <div className="flex h-full items-center justify-between bg-white px-5 py-2">
+      <div className="fixed bottom-0 z-50  flex w-screen items-start  justify-between gap-1 break-all bg-white px-0 py-2 shadow-2xl sm:gap-0 sm:px-5">
+        <div
+          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <div
-            className="flex flex-col items-center justify-center gap-2"
-            onClick={() => {
-              navigate("/");
-            }}
+            className={
+              location.pathname === "/" ? `text-primary` : `text-slate-500`
+            }
           >
-            <div
-              className={
-                location.pathname === "/" ? `text-primary` : `text-slate-500`
-              }
-            >
-              <IoHomeOutline size={25} />
-            </div>
-            <span
-              className={`text-sm
+            <IoHomeOutline size={25} />
+          </div>
+          <span
+            className={`text-sm
                 ${
                   location.pathname === "/"
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
-            >
-              Home
-            </span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-center gap-2"
-            onClick={() => {
-              navigate("/notification");
-            }}
           >
-            <div
-              className={
-                location.pathname === "/notification"
-                  ? `text-primary`
-                  : `text-slate-500`
-              }
-            >
-              <IoNotificationsOutline size={25} />
-            </div>
-            <span
-              className={`text-sm
+            Home
+          </span>
+        </div>
+        <div
+          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          onClick={() => {
+            navigate("/notification");
+          }}
+        >
+          <div
+            className={
+              location.pathname === "/notification"
+                ? `text-primary`
+                : `text-slate-500`
+            }
+          >
+            <IoNotificationsOutline size={25} />
+          </div>
+          <span
+            className={`text-sm
                 ${
                   location.pathname === "/notification"
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
-            >
-              Notifikasi
-            </span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-center gap-2"
-            onClick={() => {
-              navigate("/all-kelas");
-            }}
           >
-            <div
-              className={
-                location.pathname === "/all-kelas" ||
-                location.pathname === "/pilih-gratis" ||
-                location.pathname === "/pilih-premium"
-                  ? `text-primary`
-                  : `text-slate-500`
-              }
-            >
-              <CiCircleList size={25} />
-            </div>
-            <span
-              className={`text-sm
+            Notification
+          </span>
+        </div>
+        <div
+          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          onClick={() => {
+            navigate("/all-courses");
+          }}
+        >
+          <div
+            className={
+              location.pathname === "/all-courses" ||
+              location.pathname === "/pilih-gratis" ||
+              location.pathname === "/pilih-premium"
+                ? `text-primary`
+                : `text-slate-500`
+            }
+          >
+            <CiCircleList size={25} />
+          </div>
+          <span
+            className={`text-sm
                 ${
-                  location.pathname === "/all-kelas" ||
+                  location.pathname === "/all-courses" ||
                   location.pathname === "/pilih-gratis" ||
                   location.pathname === "/pilih-premium"
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
-            >
-              Kursus
-            </span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-center gap-2"
-            onClick={handleOpen}
           >
-            <div
-              className={
-                location.pathname === "/account-profile" ||
-                location.pathname === "/change-password" ||
-                location.pathname === "/payment-history"
-                  ? `text-primary`
-                  : `text-slate-500`
-              }
-            >
-              <FaRegUser size={25} />
-            </div>
-            <span
-              className={`text-sm
+            Courses
+          </span>
+        </div>
+        <div
+          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          onClick={handleOpen}
+        >
+          <div
+            className={
+              location.pathname === "/account-profile" ||
+              location.pathname === "/change-password" ||
+              location.pathname === "/payment-history"
+                ? `text-primary`
+                : `text-slate-500`
+            }
+          >
+            <FaRegUser size={25} />
+          </div>
+          <span
+            className={`text-sm
                 ${
                   location.pathname === "/account-profile" ||
                   location.pathname === "/change-password" ||
@@ -145,17 +143,28 @@ export const NavbarMobile = () => {
                     ? `font-semibold text-primary`
                     : `text-slate-500`
                 }`}
-            >
-              Akun
-            </span>
-          </div>
+          >
+            Account
+          </span>
         </div>
       </div>
 
       {/* Dialog Navbar Mobile */}
       <Dialog open={open} handler={handleOpen}>
         <DialogBody>
-          {token !== undefined ? (
+          {!token ? (
+            <div
+              className="flex cursor-pointer items-center gap-3 py-4 hover:text-primary"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              <div className="text-primary">
+                <LuLogOut size={25} />
+              </div>
+              <div className="text-md font-semibold">Masuk</div>
+            </div>
+          ) : (
             <>
               <div
                 className="flex cursor-pointer items-center gap-3 border-b-2 border-slate-300 py-4 hover:text-primary"
@@ -203,18 +212,6 @@ export const NavbarMobile = () => {
                 <div className="text-md font-semibold">Keluar</div>
               </div>
             </>
-          ) : (
-            <div
-              className="flex cursor-pointer items-center gap-3 py-4 hover:text-primary"
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              <div className="text-primary">
-                <LuLogOut size={25} />
-              </div>
-              <div className="text-md font-semibold">Masuk</div>
-            </div>
           )}
         </DialogBody>
       </Dialog>

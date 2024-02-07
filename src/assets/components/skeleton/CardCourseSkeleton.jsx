@@ -7,7 +7,7 @@ export const CardCourseSkeleton = () => {
 
   const isSelectedPage =
     location.pathname === `/` ||
-    location.pathname === `/all-kelas` ||
+    location.pathname === `/all-courses` ||
     location.pathname === `/detail-course/${courseId}`;
   const isPaymentHistoryPage = location.pathname === "/payment-history";
 
