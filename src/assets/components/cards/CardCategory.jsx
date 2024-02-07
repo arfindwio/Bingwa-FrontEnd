@@ -9,7 +9,7 @@ export const CardCategory = ({ thumbnail, category }) => {
 
   const handleCategoryClick = () => {
     CookieStorage.set(CookiesKeys.CategoryFilter, category);
-    navigate(`/all-kelas`);
+    navigate(`/all-courses`);
   };
 
   return (

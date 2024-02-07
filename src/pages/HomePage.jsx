@@ -141,15 +141,15 @@ export const HomePage = () => {
           <div className="flex w-full items-center justify-center bg-primary md:w-1/3 md:pr-10 lg:w-1/3 lg:pr-6">
             <div className="flex flex-col gap-2">
               <div className="text-lg font-semibold tracking-wide text-white md:text-xl lg:text-3xl">
-                Learn
+                Learn From
               </div>
               <div className="text-lg font-semibold tracking-wide text-white md:text-xl lg:text-3xl">
-                from Best Practitioners!
+                Best Practitioners!
               </div>
               <div
                 className="mt-4 cursor-pointer rounded-lg border-2 bg-white px-3 py-2 text-center text-lg font-bold tracking-wide text-primary transition-all hover:border-white hover:bg-primary hover:text-white"
                 onClick={() => {
-                  navigate("/all-kelas");
+                  navigate("/all-courses");
                 }}
               >
                 JOIN COURSE
@@ -205,7 +205,7 @@ export const HomePage = () => {
           </div>
 
           {/* Container Card Kelas */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
             {showAllCourses
               ? shuffledCourses?.length > 0
                 ? renderCourseCards(shuffledCourses, 6)

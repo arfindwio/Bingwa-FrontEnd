@@ -54,8 +54,8 @@ export const NavbarCourse = () => {
   };
 
   return (
-    <div className="fixed top-0 z-20 flex w-screen items-center justify-between gap-2 bg-primary px-2 py-4 md:px-6 lg:px-28">
-      <div className="flex gap-10">
+    <div className="fixed top-0 z-20 flex w-full items-center justify-between gap-2 bg-primary px-2 py-4 md:px-6 lg:px-28">
+      <div className="flex w-1/2 gap-10">
         <div
           className="hidden cursor-pointer items-center justify-center gap-2 md:flex lg:flex"
           onClick={() => {
@@ -66,7 +66,7 @@ export const NavbarCourse = () => {
           <div className="gap-4 text-3xl font-semibold text-white">Bingwa</div>
         </div>
 
-        <div className="relative">
+        <div className="relative w-[70%]">
           <input
             type="text"
             value={searchInput}
@@ -75,7 +75,7 @@ export const NavbarCourse = () => {
               e.key === "Enter" ? handleSearchCourse(searchInput) : ""
             }
             placeholder="Search best courses..."
-            className="h-[3rem] w-[12rem] cursor-pointer rounded-xl bg-white px-3 py-2 md:w-[20rem] lg:w-[30rem]"
+            className="h-[3rem] w-[100%] cursor-pointer rounded-xl bg-white px-3 py-2"
           />
           <BiSearchAlt
             size={30}
@@ -89,7 +89,7 @@ export const NavbarCourse = () => {
 
       {!token ? (
         <div
-          className="flex cursor-pointer gap-2 font-semibold text-white"
+          className="flex w-1/2 cursor-pointer gap-2 font-semibold text-white"
           onClick={() => {
             navigate("/login");
           }}
@@ -98,19 +98,19 @@ export const NavbarCourse = () => {
           <div className="text-xl">Masuk</div>
         </div>
       ) : (
-        <div className="flex cursor-pointer items-center gap-1 space-x-2 text-white md:space-x-4 lg:gap-2 lg:space-x-4">
+        <div className="flex w-1/2 items-center justify-end gap-4 text-white">
           <div
             className={`${
-              currentPath === "/all-kelas"
+              currentPath === "/all-courses"
                 ? "flex gap-2 rounded-xl bg-blue-400 px-2 py-1 font-bold lg:px-6"
                 : "flex space-x-2 md:space-x-4 lg:space-x-4"
             }`}
             onClick={() => {
-              navigate("/all-kelas");
+              navigate("/all-courses");
             }}
           >
             <IoIosList size={28} />
-            {currentPath === "/all-kelas" ? (
+            {currentPath === "/all-courses" ? (
               <div className="text-lg">Class</div>
             ) : null}
           </div>

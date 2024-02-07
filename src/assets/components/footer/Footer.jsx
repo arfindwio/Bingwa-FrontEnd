@@ -18,10 +18,10 @@ export const Footer = () => {
       {isLoading ? (
         <FooterSkeleton />
       ) : (
-        <div className="bg-blue px-6 pb-6 pt-12 lg:px-28">
-          <div className="flex flex-col gap-3 pb-4 sm:justify-between lg:flex-row lg:gap-1 lg:pb-2 xl:gap-0">
+        <div className="break-all bg-blue px-6 pb-6 pt-12 md:px-20 lg:px-28">
+          <div className=" flex flex-col gap-3 pb-4 sm:justify-between lg:flex-row lg:gap-1 lg:pb-2 xl:gap-0">
             {/* Bagian 1 */}
-            <div className="2/4 flex flex-col">
+            <div className="2/4  flex flex-col">
               <h2 className="mb-2 text-4xl font-bold text-white">Bingwa</h2>
               <div className="flex flex-col gap-2 py-3 text-white">
                 <p>
@@ -46,7 +46,7 @@ export const Footer = () => {
                   </a>
                 </li>
                 <li className="text-md mb-2 font-semibold lg:text-lg">
-                  <a href="/all-kelas" className="text-white hover:underline">
+                  <a href="/all-courses" className="text-white hover:underline">
                     Courses
                   </a>
                 </li>
@@ -58,12 +58,10 @@ export const Footer = () => {
               <h2 className="mb-4 text-2xl font-semibold text-white">
                 Connect
               </h2>
-              <div className="flex items-center gap-4">
-                <div className="flex gap-4 text-white">
-                  <FaSquareGithub size={50} className="cursor-pointer" />
-                  <FaSquareInstagram size={50} className="cursor-pointer" />
-                  <FaSquareWhatsapp size={50} className="cursor-pointer" />
-                </div>
+              <div className="flex flex-wrap items-center gap-1 text-white sm:gap-4">
+                <FaSquareGithub size={50} className="cursor-pointer" />
+                <FaSquareInstagram size={50} className="cursor-pointer" />
+                <FaSquareWhatsapp size={50} className="cursor-pointer" />
               </div>
             </div>
           </div>

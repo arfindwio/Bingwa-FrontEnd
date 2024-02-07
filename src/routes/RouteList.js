@@ -44,7 +44,7 @@ export const RouteList = () => {
         <Route path="/otp" element={<Otp />} />
 
         {/* Course */}
-        <Route path="/all-kelas" element={<AllCourse />} />
+        <Route path="/all-courses" element={<AllCourse />} />
         <Route path="/search-course" element={<SearchCourse />} />
         <Route path="/detail-course/:courseId" element={<DetailCourse />} />
 
