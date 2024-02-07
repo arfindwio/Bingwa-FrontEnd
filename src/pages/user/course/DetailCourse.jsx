@@ -122,7 +122,7 @@ export const DetailCourse = () => {
   useEffect(() => {
     dispatch(getAllCoursesAction());
     if (!filteredCourses) {
-      return navigate("/all-kelas");
+      return navigate("/all-courses");
     }
     getAllData();
   }, [dispatch]);

@@ -77,16 +77,17 @@ export const Notification = () => {
           )}
         </div>
       ) : (
-        <div className="min-h-screen bg-secondary px-9 py-10 pt-20 md:px-20 lg:px-80 ">
-          <div className="relative flex items-center gap-2 py-8 text-lg font-semibold text-black">
-            <GoArrowLeft
-              size={30}
-              className="absolute -inset-x-8 cursor-pointer md:-inset-x-12 lg:-inset-x-16"
+        <div className="min-h-screen bg-secondary px-2 py-10 pt-20 sm:px-6 md:px-10 lg:px-24">
+          <div className="py-8">
+            <div
+              className="relative flex w-fit cursor-pointer items-center gap-2  text-lg font-semibold text-black"
               onClick={() => {
                 navigate("/");
               }}
-            />
-            Back to home
+            >
+              <GoArrowLeft size={30} className="absolute  cursor-pointer" />
+              <p className="pl-10">Back to home</p>
+            </div>
           </div>
 
           {/* Notification */}

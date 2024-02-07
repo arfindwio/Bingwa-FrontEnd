@@ -73,7 +73,7 @@ export const Payment = () => {
   useEffect(() => {
     getAllData();
     if (!filteredCourses || !filteredCourses.isPremium || foundEnrollment) {
-      return navigate("/all-kelas");
+      return navigate("/all-courses");
     }
   }, [dispatch]);
 

@@ -13,6 +13,7 @@ import { SidebarCourse } from "../../../assets/components/sidebar/SidebarCourse"
 import { Pagination } from "../../../assets/components/pagination/Pagination";
 import { NavbarMobile } from "../../../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../../../assets/components/search/SearchMobile";
+import { Footer } from "../../../assets/components/footer/Footer";
 
 // Redux Actions
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
@@ -200,13 +201,13 @@ export const AllCourse = () => {
         {isMobile ? <SearchMobile /> : <></>}
         <div className="flex flex-col justify-center px-4 pb-16 pt-2 md:px-8 md:pb-0 md:pt-20 lg:px-24 lg:pb-0 lg:pt-20">
           {/* Search */}
-          <div className="flex items-center justify-between pt-4">
-            <div className="-mt-8 px-0 py-6 text-xl font-bold md:mt-0 md:text-3xl lg:mt-0 lg:text-3xl">
+          <div className="flex items-center justify-between pt-4 sm:py-8 md:pb-0 md:pt-6">
+            <div className="-mt-8 mb-2 px-0 py-6 text-xl font-bold sm:mb-0 sm:py-0 md:mt-0 md:text-3xl lg:mt-0 lg:text-3xl">
               Courses Topics
             </div>
             {isMobile ? (
               <div
-                className="-mt-8 font-semibold text-primary md:mt-0 lg:mt-0"
+                className="-mt-8 cursor-pointer font-semibold text-primary md:mt-0 lg:mt-0"
                 onClick={handleOpen}
               >
                 Filter
@@ -284,7 +285,7 @@ export const AllCourse = () => {
                   </span>
                 </div>
               ) : null}
-              <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 lg:grid-cols-2">
+              <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 xl:grid-cols-2">
                 {storeCourses.length === 0 ? (
                   <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
                     - Course not found -
@@ -340,6 +341,8 @@ export const AllCourse = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
 
       {/* Dialog Filter */}
       <Dialog open={open} handler={handleOpen} size="xxl">
