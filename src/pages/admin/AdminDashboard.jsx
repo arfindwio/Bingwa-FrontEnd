@@ -19,8 +19,8 @@ export const AdminDashboard = () => {
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
   const storeCountCourses = useSelector((state) => state.users.users);
-  const storePayments = useSelector((state) => state.payment.payments);
-  const isLoading = useSelector((state) => state.payment.loading);
+  const storePayments = useSelector((state) => state.payments.payments);
+  const isLoading = useSelector((state) => state.payments.loading);
 
   const countPremiumCourse = storeCountCourses.filter(
     (course) => course.isPremium === true,
@@ -55,15 +55,15 @@ export const AdminDashboard = () => {
         </div>
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
+          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCountCourses.length}
+            count={storeCountCourses?.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse.length}
+            count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
           />
         </div>
@@ -119,20 +119,20 @@ export const AdminDashboard = () => {
                       storePayments.payments.map((value, index) => (
                         <tr key={index} className="text-xs">
                           <td className="px-4 py-3">
-                            {value.user.userProfile.fullName.split(" ")[0]}
+                            {value?.user?.userProfile?.fullName?.split(" ")[0]}
                           </td>
                           <td className="px-4 py-3">
-                            {value.course.category.categoryName}
+                            {value?.course?.category?.categoryName}
                           </td>
                           <td className="px-4 py-3">
-                            {value.course.courseName}
+                            {value?.course?.courseName}
                           </td>
-                          <td className="px-4 py-3">{value.paymentCode}</td>
+                          <td className="px-4 py-3">{value?.paymentCode}</td>
                           <td className="px-4 py-3 font-medium text-green">
-                            {value.status}
+                            {value?.status}
                           </td>
-                          <td className="px-4 py-3">{value.methodPayment}</td>
-                          <td className="px-4 py-3">{value.createdAt}</td>
+                          <td className="px-4 py-3">{value?.methodPayment}</td>
+                          <td className="px-4 py-3">{value?.createdAt}</td>
                         </tr>
                       ))
                     )}
@@ -144,9 +144,9 @@ export const AdminDashboard = () => {
             {/* Pagination */}
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePayments.pagination.links.next}
-                prevLink={storePayments.pagination.links.prev}
-                totalItems={storePayments.pagination.total_items}
+                nextLink={storePayments?.pagination?.links.next}
+                prevLink={storePayments?.pagination?.links.prev}
+                totalItems={storePayments?.pagination?.total_items}
               />
             </div>
           </div>

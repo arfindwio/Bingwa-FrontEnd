@@ -2,17 +2,17 @@ import { API_ENDPOINT } from "../../utils/api-endpoint";
 import http from "../../utils/http";
 
 export const reduxGetAllEnrollments = async () => {
-  return await http.get(API_ENDPOINT.GET_ALL_ENROLLMENTS);
+  return await http.get(API_ENDPOINT.ENROLLMENTS);
 };
 
-export const reduxGetEnrollmentById = async (courseId) => {
-  return await http.get(`${API_ENDPOINT.GET_ENROLMENT}/${courseId}`);
+export const reduxGetEnrollmentByCourseId = async (courseId) => {
+  return await http.get(`${API_ENDPOINT.ENROLLMENTS}/${courseId}`);
 };
 
-export const reduxPostEnrollments = async (courseId) => {
-  return await http.post(`${API_ENDPOINT.CREATE_ENROLLMENT}/${courseId}`);
+export const reduxPostEnrollment = async (courseId) => {
+  return await http.post(`${API_ENDPOINT.ENROLLMENTS}/${courseId}`);
 };
 
-export const reduxPutEnrollments = async (courseId) => {
+export const reduxPutEnrollment = async (courseId) => {
   return await http.put(`${API_ENDPOINT.ENROLLMENTS}/${courseId}`);
 };

@@ -8,7 +8,7 @@ import ChaptersSlice from "./chapters/ChaptersSlice";
 import EnrollmentsSlice from "./enrollments/EnrollmentsSlice";
 import ReviewsSlice from "./reviews/ReviewsSlice";
 import LessonsSlice from "./lessons/LessonsSlice";
-import PaymentSlice from "./payments/PaymentsSlice";
+import PaymentsSlice from "./payments/PaymentsSlice";
 import NotificationsSlice from "./notifications/NotificationsSlice";
 import TrackingsSlice from "./trackings/TrackingsSlice";
 import PromotionsSlice from "./promotions/PromotionsSlice";
@@ -42,7 +42,7 @@ export default combineReducers({
   reviews: ReviewsSlice,
 
   // Payment
-  payment: PaymentSlice,
+  payments: PaymentsSlice,
 
   // seNotifications
   notifications: NotificationsSlice,

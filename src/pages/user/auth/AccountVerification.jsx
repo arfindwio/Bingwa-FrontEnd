@@ -6,34 +6,41 @@ import { useNavigate } from "react-router-dom";
 import BrandLogo from "../../../assets/img/brain.webp";
 
 // Redux Actions
-import { postForgetPassAction } from "../../../redux/action/users/UsersAction";
+import { putResendOtp } from "../../../redux/action/users/UsersAction";
 
 // Helper
-import { showSuccessToast } from "../../../helper/ToastHelper";
+import {
+  showSuccessToast,
+  showErrorToast,
+  showLoadingToast,
+} from "../../../helper/ToastHelper";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
 
-export const ForgetPassword = () => {
-  const [Email, setEmail] = useState("");
+export const AccountVerification = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const [Email, setEmail] = useState("");
 
   const handleSave = async () => {
-    const forget = await dispatch(
-      postForgetPassAction({
+    const verifyAccount = await dispatch(
+      putResendOtp({
         email: Email,
       }),
     );
-    if (forget) {
-      showSuccessToast("Tautan reset password terkirim, Periksa Email Anda");
+
+    showLoadingToast("Loading...");
+
+    if (!verifyAccount) {
+      showErrorToast("Verification Account Failed");
+    }
+    if (verifyAccount) {
+      showSuccessToast("Verification link has been sent!");
       setTimeout(() => {
-        window.location.href = "https://mail.google.com";
-      }, 3000);
+        navigate(`/otp`, { state: { email: Email } });
+      }, 1000);
     }
   };
 
@@ -41,17 +48,17 @@ export const ForgetPassword = () => {
     <div className="flex h-screen items-center justify-center">
       <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
         <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
-          <div className="absolute top-[120px] cursor-pointer md:top-[350px] lg:top-[150px]">
-            <GoArrowLeft
-              size={25}
-              className="items-center"
-              onClick={() => {
-                navigate("/login");
-              }}
-            />
+          <div
+            className="relative flex w-fit cursor-pointer items-center font-semibold"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            <GoArrowLeft size={25} className="absolute" />
+            <p className="pl-8 text-xl">Back</p>
           </div>
-          <span className="items-center py-2 text-4xl font-bold text-primary">
-            Forget Password
+          <span className="items-center py-4 text-4xl font-bold text-primary">
+            Account Verification
           </span>
 
           {/* Konfirmasi Password Baru */}
@@ -62,7 +69,7 @@ export const ForgetPassword = () => {
             <div className="relative flex flex-col">
               <input
                 value={Email}
-                onChange={handleEmailChange}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Input Email"
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="email"

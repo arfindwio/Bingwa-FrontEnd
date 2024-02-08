@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  enrollments: [],
+  enrollments: null,
   enrollCourseId: [],
   enrollmentPreparation: null,
   loading: false,
@@ -38,7 +38,7 @@ const enrollmentSlice = createSlice({
     },
     deleteEnrollment: (state, action) => {
       const idToDelete = action.payload;
-      state.Enrollments = state.enrollments.filter(
+      state.enrollments = state.enrollments.filter(
         (item) => item.id !== idToDelete,
       );
     },

@@ -21,8 +21,9 @@ import { putChangePasswordUser } from "../../../redux/action/users/UsersAction";
 export const AccountChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ maxWidth: 767 });
   const location = useLocation();
+  const isMobile = useMediaQuery({ maxWidth: 720 });
+
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
   const [oldPassword, setOldPassword] = useState("");
@@ -69,24 +70,30 @@ export const AccountChangePassword = () => {
         token,
       ),
     );
-    setTimeout(() => {
-      showSuccessToast("Ganti Password telah Berhasil");
-      navigate("/");
-    }, 2000);
+
+    if (changePassword) {
+      showSuccessToast("Password Change Successful");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
   };
 
   return (
     <>
-      <div className="h-fit bg-secondary px-9 py-20 pt-2 md:h-screen md:px-20 md:pt-[5rem] lg:h-fit lg:px-80 lg:pt-[5rem]">
-        <div className="relative flex items-center gap-2 py-8 text-lg font-bold text-primary">
-          <GoArrowLeft
-            size={30}
-            className="absolute -inset-x-1 cursor-pointer md:-inset-x-12 lg:-inset-x-16"
-            onClick={() => {
-              navigate("/");
-            }}
-          />
-          <span className="hidden lg:block">Kembali Ke Beranda</span>
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
+      <div className="min-h-screen bg-secondary px-2 pb-20 pt-2 sm:px-10 md:px-6 md:pt-20 lg:px-28">
+        <div className="py-8">
+          <div className="relative flex w-fit cursor-pointer items-center gap-2  text-lg font-bold text-primary">
+            <GoArrowLeft
+              size={30}
+              className="absolute  cursor-pointer"
+              onClick={() => {
+                navigate("/");
+              }}
+            />
+            <span className="flex pl-10">Back to home</span>
+          </div>
         </div>
 
         {/* Akun */}
@@ -96,19 +103,20 @@ export const AccountChangePassword = () => {
           </div>
 
           {/* Isi Akun*/}
-          <div className="flex py-4 text-center">
+          <div className="flex w-full p-6 text-center">
             <SidebarAccount />
-            <form
-              className="flex w-full flex-col items-center gap-10 md:w-[60%] lg:w-[60%]"
-              onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
+            <div
+              className="mx-auto flex w-full flex-col items-center justify-center gap-4 md:w-[55%] md:pl-6 xl:pl-0 "
+              onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
+              tabIndex={0}
             >
               <div className="py-2 text-2xl font-bold">Change Password</div>
-              <div className="relative flex flex-col gap-1">
+              <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Enter Old Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword1 ? "text" : "password"}
-                  className="relative w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                  className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"
                   value={oldPassword}
                   id="old pass"
@@ -128,12 +136,12 @@ export const AccountChangePassword = () => {
                   />
                 )}
               </div>
-              <div className="relative flex flex-col gap-1">
+              <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Enter New Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword2 ? "text" : "password"}
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                  className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"
                   value={newPassword}
                   id="new pass"
@@ -153,12 +161,12 @@ export const AccountChangePassword = () => {
                   />
                 )}
               </div>
-              <div className="relative flex flex-col gap-1">
+              <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Confirm New Password</div>
                 <input
                   onChange={handleInput}
                   type={showPassword3 ? "text" : "password"}
-                  className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                  className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"
                   value={confirmPassword}
                   id="confirm pass"
@@ -179,16 +187,15 @@ export const AccountChangePassword = () => {
                 )}
               </div>
               <button
-                className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
+                className="w-full rounded-full bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-full xl:w-[80%] 2xl:w-[60%]"
                 onClick={handleSave}
               >
                 Change Password
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };

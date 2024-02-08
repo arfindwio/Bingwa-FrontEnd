@@ -15,68 +15,80 @@ import {
 } from "../../reducer/categories/CategoriesSlice";
 
 export const getAllCategoriesAction = (fullQuery) => async (dispatch) => {
-  try {
-    dispatch(startLoading());
+  dispatch(startLoading());
 
-    let getAllInput = `?${fullQuery}`;
+  let getAllInput = `?${fullQuery}`;
 
-    const result = await (fullQuery
+  return (
+    fullQuery
       ? reduxGetAllCategoriesByQuery(getAllInput)
-      : reduxGetAllCategories());
-
-    dispatch(setCategories(result.data.data));
-    return true;
-  } catch (err) {
-    console.error("getAllCategoriesAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+      : reduxGetAllCategories()
+  )
+    .then((result) => {
+      dispatch(setCategories(result.data.data));
+      return true;
+    })
+    .catch((err) => {
+      console.error("getAllCategoriesAction", err);
+      if (err.response && err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
 export const postCategoryAction = (input) => async (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxPostCategory(input);
-    return true;
-  } catch (err) {
-    console.error("postCategoryAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+  dispatch(startLoading());
+
+  return reduxPostCategory(input)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.error("postCategoryAction", err);
+      if (err.response && err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
-export const putCategoryAction = (input, categoryId) => (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxPutCategory(input, categoryId);
-    return true;
-  } catch (err) {
-    console.error("putCategoryAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+export const putCategoryAction = (input, categoryId) => async (dispatch) => {
+  dispatch(startLoading());
+
+  return reduxPutCategory(input, categoryId)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.error("putCategoryAction", err);
+      if (err.response && err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
-export const deleteCategoryAction = (categoryId) => (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxDeleteCategory(categoryId);
-    return true;
-  } catch (err) {
-    console.error("deleteCategoryAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+export const deleteCategoryAction = (categoryId) => async (dispatch) => {
+  dispatch(startLoading());
+
+  return reduxDeleteCategory(categoryId)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.error("deleteCategoryAction", err);
+      if (err.response && err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
