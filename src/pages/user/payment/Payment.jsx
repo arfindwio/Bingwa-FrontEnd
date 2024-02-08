@@ -36,6 +36,7 @@ import { getAllEnrollmentsAction } from "../../../redux/action/enrollments/Enrol
 import {
   showLoadingToast,
   showSuccessToast,
+  showErrorToast,
 } from "../../../helper/ToastHelper";
 
 export const Payment = () => {
@@ -127,13 +128,15 @@ export const Payment = () => {
 
     toast.dismiss(loadingToastId);
 
+    if (!payment) showErrorToast("Payment Failed!!!");
+
     if (payment) {
       showSuccessToast("Payment Success...!!!");
       setTimeout(() => {
         if (!isLoading) {
           window.location.href = redirectUrl;
         }
-      }, 2000);
+      }, 1000);
     }
   };
 

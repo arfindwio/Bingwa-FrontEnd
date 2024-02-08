@@ -46,7 +46,9 @@ export const AllCourse = () => {
     (state) => state.courses.courses.pagination,
   );
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
   const isLoadingCourses = useSelector((state) => state.courses.loading);
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -286,40 +288,45 @@ export const AllCourse = () => {
                 </div>
               ) : null}
               <div className="grid w-full grid-cols-1 gap-6 py-4 md:grid-cols-1 xl:grid-cols-2">
-                {storeCourses.length === 0 ? (
+                {storeCourses?.length === 0 ? (
                   <p className="col-span-2 py-10 text-center text-lg font-semibold italic text-slate-500">
                     - Course not found -
                   </p>
                 ) : (
-                  storeCourses.map((value) => {
+                  storeCourses?.map((value) => {
                     const lessonsData = storeLessons
                       ? storeLessons.filter(
-                          (lesson) => lesson.chapter.course.id === value.id,
-                        )
-                      : null;
-                    const enrollmentData = storeEnrollments
-                      ? storeEnrollments.find(
-                          (enrollCourse) =>
-                            enrollCourse.courseId === Number(value.id),
+                          (lesson) => lesson?.chapter?.course.id === value.id,
                         )
                       : null;
 
+                    const enrollmentData = storeEnrollments?.find(
+                      (enrollCourse) => {
+                        console.log(value);
+                        return (
+                          Number(enrollCourse.courseId) === Number(value.id)
+                        );
+                      },
+                    );
+
+                    // console.log(enrollmentData);
+
                     return (
                       <CardGlobal
-                        key={value.id}
-                        image={value.courseImg}
-                        category={value.category.categoryName}
-                        rating={value.averageRating}
-                        totalRating={value.enrollment.length}
-                        title={value.courseName}
-                        author={value.mentor}
-                        level={value.level}
-                        duration={value.totalDuration}
-                        courseId={value.id}
-                        isPremium={value.isPremium}
-                        price={value.price}
-                        promotion={!value.promotion ? "" : value.promotion}
-                        modul={lessonsData.length}
+                        key={value?.id}
+                        image={value?.courseImg}
+                        category={value?.category?.categoryName}
+                        rating={value?.averageRating}
+                        totalRating={value?.enrollment?.length}
+                        title={value?.courseName}
+                        author={value?.mentor}
+                        level={value?.level}
+                        duration={value?.totalDuration}
+                        courseId={value?.id}
+                        isPremium={value?.isPremium}
+                        price={value?.price}
+                        promotion={!value?.promotion ? "" : value?.promotion}
+                        modul={lessonsData?.length}
                         enrollmentData={enrollmentData}
                       />
                     );
@@ -331,9 +338,9 @@ export const AllCourse = () => {
               {isLoadingCourses ? null : (
                 <div className="mx-auto">
                   <Pagination
-                    nextLink={storePaginationCourses.links.next}
-                    prevLink={storePaginationCourses.links.prev}
-                    totalItems={storePaginationCourses.total_items}
+                    nextLink={storePaginationCourses?.links?.next}
+                    prevLink={storePaginationCourses?.links?.prev}
+                    totalItems={storePaginationCourses?.total_items}
                   />
                 </div>
               )}

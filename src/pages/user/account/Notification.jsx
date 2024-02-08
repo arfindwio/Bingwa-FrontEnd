@@ -77,7 +77,7 @@ export const Notification = () => {
           )}
         </div>
       ) : (
-        <div className="min-h-screen bg-secondary px-2 py-10 pt-20 sm:px-6 md:px-10 lg:px-24">
+        <div className="min-h-screen bg-secondary px-2 pb-20 pt-2 sm:px-10 md:px-6 md:pt-20 lg:px-28">
           <div className="py-8">
             <div
               className="relative flex w-fit cursor-pointer items-center gap-2  text-lg font-semibold text-black"

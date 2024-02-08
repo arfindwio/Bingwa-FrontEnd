@@ -50,11 +50,12 @@ export const API_ENDPOINT = {
   LESSONS: "/lessons",
 
   // ENROLLMENTS
-  GET_ALL_ENROLLMENTS: "/enrollments", // [GET] Get All Enrollments
-  GET_ENROLMENT: "/enrollments", //{courseId} // [GET] Get Enrollments by ID
-  CREATE_ENROLLMENT: "/enrollments", // [POST] Create Enrollment by Course ID
+  // /enrollments // [GET] Get All Enrollments
+  // /enrollments // [POST] Create Enrollment by Course ID
+  // /enrollments/{courseId} // [GET] Get Enrollments by ID
   // /enrollments/{courseId} // [PUT] Update Enrollment Preparation by Course ID
   ENROLLMENTS: "/enrollments",
+  ENROLLMENTS1: "/enrollments",
 
   // REVIEWS
   // /reviews/{courseId}" [POST] Create Review
@@ -81,12 +82,9 @@ export const API_ENDPOINT = {
 
   // PAYMENTS
   // /payments // [GET] Get All Payment
-  GET_HISTORY_PAYMENTS: "/payments/history", // [GET] Get All Payment by Authentication
+  // /payments/history // [GET] Get All Payment by Authentication
   // /payments/{courseId} // [GET] Get Payment by Course ID
-  CREATE_PAYMENT: "/payments", // [POST] Create Payment
+  // /payments // [POST] Create Payment
   // payment/midtrans/{courseId} // [POST] Create Payment Midtrans
   PAYMENTS: "/payments",
-
-  // ADMIN
-  GET_ADMIN_ALL: "/admin/all", // [GET] Get All Data From Admin
 };

@@ -24,7 +24,9 @@ export const SearchCourse = () => {
   // Redux Store
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
   const storePaginationCourses = useSelector(
     (state) => state.courses.courses.pagination,
   );
@@ -88,35 +90,35 @@ export const SearchCourse = () => {
                     - Course Not Found -
                   </p>
                 ) : (
-                  storeCourses.map((value) => {
+                  storeCourses?.map((value) => {
                     const lessonsData = storeLessons
-                      ? storeLessons.filter(
-                          (lesson) => lesson.chapter.course.id === value.id,
+                      ? storeLessons?.filter(
+                          (lesson) => lesson?.chapter?.course?.id === value.id,
                         )
                       : null;
                     const enrollmentData = storeEnrollments
-                      ? storeEnrollments.find(
+                      ? storeEnrollments?.find(
                           (enrollCourse) =>
-                            enrollCourse.courseId === Number(value.id),
+                            enrollCourse?.courseId === Number(value?.id),
                         )
                       : null;
                     return (
                       <CardGlobal
-                        key={value.id}
-                        courseId={value.id}
-                        image={value.courseImg}
-                        category={value.category.categoryName}
-                        rating={value.averageRating}
-                        title={value.courseName}
-                        author={value.mentor}
-                        price={value.price}
-                        level={value.level}
-                        duration={value.totalDuration}
-                        isPremium={value.isPremium}
-                        promotion={!value.promotion ? "" : value.promotion}
-                        modul={lessonsData.length}
+                        key={value?.id}
+                        courseId={value?.id}
+                        image={value?.courseImg}
+                        category={value?.category?.categoryName}
+                        rating={value?.averageRating}
+                        title={value?.courseName}
+                        author={value?.mentor}
+                        price={value?.price}
+                        level={value?.level}
+                        duration={value?.totalDuration}
+                        isPremium={value?.isPremium}
+                        promotion={!value?.promotion ? "" : value?.promotion}
+                        modul={lessonsData?.length}
                         enrollmentData={enrollmentData}
-                        totalRating={value.enrollment.length}
+                        totalRating={value?.enrollment?.length}
                       />
                     );
                   })
@@ -127,9 +129,9 @@ export const SearchCourse = () => {
               {isLoading ? null : (
                 <div className="mx-auto mt-10 font-semibold">
                   <Pagination
-                    nextLink={storePaginationCourses.links.next}
-                    prevLink={storePaginationCourses.links.prev}
-                    totalItems={storePaginationCourses.total_items}
+                    nextLink={storePaginationCourses?.links?.next}
+                    prevLink={storePaginationCourses?.links?.prev}
+                    totalItems={storePaginationCourses?.total_items}
                   />
                 </div>
               )}

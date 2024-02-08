@@ -17,9 +17,6 @@ import { Progress } from "@material-tailwind/react";
 // Redux Actions
 import { getDetailCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
-// Cookies
-import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
-
 export const CardGlobal = ({
   image,
   category,
@@ -38,14 +35,12 @@ export const CardGlobal = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  // console.log(enrollmentData);
   const isLoadingCourses = useSelector((state) => state.courses.loading);
   const isLoadingLessons = useSelector((state) => state.lessons.loading);
   const isLoadingEnrollments = useSelector(
     (state) => state.enrollments.loading,
   );
-
-  const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const handleCardClick = () => {
     dispatch(getDetailCoursesAction(courseId));
@@ -95,37 +90,37 @@ export const CardGlobal = ({
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <RiShieldStarLine
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <RiShieldStarLine size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {level}
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <LiaBookSolid
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <LiaBookSolid size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {modul} Modul
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <IoTime
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <IoTime size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {duration} Minute
                 </div>
               </div>
             </div>
-            {isPremium ? (
+            {enrollmentData ? (
+              <>
+                <div className="flex w-full">
+                  <Progress
+                    value={Math.floor(enrollmentData?.progress * 100)}
+                    size="lg"
+                    label="Completed"
+                    color="blue"
+                    className="text-md h-8 font-semibold"
+                  />
+                </div>
+              </>
+            ) : isPremium ? (
               <div className="flex items-center">
                 <div
                   className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover"
@@ -135,8 +130,8 @@ export const CardGlobal = ({
                     <IoDiamond size={20} color="white" />
                     <div className="font-bold text-white">
                       Rp{" "}
-                      {promotion.discount
-                        ? price - promotion.discount * price
+                      {promotion?.discount
+                        ? price - promotion?.discount * price
                         : price}
                     </div>
                   </div>
@@ -146,30 +141,17 @@ export const CardGlobal = ({
                     <span className="me-1 font-semibold text-slate-500 line-through">
                       Rp {price}
                     </span>
-                    {promotion.discount * 100}%
+                    {promotion?.discount * 100}%
                   </div>
                 ) : null}
               </div>
-            ) : // Non-premium content
-            !token || !enrollmentData ? (
+            ) : (
               <div
                 className="w-fit cursor-pointer rounded-3xl bg-green px-4 py-1 font-semibold text-white"
                 onClick={handleCardClick}
               >
                 Free
               </div>
-            ) : (
-              <>
-                <div className="flex w-full">
-                  <Progress
-                    value={Math.floor(enrollmentData.progress * 100)}
-                    size="lg"
-                    label="Completed"
-                    color="blue"
-                    className="text-md h-8 font-semibold"
-                  />
-                </div>
-              </>
             )}
           </div>
         </div>

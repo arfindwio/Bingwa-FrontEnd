@@ -12,7 +12,7 @@ import { IoDiamond, IoTime } from "react-icons/io5";
 import { CardCourseSkeleton } from "../skeleton/CardCourseSkeleton";
 
 // Redux Actions
-import { getEnrollmentsByCourseIdAction } from "../../../redux/action/enrollments/EnrollmentsAction";
+import { getEnrollmentByCourseIdAction } from "../../../redux/action/enrollments/EnrollmentsAction";
 
 export const CardPaymentHistory = ({
   image,
@@ -31,10 +31,10 @@ export const CardPaymentHistory = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isLoading = useSelector((state) => state.payment.loading);
+  const isLoading = useSelector((state) => state.payments.loading);
 
   const handleCardClick = () => {
-    dispatch(getEnrollmentsByCourseIdAction(courseId));
+    dispatch(getEnrollmentByCourseIdAction(courseId));
     navigate(`/detail-course/${courseId}`);
   };
 

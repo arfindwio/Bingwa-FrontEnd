@@ -263,15 +263,15 @@ export const AdminManageCourse = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
+          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeAllCourse.length}
+            count={storeAllCourse?.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse.length}
+            count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
           />
         </div>
@@ -528,7 +528,7 @@ export const AdminManageCourse = () => {
                     <option value="" hidden>
                       Choose Category
                     </option>
-                    {storeCategories.map((value) => (
+                    {storeCategories?.map((value) => (
                       <option
                         key={value.id}
                         value={value.id}
@@ -548,7 +548,7 @@ export const AdminManageCourse = () => {
                 onChange={(e) => setNewPromotionId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
-                {storePromotions.length === 0 ? (
+                {storePromotions?.length === 0 ? (
                   <option value="" hidden>
                     No promotion available
                   </option>
@@ -557,7 +557,7 @@ export const AdminManageCourse = () => {
                     <option value="" hidden>
                       Choose Promotion
                     </option>
-                    {storePromotions.map((value) => (
+                    {storePromotions?.map((value) => (
                       <option
                         key={value.id}
                         value={value.id}
@@ -717,7 +717,7 @@ export const AdminManageCourse = () => {
                 <option value={updateCourseDetail?.categoryId} hidden>
                   {updateCourseDetail?.category?.categoryName}
                 </option>
-                {storeCategories.map((value) => (
+                {storeCategories?.map((value) => (
                   <option
                     key={value.id}
                     value={value.id}
@@ -735,7 +735,7 @@ export const AdminManageCourse = () => {
                 onChange={(e) => setNewPromotionId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
-                {storePromotions.length === 0 ? (
+                {storePromotions?.length === 0 ? (
                   <option value="" hidden>
                     No promotion available
                   </option>
@@ -744,7 +744,7 @@ export const AdminManageCourse = () => {
                     <option value={updateCourseDetail?.promotionId} hidden>
                       {updateCourseDetail?.promotion?.discount * 100}%
                     </option>
-                    {storePromotions.map((value) => (
+                    {storePromotions?.map((value) => (
                       <option
                         key={value.id}
                         value={value.id}

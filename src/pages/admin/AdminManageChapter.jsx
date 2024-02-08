@@ -116,9 +116,9 @@ export const AdminManageChapter = () => {
     );
 
     setEditChapterId(chapterId);
-    setUpdateChapterName(chapterToEdit.name);
-    setUpdateDuration(chapterToEdit.duration);
-    setUpdateCourseId(chapterToEdit.courseId);
+    setUpdateChapterName(chapterToEdit?.name);
+    setUpdateDuration(chapterToEdit?.duration);
+    setUpdateCourseId(chapterToEdit?.courseId);
     setUpdateChapterDetail(chapterToEdit);
 
     setDialogEdit(true);
@@ -186,15 +186,15 @@ export const AdminManageChapter = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
+          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCourses.length}
+            count={storeCourses?.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse.length}
+            count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
           />
         </div>
@@ -279,11 +279,13 @@ export const AdminManageChapter = () => {
                 </table>
               </div>
             </div>
+
+            {/* pagination */}
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationChapters.links.next}
-                prevLink={storePaginationChapters.links.prev}
-                totalItems={storePaginationChapters.total_items}
+                nextLink={storePaginationChapters?.links?.next}
+                prevLink={storePaginationChapters?.links?.prev}
+                totalItems={storePaginationChapters?.total_items}
               />
             </div>
           </div>
@@ -337,8 +339,8 @@ export const AdminManageChapter = () => {
                     </option>
                     {storeCourses.map((value) => (
                       <option
-                        key={value.id}
-                        value={value.id}
+                        key={value?.id}
+                        value={value?.id}
                         className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
                       >
                         {value?.courseName}

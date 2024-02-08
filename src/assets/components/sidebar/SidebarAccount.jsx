@@ -25,7 +25,7 @@ export const SidebarAccount = () => {
 
   return (
     // Sidebar Container
-    <div className="hidden w-[40%] flex-col px-4 md:flex lg:flex">
+    <div className="hidden w-[45%] flex-col break-all px-4 md:flex lg:flex">
       {/* Sidebar Item */}
       <div
         className={`flex cursor-pointer items-center gap-3 border-b-2  py-4 hover:text-primary ${

@@ -28,11 +28,12 @@ import { CookieStorage, CookiesKeys } from "../utils/cookie";
 export const HomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [showAllCourses, setShowAllCourses] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [shuffledCourses, setShuffledCourses] = useState([]);
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 719 });
 
   // Redux Store
   const storeCategories = useSelector(
@@ -40,7 +41,9 @@ export const HomePage = () => {
   );
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
@@ -91,29 +94,29 @@ export const HomePage = () => {
     return courses.slice(0, limit).map((value) => {
       const lessonsData = storeLessons
         ? storeLessons?.filter(
-            (lesson) => lesson.chapter.course.id === value.id,
+            (lesson) => lesson?.chapter?.course?.id === value?.id,
           )
         : null;
       const enrollmentData = storeEnrollments
-        ? storeEnrollments.find(
-            (enrollCourse) => enrollCourse.courseId === Number(value.id),
+        ? storeEnrollments?.find(
+            (enrollCourse) => enrollCourse?.courseId === Number(value?.id),
           )
         : null;
       return (
         <CardGlobal
-          key={value.id}
-          image={value.courseImg}
-          category={value.category.categoryName}
-          rating={value.averageRating}
-          title={value.courseName}
-          author={value.mentor}
-          level={value.level}
-          duration={value.totalDuration}
-          price={value.price}
-          courseId={value.id}
-          isPremium={value.isPremium}
-          promotion={!value.promotion ? "" : value.promotion}
-          totalRating={value.enrollment?.length}
+          key={value?.id}
+          image={value?.courseImg}
+          category={value?.category?.categoryName}
+          rating={value?.averageRating}
+          title={value?.courseName}
+          author={value?.mentor}
+          level={value?.level}
+          duration={value?.totalDuration}
+          price={value?.price}
+          courseId={value?.id}
+          isPremium={value?.isPremium}
+          promotion={!value?.promotion ? "" : value?.promotion}
+          totalRating={value?.enrollment?.length}
           modul={lessonsData?.length}
           enrollmentData={enrollmentData}
         />

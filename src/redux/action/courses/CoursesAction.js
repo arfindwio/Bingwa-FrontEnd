@@ -19,13 +19,13 @@ export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
     dispatch(startLoading());
     let getAllInput = `?${fullQuery}`;
 
-    const response = await (fullQuery
+    const result = await (fullQuery
       ? reduxGetAllCoursesByQuery(getAllInput)
       : reduxGetAllCourses());
 
-    dispatch(setCourses(response.data.data));
+    dispatch(setCourses(result.data.data));
 
-    return true;
+    return result;
   } catch (err) {
     console.error("getAllCoursesAction", err);
     throw err;
@@ -39,7 +39,7 @@ export const getDetailCoursesAction = (courseId) => async (dispatch) => {
     dispatch(startLoading());
     const result = await reduxGetDetailCoursesId(courseId);
     dispatch(setDetailCourse(result.data.data.course));
-    return true;
+    return result;
   } catch (err) {
     console.error("reduxDetailCourse", err);
   } finally {

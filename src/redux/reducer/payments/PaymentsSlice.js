@@ -8,7 +8,7 @@ const initialState = {
   loading: false,
 };
 
-const PaymentsSlice = createSlice({
+const paymentSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
@@ -40,6 +40,6 @@ export const {
   setPostPaymentMidtrans,
   startLoading,
   endLoading,
-} = PaymentsSlice.actions;
+} = paymentSlice.actions;
 
-export default PaymentsSlice.reducer;
+export default paymentSlice.reducer;
