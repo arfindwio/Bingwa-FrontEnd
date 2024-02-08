@@ -119,9 +119,9 @@ export const AdminManageLesson = () => {
     const lessonToEdit = storeLessons?.find((lesson) => lesson.id === lessonId);
 
     setEditLessonId(lessonId);
-    setUpdateLessonName(lessonToEdit.lessonName);
-    setUpdateVideoURL(lessonToEdit.videoURL);
-    setUpdateChapterId(lessonToEdit.chapterId);
+    setUpdateLessonName(lessonToEdit?.lessonName);
+    setUpdateVideoURL(lessonToEdit?.videoURL);
+    setUpdateChapterId(lessonToEdit?.chapterId);
     setUpdateLessonDetail(lessonToEdit);
 
     setDialogEdit(true);
@@ -187,15 +187,15 @@ export const AdminManageLesson = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
+          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCountCourses.length}
+            count={storeCountCourses?.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse.length}
+            count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
           />
         </div>
@@ -255,7 +255,7 @@ export const AdminManageLesson = () => {
                         </th>
                         <td className="px-4 py-3">{value?.lessonName}</td>
                         <td className="px-4 py-3">{value?.videoURL}</td>
-                        <td className="px-4 py-3">{value?.chapter.name}</td>
+                        <td className="px-4 py-3">{value?.chapter?.name}</td>
                         <td className="flex gap-1 py-3 text-sm font-semibold text-white">
                           <button
                             className="rounded-full bg-primary px-3 py-1"
@@ -280,9 +280,9 @@ export const AdminManageLesson = () => {
             </div>
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationLessons.links.next}
-                prevLink={storePaginationLessons.links.prev}
-                totalItems={storePaginationLessons.total_items}
+                nextLink={storePaginationLessons?.links?.next}
+                prevLink={storePaginationLessons?.links?.prev}
+                totalItems={storePaginationLessons?.total_items}
               />
             </div>
           </div>
@@ -348,8 +348,8 @@ export const AdminManageLesson = () => {
                     </option>
                     {storeChapters.map((value) => (
                       <option
-                        key={value.id}
-                        value={value.id}
+                        key={value?.id}
+                        value={value?.id}
                         className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
                       >
                         {value?.name}

@@ -6,6 +6,7 @@ import { HomePage } from "../pages/HomePage";
 import { Login } from "../pages/user/auth/Login";
 import { Register } from "../pages/user/auth/Register";
 import { UpdatePassword } from "../pages/user/auth/UpdatePassword";
+import { AccountVerification } from "../pages/user/auth/AccountVerification";
 import { AdminLogin } from "../pages/admin/AdminLogin";
 import { Otp } from "../pages/user/auth/Otp";
 import { Error404 } from "../pages/errors/Error404";
@@ -41,6 +42,7 @@ export const RouteList = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/account-verification" element={<AccountVerification />} />
         <Route path="/otp" element={<Otp />} />
 
         {/* Course */}

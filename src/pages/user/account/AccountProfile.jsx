@@ -36,7 +36,7 @@ export const AccountProfile = () => {
   const [newCountry, setNewCountry] = useState("");
   const [email, setEmail] = useState("");
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 720 });
 
   const storeUserProfile = useSelector((state) => state.users.userAuthenticate);
   const isLoading = useSelector((state) => state.users.loading);
@@ -47,12 +47,12 @@ export const AccountProfile = () => {
 
   useEffect(() => {
     setEmail(storeUserProfile?.email || email);
-    setNewFullName(storeUserProfile?.userProfile.fullName || newFullName);
+    setNewFullName(storeUserProfile?.userProfile?.fullName || newFullName);
     setNewPhoneNumber(
       storeUserProfile?.userProfile.phoneNumber || newPhoneNumber,
     );
-    setNewCity(storeUserProfile?.userProfile.city || newCity);
-    setNewCountry(storeUserProfile?.userProfile.country || newCountry);
+    setNewCity(storeUserProfile?.userProfile?.city || newCity);
+    setNewCountry(storeUserProfile?.userProfile?.country || newCountry);
   }, [storeUserProfile]);
 
   const getAllData = () => {
@@ -90,18 +90,20 @@ export const AccountProfile = () => {
 
   return (
     <>
-      <div className="h-fit bg-secondary px-9 py-20 pt-2 md:h-screen md:px-20 md:pt-[5rem] lg:h-fit lg:px-80 lg:pt-[5rem]">
-        <div
-          className="relative flex cursor-pointer items-center gap-2 py-8 text-lg font-bold text-primary"
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          <GoArrowLeft
-            size={30}
-            className="absolute -inset-x-1 cursor-pointer md:-inset-x-12 lg:-inset-x-16"
-          />
-          <span className="hidden lg:flex">Back to home</span>
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
+
+      <div className="min-h-screen bg-secondary px-2 pb-20 pt-2 sm:px-10 md:px-6 md:pt-20 lg:px-28">
+        <div className="py-8">
+          <div className="relative flex w-fit cursor-pointer items-center gap-2  text-lg font-bold text-primary">
+            <GoArrowLeft
+              size={30}
+              className="absolute  cursor-pointer"
+              onClick={() => {
+                navigate("/");
+              }}
+            />
+            <span className="flex pl-10">Back to home</span>
+          </div>
         </div>
 
         {/* Akun */}
@@ -111,13 +113,13 @@ export const AccountProfile = () => {
           </div>
 
           {/* Isi Akun */}
-          <div className="flex py-4 text-center">
+          <div className="flex w-full p-6 text-center ">
             <SidebarAccount />
             {isLoading ? (
               <AccountProfileSkeleton />
             ) : (
               <div
-                className="flex w-full flex-col items-center gap-4 md:w-[60%] lg:w-[60%]"
+                className="mx-auto flex w-full flex-col items-center justify-center gap-4 md:w-[55%] md:pl-6 xl:pl-0 "
                 onKeyPress={(e) => (e.key === "Enter" ? handleSave() : "")}
                 tabIndex={0}
               >
@@ -133,7 +135,7 @@ export const AccountProfile = () => {
                     src={
                       image
                         ? URL.createObjectURL(image)
-                        : storeUserProfile.userProfile?.userProfile
+                        : storeUserProfile?.userProfile?.userProfile
                             ?.profilePicture ||
                           "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706817534316"
                     }
@@ -149,55 +151,55 @@ export const AccountProfile = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                   <div className="text-left">Name</div>
                   <input
                     type="text"
-                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                     placeholder="Bingwa"
                     id="name"
                     onChange={(e) => setNewFullName(e.target.value)}
                     value={newFullName}
                   />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                   <div className="text-left">Email</div>
                   <input
                     type="text"
-                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                     placeholder="bingwa@gmail.com"
                     id="email"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                   />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                   <div className="text-left">Phone Number</div>
                   <input
                     type="text"
-                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                     placeholder="08123456789"
                     id="phone"
                     onChange={(e) => setNewPhoneNumber(e.target.value)}
                     value={newPhoneNumber}
                   />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                   <div className="text-left">City</div>
                   <input
                     type="text"
-                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                     placeholder="Jakarta"
                     id="city"
                     onChange={(e) => setNewCity(e.target.value)}
                     value={newCity}
                   />
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                   <div className="text-left">Country</div>
                   <input
                     type="text"
-                    className="w-[18rem] rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none md:w-[22rem] lg:w-[22rem]"
+                    className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                     placeholder="Indonesia"
                     id="country"
                     onChange={(e) => setNewCountry(e.target.value)}
@@ -205,7 +207,7 @@ export const AccountProfile = () => {
                   />
                 </div>
                 <button
-                  className="w-[18rem] rounded-2xl bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-[22rem] lg:w-[22rem]"
+                  className="w-full rounded-full bg-primary px-4 py-3 font-semibold text-white hover:bg-primary-hover md:w-full xl:w-[80%] 2xl:w-[60%]"
                   onClick={handleSave}
                 >
                   Save
@@ -215,7 +217,6 @@ export const AccountProfile = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };

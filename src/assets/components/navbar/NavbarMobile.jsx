@@ -40,7 +40,7 @@ export const NavbarMobile = () => {
     <>
       <div className="fixed bottom-0 z-50  flex w-screen items-start  justify-between gap-1 break-all bg-white px-0 py-2 shadow-2xl sm:gap-0 sm:px-5">
         <div
-          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          className="flex w-1/4 cursor-pointer flex-col items-center justify-center gap-2 text-center"
           onClick={() => {
             navigate("/");
           }}
@@ -64,7 +64,7 @@ export const NavbarMobile = () => {
           </span>
         </div>
         <div
-          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          className="flex w-1/4 cursor-pointer flex-col items-center justify-center gap-2 text-center"
           onClick={() => {
             navigate("/notification");
           }}
@@ -90,7 +90,7 @@ export const NavbarMobile = () => {
           </span>
         </div>
         <div
-          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          className="flex w-1/4 cursor-pointer flex-col items-center justify-center gap-2 text-center"
           onClick={() => {
             navigate("/all-courses");
           }}
@@ -120,7 +120,7 @@ export const NavbarMobile = () => {
           </span>
         </div>
         <div
-          className="flex w-1/4  flex-col items-center justify-center gap-2 text-center"
+          className="flex w-1/4 cursor-pointer flex-col items-center justify-center gap-2 text-center"
           onClick={handleOpen}
         >
           <div

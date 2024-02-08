@@ -100,8 +100,8 @@ export const CardDetailCourse = ({
                     <IoDiamond size={20} color="white" />
                     <div className="font-bold text-white">
                       Rp{" "}
-                      {promotion.discount
-                        ? price - promotion.discount * price
+                      {promotion?.discount
+                        ? price - promotion?.discount * price
                         : price}
                     </div>
                   </div>
@@ -111,7 +111,7 @@ export const CardDetailCourse = ({
                     <span className="me-1 font-semibold text-slate-500 line-through">
                       Rp {price}
                     </span>
-                    {promotion.discount * 100}%
+                    {promotion?.discount * 100}%
                   </div>
                 ) : null}
               </div>

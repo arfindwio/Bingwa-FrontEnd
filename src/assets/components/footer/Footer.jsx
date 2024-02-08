@@ -25,7 +25,7 @@ export const Footer = () => {
               <h2 className="mb-2 text-4xl font-bold text-white">Bingwa</h2>
               <div className="flex flex-col gap-2 py-3 text-white">
                 <p>
-                  123 Main Street, Anytown, CA 91234, United States of America
+                  123 Main Street, Anytown CA 91234, United States of America
                 </p>
                 <p>arfindwioctavianto@gmail.com</p>
                 <p>

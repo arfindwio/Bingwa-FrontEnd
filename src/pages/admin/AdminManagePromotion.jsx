@@ -113,13 +113,13 @@ export const AdminManagePromotion = () => {
   // Edit Promotion
   const handleEditPromotion = (promotionId) => {
     const promotionToEdit = storePromotions.find(
-      (promotion) => promotion.id === promotionId,
+      (promotion) => promotion?.id === promotionId,
     );
 
     setEditPromotionId(promotionId);
-    setUpdateDiscount(promotionToEdit.discount);
-    setUpdateStartDate(convertToISOFormat(promotionToEdit.startDate));
-    setUpdateEndDate(convertToISOFormat(promotionToEdit.endDate));
+    setUpdateDiscount(promotionToEdit?.discount);
+    setUpdateStartDate(convertToISOFormat(promotionToEdit?.startDate));
+    setUpdateEndDate(convertToISOFormat(promotionToEdit?.endDate));
 
     setDialogEdit(true);
   };
@@ -308,9 +308,9 @@ export const AdminManagePromotion = () => {
             </div>
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationPromotions.links.next}
-                prevLink={storePaginationPromotions.links.prev}
-                totalItems={storePaginationPromotions.total_items}
+                nextLink={storePaginationPromotions?.links?.next}
+                prevLink={storePaginationPromotions?.links?.prev}
+                totalItems={storePaginationPromotions?.total_items}
               />
             </div>
           </div>

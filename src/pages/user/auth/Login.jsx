@@ -58,7 +58,7 @@ export const Login = () => {
     toast.dismiss(loadingToastId);
 
     if (login) {
-      showSuccessToast("Login Berhasil!");
+      showSuccessToast("Login Successful!");
       setTimeout(() => {
         navigate("/");
       }, 2000);
@@ -67,26 +67,23 @@ export const Login = () => {
 
   const validateForm = () => {
     // Check if the Email is an Empty string or not.
-
     if (Email.length === 0) {
-      return showErrorToast("Email harus di isi");
+      return showErrorToast("Email must be filled in");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(Email)) {
-      return showErrorToast("Format Email tidak valid");
+      return showErrorToast("Invalid Email format");
     }
 
     // check if the password follows constraints or not.
-
     // if password length is less than 8 characters, alert invalid form.
-
     if (Password.length < 8) {
-      return showErrorToast("Password minimal 8 karakter");
+      return showErrorToast("Password must be at least 8 characters long");
     }
 
     if (Password.length > 12) {
-      return showErrorToast("Password maksimal 12 karakter");
+      return showErrorToast("Password can't be more than 12 characters long");
     }
 
     // variable to count upper case characters in the password.
@@ -144,25 +141,27 @@ export const Login = () => {
 
     if (countLowerCase === 0) {
       // invalid form, 0 lowercase characters
-      return showErrorToast("Password harus memiliki lower case");
+      return showErrorToast(
+        "Password must have at least one lowercase character",
+      );
     }
 
     if (countUpperCase === 0) {
       // invalid form, 0 upper case characters
-      return showErrorToast("Password harus memiliki upper case");
+      return showErrorToast(
+        "Password must have at least one uppercase character",
+      );
     }
 
     if (countDigit === 0) {
       // invalid form, 0 digit characters
-      return showErrorToast("Password harus memiliki angka");
+      return showErrorToast("Password must have at least one digit character");
     }
 
     if (countSpecialCharacters === 0) {
       // invalid form, 0 special characters characters
-      return showErrorToast("Passwsord harus memiliki simbol");
+      return showErrorToast("Password must have at least one symbol character");
     }
-
-    // if all the conditions are valid, this means that the form is valid
 
     handleLogin();
   };

@@ -113,8 +113,8 @@ export const AdminManageCategory = () => {
     );
 
     setEditCategoryId(categoryId);
-    setUpdateCategoryName(categoryToEdit.categoryName);
-    setUpdateCategoryImage(categoryToEdit.categoryImg);
+    setUpdateCategoryName(categoryToEdit?.categoryName);
+    setUpdateCategoryImage(categoryToEdit?.categoryImg);
 
     setDialogEdit(true);
   };
@@ -179,15 +179,15 @@ export const AdminManageCategory = () => {
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
         <div className="flex w-full justify-between gap-10 px-14 py-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers.length} />
+          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
-            count={storeCountCourses.length}
+            count={storeCountCourses?.length}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
-            count={countPremiumCourse.length}
+            count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
           />
         </div>
@@ -270,9 +270,9 @@ export const AdminManageCategory = () => {
             {/* Pagiantion */}
             <div className="mx-auto pt-5 font-semibold">
               <Pagination
-                nextLink={storePaginationCategories.links.next}
-                prevLink={storePaginationCategories.links.prev}
-                totalItems={storePaginationCategories.total_items}
+                nextLink={storePaginationCategories?.links?.next}
+                prevLink={storePaginationCategories?.links?.prev}
+                totalItems={storePaginationCategories?.total_items}
               />
             </div>
           </div>

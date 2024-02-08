@@ -20,7 +20,6 @@ import {
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 // Cookie
-import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -37,13 +36,13 @@ export const Register = () => {
 
   const handleInput = (e) => {
     if (e) {
-      if (e.target.id === "nama") {
+      if (e.target.id === "fullName") {
         setFullName(e.target.value);
       }
       if (e.target.id === "email") {
         setEmail(e.target.value);
       }
-      if (e.target.id === "telepon") {
+      if (e.target.id === "phoneNumber") {
         setPhoneNumber(e.target.value);
       }
       if (e.target.id === "password") {
@@ -66,53 +65,51 @@ export const Register = () => {
 
     toast.dismiss(loadingToastId);
 
-    CookieStorage.set(CookiesKeys.EmailRegister, Email);
-
+    if (!register) {
+      showErrorToast("Registration Failed");
+    }
     if (register) {
-      showSuccessToast("Tautan Verifikasi telah dikirim!");
+      showSuccessToast("Verification link has been sent!");
       setTimeout(() => {
-        navigate(`/otp`);
-      }, 2000);
+        navigate(`/otp`, { state: { email: Email } });
+      }, 1000);
     }
   };
 
   const validateForm = () => {
     if (FullName.length === 0) {
-      return showErrorToast("Nama Lengkap harus di isi");
+      return showErrorToast("Full Name must be filled");
     }
 
     if (FullName.length > 50) {
-      return showErrorToast("Nama Maksimal 50 karakter");
+      return showErrorToast("Maximum 50 characters for Full Name");
     }
 
     if (Email.length === 0) {
-      return showErrorToast("Email harus di isi");
+      return showErrorToast("Email must be filled");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(Email)) {
-      return showErrorToast("Format Email tidak valid");
+      return showErrorToast("Invalid Email format");
     }
 
     if (PhoneNumber.length === 0) {
-      return showErrorToast("No Telepon harus di isi");
+      return showErrorToast("Phone Number must be filled");
     }
 
     if (Password.length < 8) {
-      return showErrorToast("Password minimal 8 karakter");
+      return showErrorToast("Minimum 8 characters for Password");
     }
 
     if (Password.length > 12) {
-      return showErrorToast("Password maksimal 12 karakter");
+      return showErrorToast("Maximum 12 characters for Password");
     }
 
-    // variable to count upper case characters in the password.
+    // Variables to count character types in the password.
     let countUpperCase = 0;
-    // variable to count lowercase characters in the password.
     let countLowerCase = 0;
-    // variable to count digit characters in the password.
     let countDigit = 0;
-    // variable to count special characters in the password.
     let countSpecialCharacters = 0;
 
     for (let i = 0; i < Password.length; i++) {
@@ -142,37 +139,35 @@ export const Register = () => {
       ];
 
       if (specialChars.includes(Password[i])) {
-        // this means that the character is special, so increment countSpecialCharacters
         countSpecialCharacters++;
       } else if (!isNaN(Password[i] * 1)) {
-        // this means that the character is a digit, so increment countDigit
         countDigit++;
       } else {
         if (Password[i] === Password[i].toUpperCase()) {
-          // this means that the character is an upper case character, so increment countUpperCase
           countUpperCase++;
         }
         if (Password[i] === Password[i].toLowerCase()) {
-          // this means that the character is lowercase, so increment countUpperCase
           countLowerCase++;
         }
       }
     }
 
     if (countLowerCase === 0) {
-      return showErrorToast("Password harus memiliki lower case");
+      return showErrorToast("Password must have at least one lowercase letter");
     }
 
     if (countUpperCase === 0) {
-      return showErrorToast("Password harus memiliki upper case");
+      return showErrorToast("Password must have at least one uppercase letter");
     }
 
     if (countDigit === 0) {
-      return showErrorToast("Password harus memiliki angka");
+      return showErrorToast("Password must have at least one digit");
     }
 
     if (countSpecialCharacters === 0) {
-      return showErrorToast("Passwsord harus memiliki simbol");
+      return showErrorToast(
+        "Password must have at least one special character",
+      );
     }
 
     handleRegister();

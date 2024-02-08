@@ -23,7 +23,7 @@ export const AccountPaymentHistory = () => {
 
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeHistoryPayments = useSelector(
-    (state) => state.payment.historyPayments,
+    (state) => state.payments?.historyPayments,
   );
 
   useEffect(() => {
@@ -37,16 +37,19 @@ export const AccountPaymentHistory = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-secondary px-4 pt-2 md:h-screen md:px-20 md:pt-[5rem] lg:h-fit lg:px-80 lg:pt-[5rem]">
-        <div className="relative flex items-center gap-2 py-8 text-lg font-bold text-primary">
-          <GoArrowLeft
-            size={30}
-            className="absolute -inset-x-1 cursor-pointer md:-inset-x-12 lg:-inset-x-16"
-            onClick={() => {
-              navigate("/");
-            }}
-          />
-          <span className="hidden lg:block">Back to home</span>
+      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
+      <div className="min-h-screen bg-secondary px-2 pb-20 pt-2 sm:px-10 md:px-6 md:pt-20 lg:px-28">
+        <div className="py-8">
+          <div className="relative flex w-fit cursor-pointer items-center gap-2  text-lg font-bold text-primary">
+            <GoArrowLeft
+              size={30}
+              className="absolute  cursor-pointer"
+              onClick={() => {
+                navigate("/");
+              }}
+            />
+            <span className="flex pl-10">Back to home</span>
+          </div>
         </div>
 
         {/* Akun */}
@@ -56,17 +59,17 @@ export const AccountPaymentHistory = () => {
           </div>
 
           {/* Isi Akun */}
-          <div className="flex py-4 text-center">
+          <div className="flex w-full p-6 text-center">
             <SidebarAccount />
 
             {/* Riwayat Pembayaran */}
-            <div className="flex w-full flex-col items-center md:w-[60%] lg:w-[60%]">
+            <div className="mx-auto flex w-full flex-col items-center justify-center gap-4 md:w-[55%] md:pl-6 xl:pl-0">
               <div className="py-4 text-center text-2xl font-bold">
                 Payment History
               </div>
 
               {/* Main Content */}
-              <div className="w-full space-y-6 px-3 md:px-5 lg:px-5">
+              <div className=" flex w-full flex-col gap-4">
                 {/* Card Item */}
                 {storeHistoryPayments && storeHistoryPayments.length > 0 ? (
                   storeHistoryPayments.map((value) => {
@@ -80,19 +83,19 @@ export const AccountPaymentHistory = () => {
 
                     return (
                       <CardPaymentHistory
-                        key={value.courseId}
-                        image={value.course.courseImg}
+                        key={value?.courseId}
+                        image={value?.course?.courseImg}
                         category={value?.course?.category?.categoryName}
-                        rating={value.course.averageRating}
-                        totalRating={value.course.enrollment.length}
-                        title={value.course.courseName}
-                        author={value.course.mentor}
-                        level={value.course.level}
-                        modul={lessonsData.length}
-                        duration={value.course.totalDuration}
-                        courseId={value.courseId}
-                        status={value.status}
-                        price={value.amount}
+                        rating={value?.course?.averageRating}
+                        totalRating={value?.course?.enrollment?.length}
+                        title={value?.course?.courseName}
+                        author={value?.course?.mentor}
+                        level={value?.course?.level}
+                        modul={lessonsData?.length}
+                        duration={value?.course?.totalDuration}
+                        courseId={value?.courseId}
+                        status={value?.status}
+                        price={value?.amount}
                       />
                     );
                   })
@@ -106,7 +109,6 @@ export const AccountPaymentHistory = () => {
           </div>
         </div>
       </div>
-      {isMobile ? <NavbarMobile /> : <NavbarCourse style={{ zIndex: 1 }} />}
     </>
   );
 };

@@ -44,7 +44,7 @@ import {
 import { postReviewCourseAction } from "../../../redux/action/reviews/ReviewsAction";
 import {
   getAllEnrollmentsAction,
-  postEnrollmentsAction,
+  postEnrollmentAction,
   putEnrollmentPreparationAction,
 } from "../../../redux/action/enrollments/EnrollmentsAction";
 import {
@@ -104,9 +104,9 @@ export const DetailCourse = () => {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const enrollmentData = storeEnrollments
-    ? storeEnrollments.find(
-        (enrollCourse) => enrollCourse.courseId === Number(courseId),
-      )
+    ? storeEnrollments.find((enrollCourse) => {
+        return Number(enrollCourse.courseId) === Number(courseId);
+      })
     : null;
 
   const selectedCourse = !token
@@ -120,16 +120,16 @@ export const DetailCourse = () => {
   );
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     dispatch(getAllCoursesAction());
     if (!filteredCourses) {
       return navigate("/all-courses");
     }
     getAllData();
   }, [dispatch]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const getAllData = () => {
     dispatch(getDetailCoursesAction(courseId));
@@ -162,7 +162,7 @@ export const DetailCourse = () => {
         }
 
         if (!isPremium) {
-          await dispatch(postEnrollmentsAction(storeDetailCourses.id));
+          await dispatch(postEnrollmentAction(storeDetailCourses.id));
           dispatch(getAllEnrollmentsAction());
           dispatch(getTrackingsByCourseId(courseId));
           showSuccessToast("Successful Course Enrollments");
@@ -222,7 +222,7 @@ export const DetailCourse = () => {
   };
 
   const validateForm = () => {
-    if (rating.length === 0 || !rating || rating === 0) {
+    if (rating?.length === 0 || !rating || rating === 0) {
       setDialogReviewOpen(!dialogReviewOpen);
       setTimeout(() => {
         showErrorToast("Rating cannot be empty. Please provide a rating");
@@ -289,7 +289,7 @@ export const DetailCourse = () => {
                           {Math.floor(storeDetailCourses.averageRating * 10) /
                             10}
                           <span className="ms-1 font-medium text-slate-500">
-                            ({storeDetailCourses.enrollment.length})
+                            ({storeDetailCourses?.enrollment?.length})
                           </span>
                         </div>
                       </>
@@ -312,7 +312,7 @@ export const DetailCourse = () => {
                   <div className="flex items-center gap-1">
                     <LiaBookSolid size={20} color="#22c55e" />
                     <div className="text-sm font-semibold">
-                      {storeLessonsCourseId.length} Module
+                      {storeLessonsCourseId?.length} Module
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -347,7 +347,7 @@ export const DetailCourse = () => {
                   <div
                     className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
                     style={{
-                      backgroundImage: `url(${storeDetailCourses.courseImg})`,
+                      backgroundImage: `url(${storeDetailCourses?.courseImg})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}
@@ -356,7 +356,7 @@ export const DetailCourse = () => {
                       <FaCirclePlay
                         size={60}
                         onClick={() =>
-                          window.open(storeDetailCourses.videoURL, "_blank")
+                          window.open(storeDetailCourses?.videoURL, "_blank")
                         }
                       />
                     </div>
@@ -412,7 +412,7 @@ export const DetailCourse = () => {
                             className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                             onClick={handleEnrollCourse}
                           >
-                            {storeDetailCourses.isPremium
+                            {storeDetailCourses?.isPremium
                               ? "Buy Course"
                               : "Enroll Course"}
                           </div>
@@ -423,7 +423,7 @@ export const DetailCourse = () => {
                                 className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                                 onClick={handleEnrollCourse}
                               >
-                                {storeDetailCourses.isPremium
+                                {storeDetailCourses?.isPremium
                                   ? "Buy Course"
                                   : "Enroll Course"}
                               </div>
@@ -435,7 +435,7 @@ export const DetailCourse = () => {
                                   className="hidden md:hidden lg:flex"
                                 />
                                 <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                                  {Math.floor(enrollmentData.progress * 100)}%
+                                  {Math.floor(enrollmentData?.progress * 100)}%
                                   Completed
                                 </div>
                               </>
@@ -449,27 +449,27 @@ export const DetailCourse = () => {
 
                 {/* Chapter */}
                 {selectedCourse &&
-                  selectedCourse.chapter &&
-                  selectedCourse.chapter.map((chapter, index) => (
+                  selectedCourse?.chapter &&
+                  selectedCourse?.chapter?.map((chapter, index) => (
                     <div key={index} className="flex flex-col gap-4">
                       {loadingChapters ? (
                         <DetailCourseSkeleton2 />
                       ) : (
                         <div className="flex justify-between gap-10">
                           <h2 className="font-semibold text-primary">
-                            Chapter {index + 1} - {chapter.name}
+                            Chapter {index + 1} - {chapter?.name}
                           </h2>
                           <h2 className="font-semibold text-blue">
-                            {chapter.duration} Minute
+                            {chapter?.duration} Minute
                           </h2>
                         </div>
                       )}
                       {/* Lesson List */}
-                      {chapter.lesson &&
-                        chapter.lesson.map((lesson, lessonIndex) => {
+                      {chapter?.lesson &&
+                        chapter?.lesson?.map((lesson, lessonIndex) => {
                           const trackingData = storeTrackingsCourseEnroll
-                            ? storeTrackingsCourseEnroll.find(
-                                (tracking) => tracking.lessonId === lesson.id,
+                            ? storeTrackingsCourseEnroll?.find(
+                                (tracking) => tracking?.lessonId === lesson?.id,
                               )
                             : null;
 
@@ -497,8 +497,8 @@ export const DetailCourse = () => {
                                           ? handleDialogOpen
                                           : () =>
                                               handleTrackings(
-                                                lesson.id,
-                                                lesson.videoURL,
+                                                lesson?.id,
+                                                lesson?.videoURL,
                                               )
                                     }
                                   >
@@ -506,7 +506,7 @@ export const DetailCourse = () => {
                                       {lessonIndex + 1}
                                     </p>
                                     <p className="font-semibold">
-                                      {lesson.lessonName}
+                                      {lesson?.lessonName}
                                     </p>
                                   </div>
                                   <div
@@ -515,7 +515,7 @@ export const DetailCourse = () => {
                                         ? "text-slate-500"
                                         : !enrollmentData
                                           ? "cursor-pointer text-slate-500"
-                                          : trackingData && trackingData.status
+                                          : trackingData && trackingData?.status
                                             ? "cursor-pointer text-slate-500"
                                             : "cursor-pointer text-green"
                                     }`}
@@ -553,7 +553,7 @@ export const DetailCourse = () => {
           {/* Dialog OnBoarding */}
           <Dialog
             open={
-              enrollmentData && !enrollmentData.preparationCheck
+              enrollmentData && !enrollmentData?.preparationCheck
                 ? dialogPreparationOpen
                 : false
             }
@@ -688,13 +688,13 @@ export const DetailCourse = () => {
                 duration={storeDetailCourses?.totalDuration}
                 price={storeDetailCourses?.price}
                 isPremium={storeDetailCourses?.isPremium}
-                totalRating={storeDetailCourses.enrollment.length}
+                totalRating={storeDetailCourses?.enrollment?.length}
                 promotion={
-                  !storeDetailCourses.promotion
+                  !storeDetailCourses?.promotion
                     ? ""
-                    : storeDetailCourses.promotion
+                    : storeDetailCourses?.promotion
                 }
-                modul={storeLessonsCourseId.length}
+                modul={storeLessonsCourseId?.length}
               />
             </DialogBody>
             <DialogFooter className="flex justify-center">
@@ -734,7 +734,7 @@ export const DetailCourse = () => {
                           className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                           onClick={handleEnrollCourse}
                         >
-                          {storeDetailCourses.isPremium
+                          {storeDetailCourses?.isPremium
                             ? "Buy Course"
                             : "Enroll Course"}
                         </div>
@@ -746,7 +746,7 @@ export const DetailCourse = () => {
                             className="hidden md:hidden lg:flex"
                           />
                           <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                            {Math.floor(enrollmentData.progress * 100)}%
+                            {Math.floor(enrollmentData?.progress * 100)}%
                             Completed
                           </div>
                         </>
@@ -758,8 +758,8 @@ export const DetailCourse = () => {
 
               {/* Chapter */}
               {selectedCourse &&
-                selectedCourse.chapter &&
-                selectedCourse.chapter.map((chapter, index) => (
+                selectedCourse?.chapter &&
+                selectedCourse?.chapter?.map((chapter, index) => (
                   <div key={index} className="flex flex-col gap-4">
                     <div className="flex justify-between px-2 pt-6 text-lg">
                       <h2 className="font-bold text-primary">
@@ -773,11 +773,11 @@ export const DetailCourse = () => {
                       {chapter.name}
                     </h2>
                     {/* Lesson List */}
-                    {chapter.lesson &&
-                      chapter.lesson.map((lesson, lessonIndex) => {
+                    {chapter?.lesson &&
+                      chapter?.lesson?.map((lesson, lessonIndex) => {
                         const trackingData = storeTrackingsCourseEnroll
-                          ? storeTrackingsCourseEnroll.find(
-                              (tracking) => tracking.lessonId === lesson.id,
+                          ? storeTrackingsCourseEnroll?.find(
+                              (tracking) => tracking?.lessonId === lesson?.id,
                             )
                           : null;
 
@@ -801,8 +801,8 @@ export const DetailCourse = () => {
                                     ? handleDialogOpen
                                     : () =>
                                         handleTrackings(
-                                          lesson.id,
-                                          lesson.videoURL,
+                                          lesson?.id,
+                                          lesson?.videoURL,
                                         )
                               }
                             >
@@ -810,7 +810,7 @@ export const DetailCourse = () => {
                                 {lessonIndex + 1}
                               </p>
                               <p className="font-semibold">
-                                {lesson.lessonName}
+                                {lesson?.lessonName}
                               </p>
                             </div>
                             <div
@@ -819,7 +819,7 @@ export const DetailCourse = () => {
                                   ? "text-slate-500"
                                   : !enrollmentData
                                     ? "cursor-pointer text-slate-500"
-                                    : trackingData && trackingData.status
+                                    : trackingData && trackingData?.status
                                       ? "cursor-pointer text-slate-500"
                                       : "cursor-pointer text-green"
                               }`}
@@ -830,8 +830,8 @@ export const DetailCourse = () => {
                                     ? handleDialogOpen
                                     : () =>
                                         handleTrackings(
-                                          lesson.id,
-                                          lesson.videoURL,
+                                          lesson?.id,
+                                          lesson?.videoURL,
                                         )
                               }
                             >

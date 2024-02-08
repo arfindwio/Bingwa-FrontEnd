@@ -15,68 +15,78 @@ import {
 } from "../../reducer/chapters/ChaptersSlice";
 
 export const getAllChaptersAction = (fullQuery) => async (dispatch) => {
-  try {
-    dispatch(startLoading());
+  dispatch(startLoading());
 
-    let getAllInput = `?${fullQuery}`;
+  let getAllInput = `?${fullQuery}`;
 
-    const result = await (fullQuery
-      ? reduxGetAllChaptersByQuery(getAllInput)
-      : reduxGetAllChapters());
-
-    dispatch(setChapters(result.data.data));
-    return true;
-  } catch (err) {
-    console.error("getAllChaptersAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+  return (
+    fullQuery ? reduxGetAllChaptersByQuery(getAllInput) : reduxGetAllChapters()
+  )
+    .then((result) => {
+      dispatch(setChapters(result.data.data));
+      return true;
+    })
+    .catch((err) => {
+      console.error("getAllChaptersAction", err);
+      if (err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
 export const postChapterAction = (input) => async (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxPostChapter(input);
-    return true;
-  } catch (err) {
-    console.error("postChapterAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+  dispatch(startLoading());
+
+  return reduxPostChapter(input)
+    .then(() => {
+      return true; // Signal success
+    })
+    .catch((err) => {
+      console.error("postChapterAction", err);
+      if (err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
-export const putChapterAction = (input, chapterId) => (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxPutChapter(input, chapterId);
-    return true;
-  } catch (err) {
-    console.error("putChapterAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+export const putChapterAction = (input, chapterId) => async (dispatch) => {
+  dispatch(startLoading());
+
+  return reduxPutChapter(input, chapterId)
+    .then(() => {
+      return true; // Signal success
+    })
+    .catch((err) => {
+      console.error("putChapterAction", err);
+      if (err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
 
-export const deleteChapterAction = (chapterId) => (dispatch) => {
-  try {
-    dispatch(startLoading());
-    reduxDeleteChapter(chapterId);
-    return true;
-  } catch (err) {
-    console.error("deleteChapterAction", err);
-    if (err.response.status === 404) {
-      showErrorToast(err.response.data.message);
-    }
-  } finally {
-    dispatch(endLoading());
-  }
+export const deleteChapterAction = (chapterId) => async (dispatch) => {
+  dispatch(startLoading());
+
+  return reduxDeleteChapter(chapterId)
+    .then(() => {
+      return true; // Signal success
+    })
+    .catch((err) => {
+      console.error("deleteChapterAction", err);
+      if (err.response.status === 404) {
+        showErrorToast(err.response.data.message);
+      }
+    })
+    .finally(() => {
+      dispatch(endLoading());
+    });
 };
