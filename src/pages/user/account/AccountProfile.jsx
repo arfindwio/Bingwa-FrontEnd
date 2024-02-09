@@ -55,7 +55,7 @@ export const AccountProfile = () => {
     setNewCountry(storeUserProfile?.userProfile?.country || newCountry);
   }, [storeUserProfile]);
 
-  const getAllData = () => {
+  const getAllData = async () => {
     dispatch(getUserAuthenticateAction());
   };
 

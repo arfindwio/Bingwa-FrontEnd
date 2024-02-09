@@ -28,9 +28,10 @@ export const getAllLessonsAction = (fullQuery) => async (dispatch) => {
 
     return true;
   } catch (err) {
-    console.error("getAllLessonsAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -44,7 +45,11 @@ export const getAllLessonsByCourseIdAction = (courseId) => async (dispatch) => {
     dispatch(setLessonsByCourseId(result.data.data));
     return true;
   } catch (err) {
-    console.error("reduxGetAllLessonsByCourseId", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -56,9 +61,10 @@ export const postLessonAction = (input) => async (dispatch) => {
     reduxPostLesson(input);
     return true;
   } catch (err) {
-    console.error("postLessonAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -71,9 +77,10 @@ export const putLessonAction = (input, lessonId) => (dispatch) => {
     reduxPutLesson(input, lessonId);
     return true;
   } catch (err) {
-    console.error("putLessonAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -86,9 +93,10 @@ export const deleteLessonAction = (lessonId) => (dispatch) => {
     reduxDeleteLesson(lessonId);
     return true;
   } catch (err) {
-    console.error("deleteLessonAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());

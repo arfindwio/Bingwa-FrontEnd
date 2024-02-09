@@ -58,10 +58,12 @@ export const Payment = () => {
 
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const redirectUrl = useSelector(
-    (state) => state.payment.paymentMidtrans.transaction.redirect_url,
+    (state) => state.payments?.paymentMidtrans?.transaction.redirect_url,
   );
-  const isLoading = useSelector((state) => state.payment.loading);
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const isLoading = useSelector((state) => state.payments.loading);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
 
   const foundEnrollment = storeEnrollments.find(
     (enrollCourse) => enrollCourse.courseId === Number(courseId),
@@ -190,12 +192,12 @@ export const Payment = () => {
 
       {/* First Container */}
       <div className="md:px-30 mt-[5rem] flex justify-center py-3 shadow-lg md:mt-[5rem] lg:mt-[5rem] lg:py-4">
-        <div className="w-fit items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base font-semibold text-white sm:px-10 md:px-20 md:text-xl lg:px-36">
+        <div className="w-fit items-center rounded-xl bg-red-500 px-2 py-2 text-center text-base font-semibold text-white sm:px-10 md:px-20 md:text-xl lg:px-48">
           Complete the payment within {formatTime(timeRemaining)}
         </div>
       </div>
 
-      <div className="relative mt-5 flex items-center px-28 text-lg font-bold">
+      <div className="relative mt-5 flex items-center px-8 text-lg font-bold lg:px-28">
         <GoArrowLeft
           size={30}
           className="absolute cursor-pointer "
@@ -206,9 +208,9 @@ export const Payment = () => {
         <p className="pl-10">Back</p>
       </div>
 
-      <div className=" justify-center px-[1rem] py-10 pt-4 md:px-2 lg:flex lg:px-28 ">
+      <div className=" flex flex-col justify-center gap-4 px-8 py-10 pt-4  lg:flex-row lg:gap-0 lg:px-28">
         {/* Payment Method */}
-        <div className="flex flex-col gap-2 pr-6 lg:w-[60%]">
+        <div className="flex flex-col gap-2 lg:w-[60%] lg:pr-6">
           <div className="flex flex-col">
             <div
               className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
@@ -255,7 +257,7 @@ export const Payment = () => {
                 <div className="flex flex-col text-start">
                   <span className="text-xl font-semibold">Bank Name</span>
                   <input
-                    type="number"
+                    type="text"
                     className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
                     placeholder="BCA"
                     value={newBankName}
@@ -491,11 +493,11 @@ export const Payment = () => {
                   <img src={indomaret} className="" alt="Indomaret" />
                 </div>
               </div>
-              <div className="mx-auto w-full px-20 pt-4">
+              <div className="mx-auto flex w-full flex-col gap-2 px-20 pt-4">
                 <div className="flex flex-col text-start">
                   <span className="text-xl font-semibold">Store</span>
                   <input
-                    type="number"
+                    type="text"
                     className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
                     placeholder="Alfamart"
                     value={newStore}
@@ -507,7 +509,7 @@ export const Payment = () => {
                 <div className="flex flex-col text-start">
                   <span className="text-xl font-semibold">Message</span>
                   <input
-                    type="number"
+                    type="text"
                     className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
                     placeholder="I want to make a payment for order"
                     value={newMessage}
@@ -521,7 +523,7 @@ export const Payment = () => {
           </div>
         </div>
 
-        <div className="flex h-fit w-fit flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2  shadow-lg focus:outline-none md:w-auto lg:w-[40%]">
+        <div className="flex h-fit w-fit flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2 shadow-xl focus:outline-none md:w-auto lg:w-[40%]">
           <div className="flex flex-col items-center text-2xl font-bold">
             Course Payment
           </div>

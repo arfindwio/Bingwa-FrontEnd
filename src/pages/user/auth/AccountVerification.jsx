@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Images
 import BrandLogo from "../../../assets/img/brain.webp";
@@ -25,13 +26,16 @@ export const AccountVerification = () => {
   const [Email, setEmail] = useState("");
 
   const handleSave = async () => {
+    const loadingToastId = showLoadingToast("Loading ...");
+    console.log(Email);
+
     const verifyAccount = await dispatch(
       putResendOtp({
         email: Email,
       }),
     );
 
-    showLoadingToast("Loading...");
+    toast.dismiss(loadingToastId);
 
     if (!verifyAccount) {
       showErrorToast("Verification Account Failed");
@@ -62,7 +66,10 @@ export const AccountVerification = () => {
           </span>
 
           {/* Konfirmasi Password Baru */}
-          <div className="flex flex-col gap-2 py-4">
+          <div
+            className="flex flex-col gap-2 py-4"
+            onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
+          >
             <div className="flex justify-between">
               <span className="text-left text-lg">Email</span>
             </div>
@@ -70,7 +77,7 @@ export const AccountVerification = () => {
               <input
                 value={Email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Input Email"
+                placeholder="bingwa@gmail.com"
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="email"
               />

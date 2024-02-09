@@ -93,12 +93,10 @@ export const putResendOtp = (email) => async (dispatch) => {
     dispatch(setResendOtp(result.data.data));
     return true;
   } catch (err) {
-    if (err.response) {
-      if (err.response.status >= 400 && err.response.status <= 500) {
-        showErrorToast(err.response.data.message);
-      } else {
-        console.error("unexpected Error", err);
-      }
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -112,12 +110,10 @@ export const putChangePasswordUser = (input, token) => async (dispatch) => {
     dispatch(setChangePassword(result.data.data));
     return true;
   } catch (err) {
-    if (err.response) {
-      if (err.response.status >= 400 && err.response.status <= 500) {
-        showErrorToast(err.response.data.message);
-      } else {
-        console.error("unexpected Error", err);
-      }
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -131,12 +127,10 @@ export const postForgetPassAction = (email) => async (dispatch) => {
     dispatch(setForgetPassword(result.data.data));
     return true;
   } catch (err) {
-    if (err.response) {
-      if (err.response.status >= 400 && err.response.status <= 500) {
-        showErrorToast(err.response.data.message);
-      } else {
-        console.error("unexpected Error", err);
-      }
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -150,12 +144,10 @@ export const putUpdatePassword = (input, token) => async (dispatch) => {
     dispatch(setUpdatePassword(result.data.data));
     return true;
   } catch (err) {
-    if (err.response) {
-      if (err.response.status >= 400 && err.response.status <= 500) {
-        showErrorToast(err.response.data.message);
-      } else {
-        console.error("unexpected Error", err);
-      }
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -169,9 +161,10 @@ export const getUserAuthenticateAction = () => async (dispatch) => {
     dispatch(setUserAuthenticate(result.data.data.user));
     return true;
   } catch (err) {
-    console.error("getUserAuthenticateAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -185,9 +178,10 @@ export const getAllUsersAction = () => async (dispatch) => {
     dispatch(setUsers(result.data.data.users));
     return true;
   } catch (err) {
-    console.error("getUserAuthenticateAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());

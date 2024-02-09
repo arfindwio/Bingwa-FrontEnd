@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -25,6 +25,7 @@ import {
 // Redux Actionss
 import { logoutUserAction } from "../../../redux/action/users/UsersAction";
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getUserAuthenticateAction } from "../../../redux/action/users/UsersAction";
 
 // Cookie
 import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
@@ -39,6 +40,19 @@ export const NavbarCourse = () => {
   const currentPath = location.pathname;
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (token) {
+        const user = await dispatch(getUserAuthenticateAction());
+        if (!user) {
+          CookieStorage.remove(CookiesKeys.AuthToken);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearchCourse = (searchInput) => {
     const search = dispatch(getAllCoursesAction(searchInput));
@@ -55,18 +69,18 @@ export const NavbarCourse = () => {
 
   return (
     <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-primary px-2 py-4  md:px-6 lg:px-28">
-      <div className="flex w-1/2 gap-10">
+      <div className="flex w-[60%] items-center">
         <div
-          className="flex cursor-pointer items-center justify-center gap-2 md:flex lg:flex"
+          className="flex w-fit cursor-pointer items-center justify-start gap-3 pr-14 md:pr-8 lg:pr-6 xl:pr-4"
           onClick={() => {
             navigate("/");
           }}
         >
-          <img src={BrandLogo} alt="Brand Logo" className="w-[2.5rem]" />
-          <div className="gap-4 text-3xl font-semibold text-white">Bingwa</div>
+          <img src={BrandLogo} alt="Brand Logo" className="w-10" />
+          <div className="text-3xl font-semibold text-white">Bingwa</div>
         </div>
 
-        <div className="relative hidden w-[70%] sm:flex">
+        <div className="relative hidden w-[70%] py-2 sm:flex sm:py-0">
           <input
             type="text"
             value={searchInput}
@@ -89,7 +103,7 @@ export const NavbarCourse = () => {
 
       {!token ? (
         <div
-          className="flex w-1/2 cursor-pointer justify-end gap-2 font-semibold text-white"
+          className="flex w-[40%] cursor-pointer justify-end gap-2 font-semibold text-white"
           onClick={() => {
             navigate("/login");
           }}

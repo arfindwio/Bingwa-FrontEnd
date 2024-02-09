@@ -63,7 +63,7 @@ export const ForgetPassword = () => {
               <input
                 value={Email}
                 onChange={handleEmailChange}
-                placeholder="Input Email"
+                placeholder="bingwa@gmail.com"
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="email"
               />
