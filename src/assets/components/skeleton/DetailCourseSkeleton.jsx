@@ -11,7 +11,9 @@ export const DetailCourseSkeleton = () => {
   const { courseId } = useParams();
 
   const storeDetailCourses = useSelector((state) => state.courses.detailCourse);
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 

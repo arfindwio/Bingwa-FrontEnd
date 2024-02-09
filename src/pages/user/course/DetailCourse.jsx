@@ -12,6 +12,7 @@ import {
   DetailCourseSkeleton2,
   DetailCourseSkeleton3,
 } from "../../../assets/components/skeleton/DetailCourseSkeleton";
+import { Footer } from "../../../assets/components/footer/Footer";
 
 // Images
 import onboarding from "../../../assets/img/onboarding.webp";
@@ -81,7 +82,9 @@ export const DetailCourse = () => {
   const storeLessonsCourseId = useSelector(
     (state) => state.lessons.lessonsCourseId.lessons,
   );
-  const storeEnrollments = useSelector((state) => state.enrollments.course);
+  const storeEnrollments = useSelector(
+    (state) => state.enrollments.enrollments,
+  );
   const storeTrackingsCourseEnroll = useSelector(
     (state) => state.trackings.trackingsCourseId.allTrackings,
   );
@@ -179,13 +182,10 @@ export const DetailCourse = () => {
   };
 
   const handleTrackings = async (lessonId, videoUrl) => {
-    const loadingToastId = showLoadingToast("Loading ...");
-
     try {
       await dispatch(putTrackingAction(lessonId));
       if (!loadingTracking) {
         setVideoLink(videoUrl.split("https://youtu.be/")[1]);
-        toast.dismiss(loadingToastId);
         dispatch(getTrackingsByCourseId(courseId));
         dispatch(getAllEnrollmentsAction());
       }
@@ -215,9 +215,7 @@ export const DetailCourse = () => {
       setTimeout(() => {
         showSuccessToast("Your review has been submitted successfully!");
       }, 1000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      dispatch(getDetailCoursesAction(courseId));
     }
   };
 
@@ -227,7 +225,7 @@ export const DetailCourse = () => {
       setTimeout(() => {
         showErrorToast("Rating cannot be empty. Please provide a rating");
       }, 400);
-      return;
+      return false;
     }
 
     handleReview();
@@ -242,11 +240,11 @@ export const DetailCourse = () => {
         <DetailCourseSkeleton />
       ) : (
         <>
-          <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-20">
+          <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-24">
             {/* Left Container */}
-            <div className="mt-16 flex w-full flex-col gap-4 px-4 md:w-3/5 lg:w-3/5">
+            <div className="mt-16 flex w-full flex-col px-4 md:w-3/5 lg:w-3/5">
               {/* Button Back */}
-              <div className="flex w-full items-center gap-2 py-4">
+              <div className="flex w-full items-center gap-2 py-4 pt-6">
                 <div
                   className="cursor-pointer"
                   onClick={() => {
@@ -265,7 +263,7 @@ export const DetailCourse = () => {
                     Other Courses
                   </div>
                   <div
-                    className="font-bold text-primary md:hidden lg:hidden"
+                    className="cursor-pointer font-bold text-primary md:hidden lg:hidden"
                     onClick={handleOpen}
                   >
                     Chapter
@@ -323,7 +321,7 @@ export const DetailCourse = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 pb-1 pt-3">
                 <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
                   <div className="font-semibold">Join Telegram Grup</div>
                   <div>
@@ -345,7 +343,7 @@ export const DetailCourse = () => {
               <div className="flex flex-col">
                 {!videoLink ? (
                   <div
-                    className="my-4 flex h-[20rem] items-center justify-center rounded-2xl"
+                    className="my-4 flex h-[20rem] items-center justify-center rounded-2xl border-2 shadow-md"
                     style={{
                       backgroundImage: `url(${storeDetailCourses?.courseImg})`,
                       backgroundSize: "cover",
@@ -362,7 +360,7 @@ export const DetailCourse = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="relative h-0 overflow-hidden rounded-2xl pb-[56.25%]">
+                  <div className="relative my-3 h-0 overflow-hidden rounded-2xl border-2 pb-[56.25%] shadow-lg">
                     <iframe
                       title="YouTube Video"
                       className="absolute left-0 top-0 h-full w-full"
@@ -497,8 +495,8 @@ export const DetailCourse = () => {
                                           ? handleDialogOpen
                                           : () =>
                                               handleTrackings(
-                                                lesson?.id,
-                                                lesson?.videoURL,
+                                                lesson.id,
+                                                lesson.videoURL,
                                               )
                                     }
                                   >
@@ -515,7 +513,7 @@ export const DetailCourse = () => {
                                         ? "text-slate-500"
                                         : !enrollmentData
                                           ? "cursor-pointer text-slate-500"
-                                          : trackingData && trackingData?.status
+                                          : trackingData && trackingData.status
                                             ? "cursor-pointer text-slate-500"
                                             : "cursor-pointer text-green"
                                     }`}
@@ -550,6 +548,8 @@ export const DetailCourse = () => {
             </div>
           </div>
 
+          <Footer />
+
           {/* Dialog OnBoarding */}
           <Dialog
             open={
@@ -570,18 +570,14 @@ export const DetailCourse = () => {
                 Onboarding...
               </h1>
             </DialogHeader>
-            <DialogBody className="flex flex-col items-center justify-center px-12">
+            <DialogBody className="flex flex-col items-center justify-center px-20 text-center">
               <img src={onboarding} alt="onboarding" className="w-[50%]" />
               <h1 className="my-6 font-semibold text-slate-800">
                 Persiapkan hal berikut untuk belajar yang maksimal:
               </h1>
               <p className="text-slate-600">
-                Mempunyai akun Figma atau Install Adobe XD
+                {storeDetailCourses?.learningMaterial}
               </p>
-              <p className="text-slate-600">
-                Menggunakan internet minimal kecepatan 2Mbps
-              </p>
-              <p className="text-slate-600">Belajar di tempat yang nyaman</p>
             </DialogBody>
             <DialogFooter className="flex justify-center">
               <div
@@ -639,7 +635,7 @@ export const DetailCourse = () => {
                   <textarea
                     placeholder="Share your experience with this course..."
                     onChange={(e) => setComment(e.target.value)}
-                    className="rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
+                    className="max-h-[30vh] rounded-lg border-2 border-slate-300 p-4 focus:border-primary focus:outline-none"
                     value={Comment}
                     id="comment"
                     rows={4}
@@ -739,17 +735,13 @@ export const DetailCourse = () => {
                             : "Enroll Course"}
                         </div>
                       ) : (
-                        <>
-                          <TbProgressCheck
-                            size={30}
-                            color="#22c55e"
-                            className="hidden md:hidden lg:flex"
-                          />
+                        <div className="flex gap-2">
+                          <TbProgressCheck size={30} color="#22c55e" />
                           <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
                             {Math.floor(enrollmentData?.progress * 100)}%
                             Completed
                           </div>
-                        </>
+                        </div>
                       )}
                     </div>
                   )}
@@ -766,7 +758,7 @@ export const DetailCourse = () => {
                         Chapter {index + 1}
                       </h2>
                       <h2 className="font-bold text-blue">
-                        {chapter.duration}
+                        {chapter.duration} Minute
                       </h2>
                     </div>
                     <h2 className="text-center font-bold text-black">
@@ -801,8 +793,8 @@ export const DetailCourse = () => {
                                     ? handleDialogOpen
                                     : () =>
                                         handleTrackings(
-                                          lesson?.id,
-                                          lesson?.videoURL,
+                                          lesson.id,
+                                          lesson.videoURL,
                                         )
                               }
                             >
@@ -819,7 +811,7 @@ export const DetailCourse = () => {
                                   ? "text-slate-500"
                                   : !enrollmentData
                                     ? "cursor-pointer text-slate-500"
-                                    : trackingData && trackingData?.status
+                                    : trackingData && trackingData.status
                                       ? "cursor-pointer text-slate-500"
                                       : "cursor-pointer text-green"
                               }`}
@@ -830,8 +822,8 @@ export const DetailCourse = () => {
                                     ? handleDialogOpen
                                     : () =>
                                         handleTrackings(
-                                          lesson?.id,
-                                          lesson?.videoURL,
+                                          lesson.id,
+                                          lesson.videoURL,
                                         )
                               }
                             >

@@ -1,3 +1,5 @@
+import { showErrorToast } from "../../../helper/ToastHelper";
+
 import {
   reduxGetTrackingsByCourseId,
   reduxPutTracking,
@@ -5,7 +7,6 @@ import {
 
 import {
   setTrackingsByCourseId,
-  updateTracking,
   startLoading,
   endLoading,
 } from "../../reducer/trackings/TrackingsSlice";
@@ -17,7 +18,11 @@ export const getTrackingsByCourseId = (courseId) => async (dispatch) => {
     dispatch(setTrackingsByCourseId(result.data.data));
     return true;
   } catch (err) {
-    console.error("reduxGetTrackingsByCourseId", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -26,11 +31,14 @@ export const getTrackingsByCourseId = (courseId) => async (dispatch) => {
 export const putTrackingAction = (lessonId) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxPutTracking(lessonId);
-    dispatch(updateTracking(result.data.data.tracking));
+    await reduxPutTracking(lessonId);
     return true;
   } catch (err) {
-    console.error("reduxPutTracking", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }

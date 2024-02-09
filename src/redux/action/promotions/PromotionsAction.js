@@ -26,9 +26,10 @@ export const getAllPromotionsAction = (fullQuery) => async (dispatch) => {
 
     return true;
   } catch (err) {
-    console.error("getAllPromotionssAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -41,9 +42,10 @@ export const postPromotionAction = (input) => async (dispatch) => {
     reduxPostPromotion(input);
     return true;
   } catch (err) {
-    console.error("postPromotionAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -56,9 +58,10 @@ export const putPromotionAction = (input, PromotionsId) => (dispatch) => {
     reduxPutPromotions(input, PromotionsId);
     return true;
   } catch (err) {
-    console.error("putPromotionAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());
@@ -71,9 +74,10 @@ export const deletePromotionAction = (PromotionsId) => (dispatch) => {
     reduxDeletePromotion(PromotionsId);
     return true;
   } catch (err) {
-    console.error("deletePromotionAction", err);
-    if (err.response.status === 404) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());

@@ -1,3 +1,5 @@
+import { showErrorToast } from "../../../helper/ToastHelper";
+
 import {
   reduxGetAllNotifications,
   reduxPutNotification,
@@ -16,7 +18,11 @@ export const getAllNotificationsAction = () => async (dispatch) => {
     dispatch(setNotifications(result.data.data.notifications));
     return true;
   } catch (err) {
-    console.error("getAllNotificationsAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -29,7 +35,11 @@ export const putNotificationsAction = () => async (dispatch) => {
     dispatch(setStatus(result.data.data.notifications));
     return true;
   } catch (err) {
-    console.error("putNotificationsAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }

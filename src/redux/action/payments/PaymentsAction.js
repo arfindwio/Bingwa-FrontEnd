@@ -28,7 +28,11 @@ export const getAllPaymentsAction = (fullQuery) => async (dispatch) => {
     dispatch(setPayments(result.data.data));
     return true;
   } catch (err) {
-    console.error("getAllPaymentsAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -41,7 +45,11 @@ export const getHistoryPaymentAction = () => async (dispatch) => {
     dispatch(setHistoryPayments(result.data.data.payments));
     return true;
   } catch (err) {
-    console.error("getHistoryPaymentAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
     return false;
   } finally {
     dispatch(endLoading());
@@ -55,7 +63,11 @@ export const postPaymentAction = (input, courseId) => async (dispatch) => {
     dispatch(setPostPayment(result.data.data));
     return true;
   } catch (err) {
-    console.error("error postPaymentAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
     return false;
   } finally {
     dispatch(endLoading());
@@ -70,9 +82,10 @@ export const postPaymentMidtransAction =
       dispatch(setPostPaymentMidtrans(result.data.data));
       return true;
     } catch (err) {
-      console.error("postPaymentMidtransAction", err);
-      if (err.response.status === 404) {
+      if (err.response.status >= 400 && err.response.status <= 500) {
         showErrorToast(err.response.data.message);
+      } else {
+        console.error("unexpected Error", err);
       }
     } finally {
       dispatch(endLoading());

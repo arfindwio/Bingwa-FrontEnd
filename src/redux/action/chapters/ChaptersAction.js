@@ -15,78 +15,95 @@ import {
 } from "../../reducer/chapters/ChaptersSlice";
 
 export const getAllChaptersAction = (fullQuery) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
 
-  let getAllInput = `?${fullQuery}`;
+    let getAllInput = `?${fullQuery}`;
 
-  return (
-    fullQuery ? reduxGetAllChaptersByQuery(getAllInput) : reduxGetAllChapters()
-  )
-    .then((result) => {
-      dispatch(setChapters(result.data.data));
-      return true;
-    })
-    .catch((err) => {
-      console.error("getAllChaptersAction", err);
-      if (err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    const result = fullQuery
+      ? await reduxGetAllChaptersByQuery(getAllInput)
+      : await reduxGetAllChapters();
+
+    dispatch(setChapters(result.data.data));
+
+    return true;
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.status >= 400 &&
+      err.response.status <= 500
+    ) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const postChapterAction = (input) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
 
-  return reduxPostChapter(input)
-    .then(() => {
-      return true; // Signal success
-    })
-    .catch((err) => {
-      console.error("postChapterAction", err);
-      if (err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    await reduxPostChapter(input);
+
+    return true; // Signal success
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.status >= 400 &&
+      err.response.status <= 500
+    ) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const putChapterAction = (input, chapterId) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
 
-  return reduxPutChapter(input, chapterId)
-    .then(() => {
-      return true; // Signal success
-    })
-    .catch((err) => {
-      console.error("putChapterAction", err);
-      if (err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    await reduxPutChapter(input, chapterId);
+
+    return true; // Signal success
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.status >= 400 &&
+      err.response.status <= 500
+    ) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const deleteChapterAction = (chapterId) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
 
-  return reduxDeleteChapter(chapterId)
-    .then(() => {
-      return true; // Signal success
-    })
-    .catch((err) => {
-      console.error("deleteChapterAction", err);
-      if (err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    await reduxDeleteChapter(chapterId);
+
+    return true; // Signal success
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.status >= 400 &&
+      err.response.status <= 500
+    ) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
