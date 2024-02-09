@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -23,6 +23,9 @@ import {
 // Components
 import { LoginGoogle } from "../../../assets/components/google/LoginGoogle";
 
+// Cookie
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
+
 export const Login = () => {
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
@@ -30,19 +33,14 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
 
+  const token = CookieStorage.get(CookiesKeys.AuthToken);
+
+  useEffect(() => {
+    if (token) return navigate("/");
+  }, []);
+
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "email") {
-        setEmail(e.target.value);
-      }
-      if (e.target.id === "password") {
-        setPassword(e.target.value);
-      }
-    }
   };
 
   const handleLogin = async () => {
@@ -171,16 +169,16 @@ export const Login = () => {
       <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
         <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
           <span className="items-center py-8 text-4xl font-bold text-primary">
-            Masuk
+            Login
           </span>
 
           {/* Email atau No Telepon */}
           <form onKeyDown={(e) => (e.key === "Enter" ? validateForm() : "")}>
             <div className="flex flex-col gap-2">
-              <span className="text-left text-lg">Email/No Telepon</span>
+              <span className="text-left text-lg">Email / Phone Number</span>
               <input
                 placeholder="bingwa@gmail.com"
-                onChange={handleInput}
+                onChange={(e) => setEmail(e.target.value)}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="email"
                 value={Email}
@@ -204,7 +202,7 @@ export const Login = () => {
               <div className="relative flex flex-col">
                 <input
                   placeholder="**********"
-                  onChange={handleInput}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   value={Password}
                   id="password"
@@ -236,23 +234,34 @@ export const Login = () => {
                   validateForm();
                 }}
               >
-                Masuk
+                Login
               </button>
 
               <div className="flex items-center justify-center py-6">
                 <LoginGoogle />
               </div>
 
-              <div className="text-center">
-                <span className="items-center justify-center py-8 text-center text-black">
-                  Belum punya akun?
+              <div className="flex flex-col text-center">
+                <span className="items-center justify-center text-center text-black">
+                  Don't have an account?
                   <span
                     className="cursor-pointer px-2 font-bold text-primary"
                     onClick={() => {
                       navigate("/Register");
                     }}
                   >
-                    Daftar di sini.
+                    Register Here.
+                  </span>
+                </span>
+                <span className="items-center justify-center text-center text-black">
+                  Account not verified?
+                  <span
+                    className="cursor-pointer px-2 font-bold text-primary"
+                    onClick={() => {
+                      navigate("/account-verification");
+                    }}
+                  >
+                    Verify it here.
                   </span>
                 </span>
               </div>

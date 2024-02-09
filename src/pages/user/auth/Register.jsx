@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
@@ -20,6 +20,7 @@ import {
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 // Cookie
+import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -29,6 +30,12 @@ export const Register = () => {
   const [Password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+
+  const token = CookieStorage.get(CookiesKeys.AuthToken);
+
+  useEffect(() => {
+    if (token) return navigate("/");
+  }, []);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -178,7 +185,7 @@ export const Register = () => {
       <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
         <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
           <span className="items-center py-6 text-4xl font-bold text-primary">
-            Daftar
+            Register
           </span>
 
           {/* Nama */}
@@ -266,8 +273,8 @@ export const Register = () => {
               </button>
             </div>
 
-            <div className="text-center">
-              <span className="items-center justify-center py-6 text-center text-black">
+            <div className="flex flex-col text-center">
+              <span className=" text-center text-black">
                 Already have an account?
                 <span
                   className="cursor-pointer px-2 font-bold text-primary"
@@ -276,6 +283,17 @@ export const Register = () => {
                   }}
                 >
                   Sign in here
+                </span>
+              </span>
+              <span className=" text-center text-black">
+                Account not verified?
+                <span
+                  className="cursor-pointer px-2 font-bold text-primary"
+                  onClick={() => {
+                    navigate("/account-verification");
+                  }}
+                >
+                  Verify it here.
                 </span>
               </span>
             </div>

@@ -1,3 +1,5 @@
+import { showErrorToast } from "../../../helper/ToastHelper";
+
 import {
   reduxGetAllEnrollments,
   reduxGetEnrollmentByCourseId,
@@ -15,68 +17,74 @@ import {
 } from "../../reducer/enrollments/EnrollmentsSlice";
 
 export const getAllEnrollmentsAction = () => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
+    const result = await reduxGetAllEnrollments();
+    dispatch(setEnrollments(result.data.data.enrollments));
 
-  return await reduxGetAllEnrollments()
-    .then((result) => {
-      dispatch(setEnrollments(result.data.data.enrollments));
-      return true; // Indicate success
-    })
-    .catch((err) => {
-      console.error("getAllEnrollmentsAction", err);
-      return false;
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    return true;
+  } catch (err) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const getEnrollmentByCourseIdAction = (courseId) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
+    const result = await reduxGetEnrollmentByCourseId(courseId);
+    dispatch(setEnrollByCourseId(result.data.data));
 
-  return await reduxGetEnrollmentByCourseId(courseId)
-    .then((result) => {
-      dispatch(setEnrollByCourseId(result.data.data));
-      return true;
-    })
-    .catch((err) => {
-      console.error("getEnrollmentsByCourseIdAction", err);
-      return false;
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    return true;
+  } catch (err) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const postEnrollmentAction = (courseId) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
+    const result = await reduxPostEnrollment(courseId);
+    dispatch(addEnrollment(result.data.data.enrollments));
 
-  await reduxPostEnrollment(courseId)
-    .then((result) => {
-      dispatch(addEnrollment(result.data.data.enrollments));
-      return true;
-    })
-    .catch((err) => {
-      console.error("enrollmentsAction", err);
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    return true;
+  } catch (err) {
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const putEnrollmentPreparationAction =
   (courseId) => async (dispatch) => {
-    dispatch(startLoading());
+    try {
+      dispatch(startLoading());
+      const result = await reduxPutEnrollment(courseId);
+      dispatch(setEnrollmentPreparation(result.data.data.updatedEnrollment));
 
-    await reduxPutEnrollment(courseId)
-      .then((result) => {
-        dispatch(setEnrollmentPreparation(result.data.data.updatedEnrollment));
-        return true;
-      })
-      .catch((err) => {
-        console.error("enrollmentsAction", err);
-      })
-      .finally(() => {
-        dispatch(endLoading());
-      });
+      return true;
+    } catch (err) {
+      if (err.response.status >= 400 && err.response.status <= 500) {
+        showErrorToast(err.response.data.message);
+      } else {
+        console.error("unexpected Error", err);
+      }
+    } finally {
+      dispatch(endLoading());
+    }
   };

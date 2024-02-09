@@ -13,12 +13,10 @@ export const postReviewCourseAction = (courseId, input) => async (dispatch) => {
     dispatch(addReview(result.data.data));
     return true;
   } catch (err) {
-    if (err.response) {
-      if (err.response.status >= 400 && err.response.status <= 500) {
-        showErrorToast(err.response.data.message);
-      } else {
-        console.error("unexpected Error", err);
-      }
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
     }
   } finally {
     dispatch(endLoading());

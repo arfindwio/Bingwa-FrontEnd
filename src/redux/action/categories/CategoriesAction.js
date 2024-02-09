@@ -15,80 +15,93 @@ import {
 } from "../../reducer/categories/CategoriesSlice";
 
 export const getAllCategoriesAction = (fullQuery) => async (dispatch) => {
-  dispatch(startLoading());
+  try {
+    dispatch(startLoading());
 
-  let getAllInput = `?${fullQuery}`;
+    let getAllInput = `?${fullQuery}`;
 
-  return (
-    fullQuery
-      ? reduxGetAllCategoriesByQuery(getAllInput)
-      : reduxGetAllCategories()
-  )
-    .then((result) => {
-      dispatch(setCategories(result.data.data));
-      return true;
-    })
-    .catch((err) => {
-      console.error("getAllCategoriesAction", err);
-      if (err.response && err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+    const result = fullQuery
+      ? await reduxGetAllCategoriesByQuery(getAllInput)
+      : await reduxGetAllCategories();
+
+    dispatch(setCategories(result.data.data));
+
+    return true;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.status >= 400 &&
+      error.response.status <= 500
+    ) {
+      showErrorToast(error.response.data.message);
+    } else {
+      console.error("Unexpected Error:", error);
+    }
+    return false;
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const postCategoryAction = (input) => async (dispatch) => {
-  dispatch(startLoading());
-
-  return reduxPostCategory(input)
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
-      console.error("postCategoryAction", err);
-      if (err.response && err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+  try {
+    dispatch(startLoading());
+    await reduxPostCategory(input);
+    return true;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.status >= 400 &&
+      error.response.status <= 500
+    ) {
+      showErrorToast(error.response.data.message);
+    } else {
+      console.error("unexpected Error", error);
+    }
+    return false;
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const putCategoryAction = (input, categoryId) => async (dispatch) => {
-  dispatch(startLoading());
-
-  return reduxPutCategory(input, categoryId)
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
-      console.error("putCategoryAction", err);
-      if (err.response && err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+  try {
+    dispatch(startLoading());
+    await reduxPutCategory(input, categoryId);
+    return true;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.status >= 400 &&
+      error.response.status <= 500
+    ) {
+      showErrorToast(error.response.data.message);
+    } else {
+      console.error("unexpected Error", error);
+    }
+    return false;
+  } finally {
+    dispatch(endLoading());
+  }
 };
 
 export const deleteCategoryAction = (categoryId) => async (dispatch) => {
-  dispatch(startLoading());
-
-  return reduxDeleteCategory(categoryId)
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
-      console.error("deleteCategoryAction", err);
-      if (err.response && err.response.status === 404) {
-        showErrorToast(err.response.data.message);
-      }
-    })
-    .finally(() => {
-      dispatch(endLoading());
-    });
+  try {
+    dispatch(startLoading());
+    await reduxDeleteCategory(categoryId);
+    return true;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.status >= 400 &&
+      error.response.status <= 500
+    ) {
+      showErrorToast(error.response.data.message);
+    } else {
+      console.error("unexpected Error", error);
+    }
+    return false;
+  } finally {
+    dispatch(endLoading());
+  }
 };

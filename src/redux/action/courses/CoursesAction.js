@@ -1,3 +1,5 @@
+import { showErrorToast } from "../../../helper/ToastHelper";
+
 import {
   reduxGetDetailCoursesId,
   reduxGetAllCourses,
@@ -27,8 +29,11 @@ export const getAllCoursesAction = (fullQuery) => async (dispatch) => {
 
     return result;
   } catch (err) {
-    console.error("getAllCoursesAction", err);
-    throw err;
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -41,7 +46,11 @@ export const getDetailCoursesAction = (courseId) => async (dispatch) => {
     dispatch(setDetailCourse(result.data.data.course));
     return result;
   } catch (err) {
-    console.error("reduxDetailCourse", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -53,7 +62,11 @@ export const postCourseAction = (input) => async (dispatch) => {
     await reduxPostCourse(input);
     return true;
   } catch (err) {
-    console.error("postCourseAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -65,7 +78,11 @@ export const putCourseAction = (input, courseId) => async (dispatch) => {
     await reduxPutCourse(input, courseId);
     return true;
   } catch (err) {
-    console.error("putCourseAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
@@ -77,7 +94,11 @@ export const deleteCourseAction = (courseId) => async (dispatch) => {
     await reduxDeleteCourse(courseId);
     return true;
   } catch (err) {
-    console.error("deleteCourseAction", err);
+    if (err.response.status >= 400 && err.response.status <= 500) {
+      showErrorToast(err.response.data.message);
+    } else {
+      console.error("unexpected Error", err);
+    }
   } finally {
     dispatch(endLoading());
   }
