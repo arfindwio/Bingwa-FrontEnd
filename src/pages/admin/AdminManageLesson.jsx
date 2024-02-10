@@ -14,7 +14,7 @@ import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import { Pagination } from "../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
+import { AdminDataSkeleton } from "../../assets/components/skeleton/AdminDataSkeleton";
 
 // Helper
 import { showSuccessToast } from "../../helper/ToastHelper";
@@ -174,10 +174,6 @@ export const AdminManageLesson = () => {
     }
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <div className="flex">
       <div className="w-1/6">
@@ -186,7 +182,7 @@ export const AdminManageLesson = () => {
       <div className="flex w-5/6 flex-col pb-20">
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
-        <div className="flex w-full justify-between gap-10 px-14 py-10">
+        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
           <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
@@ -242,49 +238,66 @@ export const AdminManageLesson = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storeLessons?.map((value, index) => (
-                      <tr
-                        className="border-b dark:border-gray-700"
-                        key={value?.id}
-                      >
-                        <th
-                          scope="row"
-                          className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white"
+                    {!storeLessons ? (
+                      <tr>
+                        <td
+                          className="px-4 py-3 text-center text-sm
+                  italic"
+                          colSpan={5}
                         >
-                          {index + 1}
-                        </th>
-                        <td className="px-4 py-3">{value?.lessonName}</td>
-                        <td className="px-4 py-3">{value?.videoURL}</td>
-                        <td className="px-4 py-3">{value?.chapter?.name}</td>
-                        <td className="flex gap-1 py-3 text-sm font-semibold text-white">
-                          <button
-                            className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditLesson(value?.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="rounded-full bg-red-400 px-3 py-1"
-                            onClick={() => {
-                              handleDeleteLesson(value?.id);
-                            }}
-                          >
-                            Delete
-                          </button>
+                          Data Not Found
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      storeLessons?.map((value, index) =>
+                        isLoading ? (
+                          <AdminDataSkeleton index={index} tdCount={5} />
+                        ) : (
+                          <tr
+                            className="border-b dark:border-gray-700"
+                            key={value?.id}
+                          >
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
+                              {index + 1}
+                            </td>
+                            <td className="px-4 py-3">{value?.lessonName}</td>
+                            <td className="px-4 py-3">{value?.videoURL}</td>
+                            <td className="px-4 py-3">
+                              {value?.chapter?.name}
+                            </td>
+                            <td className="flex gap-1 py-3 text-sm font-semibold text-white">
+                              <button
+                                className="rounded-full bg-primary px-3 py-1"
+                                onClick={() => handleEditLesson(value?.id)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="rounded-full bg-red-400 px-3 py-1"
+                                onClick={() => {
+                                  handleDeleteLesson(value?.id);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ),
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
-            <div className="mx-auto pt-5 font-semibold">
-              <Pagination
-                nextLink={storePaginationLessons?.links?.next}
-                prevLink={storePaginationLessons?.links?.prev}
-                totalItems={storePaginationLessons?.total_items}
-              />
-            </div>
+            {isLoading ? null : (
+              <div className="mx-auto pt-5 font-semibold">
+                <Pagination
+                  nextLink={storePaginationLessons?.links?.next}
+                  prevLink={storePaginationLessons?.links?.prev}
+                  totalItems={storePaginationLessons?.total_items}
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>

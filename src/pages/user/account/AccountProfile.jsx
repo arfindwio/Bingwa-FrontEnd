@@ -36,7 +36,7 @@ export const AccountProfile = () => {
   const [newCountry, setNewCountry] = useState("");
   const [email, setEmail] = useState("");
 
-  const isMobile = useMediaQuery({ maxWidth: 720 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const storeUserProfile = useSelector((state) => state.users.userAuthenticate);
   const isLoading = useSelector((state) => state.users.loading);

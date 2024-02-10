@@ -24,7 +24,7 @@ export const Notification = () => {
   const storeNotif = useSelector((state) => state.notifications.notifications);
   const isLoading = useSelector((state) => state.notifications.loading);
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   useEffect(() => {
     dispatch(getAllNotificationsAction());

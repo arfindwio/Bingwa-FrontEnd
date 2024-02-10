@@ -19,7 +19,7 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const SearchCourse = () => {
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   // Redux Store
   const storeCourses = useSelector((state) => state.courses.courses.courses);

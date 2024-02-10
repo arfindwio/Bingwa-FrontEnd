@@ -6,7 +6,7 @@ import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import { Pagination } from "../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
+import { AdminDataSkeleton } from "../../assets/components/skeleton/AdminDataSkeleton";
 
 // Redux Actions
 import { getAllUsersAction } from "../../redux/action/users/UsersAction";
@@ -40,10 +40,6 @@ export const AdminDashboard = () => {
     dispatch(getAllPaymentsAction(formatSearch));
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <div className="flex">
       <div className="w-1/6">
@@ -54,7 +50,7 @@ export const AdminDashboard = () => {
           <AdminNavbar onSearch={handleSearch} />
         </div>
         {/* Card */}
-        <div className="flex w-full justify-between gap-10 px-14 py-10">
+        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
           <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
@@ -116,25 +112,31 @@ export const AdminDashboard = () => {
                         </td>
                       </tr>
                     ) : (
-                      storePayments.payments.map((value, index) => (
-                        <tr key={index} className="text-xs">
-                          <td className="px-4 py-3">
-                            {value?.user?.userProfile?.fullName?.split(" ")[0]}
-                          </td>
-                          <td className="px-4 py-3">
-                            {value?.course?.category?.categoryName}
-                          </td>
-                          <td className="px-4 py-3">
-                            {value?.course?.courseName}
-                          </td>
-                          <td className="px-4 py-3">{value?.paymentCode}</td>
-                          <td className="px-4 py-3 font-medium text-green">
-                            {value?.status}
-                          </td>
-                          <td className="px-4 py-3">{value?.methodPayment}</td>
-                          <td className="px-4 py-3">{value?.createdAt}</td>
-                        </tr>
-                      ))
+                      storePayments.payments.map((value, index) =>
+                        isLoading ? (
+                          <AdminDataSkeleton index={index} tdCount={7} />
+                        ) : (
+                          <tr key={index} className="break-all text-xs">
+                            <td className="px-4 py-3">
+                              {value?.user?.userProfile?.fullName.split(" ")[0]}
+                            </td>
+                            <td className="px-4 py-3">
+                              {value?.course?.category?.categoryName}
+                            </td>
+                            <td className="px-4 py-3">
+                              {value?.course?.courseName}
+                            </td>
+                            <td className="px-4 py-3">{value?.paymentCode}</td>
+                            <td className="px-4 py-3 font-medium text-green">
+                              {value?.status}
+                            </td>
+                            <td className="px-4 py-3">
+                              {value?.methodPayment}
+                            </td>
+                            <td className="px-4 py-3">{value?.createdAt}</td>
+                          </tr>
+                        ),
+                      )
                     )}
                   </tbody>
                 </table>
@@ -142,13 +144,15 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Pagination */}
-            <div className="mx-auto pt-5 font-semibold">
-              <Pagination
-                nextLink={storePayments?.pagination?.links.next}
-                prevLink={storePayments?.pagination?.links.prev}
-                totalItems={storePayments?.pagination?.total_items}
-              />
-            </div>
+            {isLoading ? null : (
+              <div className="mx-auto pt-5 font-semibold">
+                <Pagination
+                  nextLink={storePayments?.pagination?.links.next}
+                  prevLink={storePayments?.pagination?.links.prev}
+                  totalItems={storePayments?.pagination?.total_items}
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 
 // Components
@@ -74,7 +75,7 @@ export const DetailCourse = () => {
   const [rating, setRating] = useState(0);
   const [Comment, setComment] = useState("");
 
-  const [open, setOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("about");
   const [dialogReviewOpen, setDialogReviewOpen] = useState(false);
   const [dialogPreparationOpen, setDialogPreparationOpen] = useState(true);
 
@@ -94,7 +95,7 @@ export const DetailCourse = () => {
   const loadingLessons = useSelector((state) => state.lessons.loading);
   const loadingTracking = useSelector((state) => state.trackings.loading);
 
-  const handleOpen = () => setOpen(!open);
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const handleDialogPreparationOpen = () =>
     setDialogPreparationOpen(!dialogPreparationOpen);
@@ -231,6 +232,230 @@ export const DetailCourse = () => {
     handleReview();
   };
 
+  const renderDescCourse = () => {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex justify-between">
+          <p className="text-xl font-bold text-primary">
+            {storeDetailCourses?.category?.categoryName}
+          </p>
+          <div className="flex items-center gap-1">
+            {!storeDetailCourses.averageRating ? null : (
+              <>
+                <FaStar className="text-yellow-700" />
+                <p className="text-lg font-bold">
+                  {Math.floor(storeDetailCourses.averageRating * 10) / 10}
+                  <span className="ms-1 font-medium text-slate-500">
+                    ({storeDetailCourses?.enrollment?.length})
+                  </span>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-col">
+            <p className="text-xl font-bold">
+              {storeDetailCourses?.courseName}
+            </p>
+            <p className="text-lg">{storeDetailCourses?.mentor}</p>
+          </div>
+
+          <div className="flex flex-wrap gap-4 md:gap-10 lg:gap-10">
+            <div className="flex items-center gap-1">
+              <RiShieldStarLine size={20} color="#22c55e" />
+              <p className="text-sm font-semibold text-primary">
+                {storeDetailCourses?.level}
+              </p>
+            </div>
+            <div className="flex items-center gap-1">
+              <LiaBookSolid size={20} color="#22c55e" />
+              <p className="text-sm font-semibold">
+                {storeLessonsCourseId?.length} Module
+              </p>
+            </div>
+            <div className="flex items-center gap-1">
+              <IoTime size={20} color="#22c55e" />
+              <p className="text-sm font-semibold">
+                {storeDetailCourses?.totalDuration} Minute
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full items-center gap-3 ">
+          <div className="flex w-[50%] cursor-pointer items-center justify-center break-all rounded-full bg-green px-6 py-2 text-center font-semibold text-white lg:w-[45%]">
+            Join Telegram Grup
+            <HiChatAlt2 size={20} className="ms-2" />
+          </div>
+          {!token ? null : !enrollmentData || enrollmentData.review ? null : (
+            <div
+              className="w-[50%] cursor-pointer items-center break-all rounded-full border-2 border-green bg-white px-6 py-2 text-center font-semibold text-green lg:w-[45%]"
+              onClick={handleDialogReviewOpen}
+            >
+              Add Review This Course
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderAboutCourse = () => {
+    return (
+      <>
+        <div className="flex flex-col gap-3">
+          {/* Tentang Kelas */}
+          <div className="flex flex-col gap-2">
+            <h1 className="text-xl font-bold">About Course</h1>
+            <p className="indent-8 text-slate-600">
+              {storeDetailCourses?.aboutCourse}
+            </p>
+          </div>
+
+          {/* Kelas ini ditujukan untuk */}
+          <div className="flex flex-col gap-2">
+            <h1 className="text-xl font-bold">This Course is Targeted For</h1>
+            <ol className="list-decimal pl-4">
+              <li>{storeDetailCourses?.targetAudience}</li>
+            </ol>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const renderLearningMaterial = () => {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-row items-center justify-between">
+          {loadingChapters ? (
+            <DetailCourseSkeleton1 />
+          ) : (
+            <>
+              <h1 className="text-xl font-bold">Learning Materials</h1>
+              <div className="flex w-fit items-center justify-between gap-2 rounded-xl">
+                {!token ? (
+                  <div
+                    className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                    onClick={handleEnrollCourse}
+                  >
+                    {storeDetailCourses?.isPremium
+                      ? "Buy Course"
+                      : "Enroll Course"}
+                  </div>
+                ) : (
+                  <>
+                    {!enrollmentData ? (
+                      <div
+                        className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                        onClick={handleEnrollCourse}
+                      >
+                        {storeDetailCourses?.isPremium
+                          ? "Buy Course"
+                          : "Enroll Course"}
+                      </div>
+                    ) : (
+                      <>
+                        <TbProgressCheck
+                          size={30}
+                          color="#22c55e"
+                          className="hidden md:hidden lg:flex"
+                        />
+                        <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                          {Math.floor(enrollmentData?.progress * 100)}%
+                          Completed
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Chapter */}
+        {selectedCourse &&
+          selectedCourse?.chapter &&
+          selectedCourse?.chapter?.map((chapter, index) => (
+            <div key={index} className="flex flex-col gap-4">
+              {loadingChapters ? (
+                <DetailCourseSkeleton2 />
+              ) : (
+                <div className="flex justify-between gap-10 pt-2">
+                  <h2 className="font-semibold text-primary">
+                    Chapter {index + 1} - {chapter?.name}
+                  </h2>
+                  <h2 className="font-semibold text-blue">
+                    {chapter?.duration} Minute
+                  </h2>
+                </div>
+              )}
+              {/* Lesson List */}
+              {chapter?.lesson &&
+                chapter?.lesson?.map((lesson, lessonIndex) => {
+                  const trackingData = storeTrackingsCourseEnroll
+                    ? storeTrackingsCourseEnroll?.find(
+                        (tracking) => tracking?.lessonId === lesson?.id,
+                      )
+                    : null;
+
+                  return (
+                    <div
+                      key={lessonIndex}
+                      className={`flex cursor-pointer items-center justify-between border-b-2 pb-2 ${
+                        !token ? "" : "cursor-pointer"
+                      }`}
+                      onClick={
+                        !token
+                          ? null
+                          : !enrollmentData
+                            ? handleDialogOpen
+                            : () => handleTrackings(lesson.id, lesson.videoURL)
+                      }
+                    >
+                      {loadingLessons ? (
+                        <DetailCourseSkeleton3 />
+                      ) : (
+                        <>
+                          <div className="flex w-full items-center gap-4">
+                            <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
+                              {lessonIndex + 1}
+                            </p>
+                            <p className="font-semibold">
+                              {lesson?.lessonName}
+                            </p>
+                          </div>
+                          <div
+                            className={`${
+                              !token
+                                ? "text-slate-500"
+                                : !enrollmentData
+                                  ? "cursor-pointer text-slate-500"
+                                  : trackingData && trackingData.status
+                                    ? "cursor-pointer text-slate-500"
+                                    : "cursor-pointer text-green"
+                            }`}
+                          >
+                            {!token ? (
+                              <BiSolidLock size={25} />
+                            ) : !enrollmentData ? (
+                              <BiSolidLock size={25} />
+                            ) : (
+                              <FaCirclePlay size={25} />
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+          ))}
+      </div>
+    );
+  };
+
   return (
     <>
       <NavbarCourse />
@@ -240,310 +465,112 @@ export const DetailCourse = () => {
         <DetailCourseSkeleton />
       ) : (
         <>
-          <div className="z-20 flex min-h-screen px-0 py-6 md:px-4 lg:px-24">
-            {/* Left Container */}
-            <div className="mt-16 flex w-full flex-col px-4 md:w-3/5 lg:w-3/5">
-              {/* Button Back */}
-              <div className="flex w-full items-center gap-2 py-4 pt-6">
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    navigate(window.history.back());
-                  }}
-                >
-                  <GoArrowLeft size={30} />
-                </div>
-                <div className="flex w-full justify-between">
-                  <div
-                    className="cursor-pointer font-semibold"
-                    onClick={() => {
-                      navigate(window.history.back());
-                    }}
-                  >
-                    Other Courses
-                  </div>
-                  <div
-                    className="cursor-pointer font-bold text-primary md:hidden lg:hidden"
-                    onClick={handleOpen}
-                  >
-                    Chapter
-                  </div>
-                </div>
-              </div>
-
-              {/* Container Desc Kelas */}
-              <div className="flex flex-col gap-3">
-                <div className="flex justify-between">
-                  <div className="text-xl font-bold text-primary">
-                    {storeDetailCourses?.category?.categoryName}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {!storeDetailCourses.averageRating ? null : (
-                      <>
-                        <div className="text-yellow-700">
-                          <FaStar />
-                        </div>
-                        <div className="text-lg font-bold">
-                          {Math.floor(storeDetailCourses.averageRating * 10) /
-                            10}
-                          <span className="ms-1 font-medium text-slate-500">
-                            ({storeDetailCourses?.enrollment?.length})
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="text-xl font-bold">
-                    {storeDetailCourses?.courseName}
-                  </div>
-                  <div className="text-lg">{storeDetailCourses?.mentor}</div>
-                </div>
-                <div className="flex gap-4 md:gap-10 lg:gap-10">
-                  <div className="flex items-center gap-1">
-                    <RiShieldStarLine size={20} color="#22c55e" />
-                    <div className="text-sm font-semibold text-primary">
-                      {storeDetailCourses?.level}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <LiaBookSolid size={20} color="#22c55e" />
-                    <div className="text-sm font-semibold">
-                      {storeLessonsCourseId?.length} Module
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <IoTime size={20} color="#22c55e" />
-                    <div className="text-sm font-semibold">
-                      {storeDetailCourses?.totalDuration} Minute
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-3 pb-1 pt-3">
-                <div className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-green px-6 py-2 text-white">
-                  <div className="font-semibold">Join Telegram Grup</div>
-                  <div>
-                    <HiChatAlt2 size={20} />
-                  </div>
-                </div>
-                {!token ? null : !enrollmentData ||
-                  enrollmentData.review ? null : (
-                  <div
-                    className="flex w-fit cursor-pointer items-center gap-2 rounded-xl border-2 border-green bg-white px-6 py-2 text-green"
-                    onClick={handleDialogReviewOpen}
-                  >
-                    <div className="font-semibold">Add Review This Course</div>
-                  </div>
-                )}
-              </div>
-
-              {/* Section Detail Kelas */}
-              <div className="flex flex-col">
-                {!videoLink ? (
-                  <div
-                    className="my-4 flex h-[20rem] items-center justify-center rounded-2xl border-2 shadow-md"
-                    style={{
-                      backgroundImage: `url(${storeDetailCourses?.courseImg})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  >
-                    <div className="cursor-pointer rounded-full bg-white p-1 text-primary">
-                      <FaCirclePlay
-                        size={60}
-                        onClick={() =>
-                          window.open(storeDetailCourses?.videoURL, "_blank")
-                        }
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative my-3 h-0 overflow-hidden rounded-2xl border-2 pb-[56.25%] shadow-lg">
-                    <iframe
-                      title="YouTube Video"
-                      className="absolute left-0 top-0 h-full w-full"
-                      src={`https://www.youtube.com/embed/${videoLink}`}
-                      frameBorder="0"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                )}
-
-                <div className="flex flex-col gap-3">
-                  {/* Tentang Kelas */}
-                  <div className="flex flex-col gap-2">
-                    <h1 className="text-xl font-bold">About Course</h1>
-                    <p className="text-slate-600">
-                      {storeDetailCourses?.aboutCourse}
-                    </p>
-                  </div>
-
-                  {/* Kelas ini ditujukan untuk */}
-                  <div className="flex flex-col gap-2">
-                    <h1 className="text-xl font-bold">
-                      This course is targeted for
-                    </h1>
-                    <ol className="list-decimal pl-4">
-                      <li>{storeDetailCourses?.targetAudience}</li>
-                    </ol>
-                  </div>
-                </div>
+          <div className="flex min-h-screen flex-col px-0 pb-6 pt-20 md:px-4 lg:px-28">
+            {/* Button Back */}
+            <div className="w-fit pb-2 pt-4 md:pb-0 md:pt-6">
+              <div
+                className="flex cursor-pointer items-center gap-2 font-semibold"
+                onClick={() => {
+                  navigate(window.history.back());
+                }}
+              >
+                <GoArrowLeft size={30} />
+                Other Courses
               </div>
             </div>
+            {/* Left Container */}
+            <div className="flex">
+              <div className="flex w-full flex-col px-4 md:w-3/5 lg:w-3/5">
+                {isMobile ? (
+                  ""
+                ) : (
+                  <div className="rounded-lg border-2 bg-secondary px-6 py-4 shadow-sm">
+                    {renderDescCourse()}
+                  </div>
+                )}
 
-            {/* Right Container */}
-            <div className="mt-20 hidden w-2/5 flex-col md:flex lg:flex">
-              {/* Sidebar */}
-              <div className="mt-8 flex flex-col gap-6 rounded-2xl p-6 shadow-lg">
-                {/* Materi Belajar */}
-                <div className="flex justify-between">
-                  {loadingChapters ? (
-                    <DetailCourseSkeleton1 />
+                {/* Section Detail Kelas */}
+                <div className="flex flex-col">
+                  {!videoLink ? (
+                    <div
+                      className="my-3 flex h-[20rem] items-center justify-center rounded-2xl border-2 shadow-md"
+                      style={{
+                        backgroundImage: `url(${storeDetailCourses?.courseImg})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="cursor-pointer rounded-full bg-white p-1 text-primary">
+                        <FaCirclePlay
+                          size={60}
+                          onClick={() =>
+                            window.open(storeDetailCourses?.videoURL, "_blank")
+                          }
+                        />
+                      </div>
+                    </div>
                   ) : (
+                    <div className="relative my-3 h-0 overflow-hidden rounded-2xl border-2 pb-[56.25%] shadow-lg">
+                      <iframe
+                        title="YouTube Video"
+                        className="absolute left-0 top-0 h-full w-full"
+                        src={`https://www.youtube.com/embed/${videoLink}`}
+                        frameBorder="0"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  )}
+
+                  {isMobile ? (
                     <>
-                      <h1 className="text-xl font-bold">Learning Materials</h1>
-                      <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-                        {!token ? (
-                          <div
-                            className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                            onClick={handleEnrollCourse}
+                      <div className="mb-4 mt-2 rounded-lg bg-secondary px-6 py-4">
+                        {renderDescCourse()}
+                      </div>
+                      <div className="border-t-lg w-full overflow-hidden rounded-t-lg border-2">
+                        <div className="flex w-full">
+                          <p
+                            className={`w-1/2 cursor-pointer  py-4 text-center text-lg font-semibold ${
+                              selectedTab === "about"
+                                ? "bg-primary text-white"
+                                : "bg-secondary text-blue"
+                            }`}
+                            onClick={() => {
+                              setSelectedTab("about");
+                            }}
                           >
-                            {storeDetailCourses?.isPremium
-                              ? "Buy Course"
-                              : "Enroll Course"}
-                          </div>
-                        ) : (
-                          <>
-                            {!enrollmentData ? (
-                              <div
-                                className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                                onClick={handleEnrollCourse}
-                              >
-                                {storeDetailCourses?.isPremium
-                                  ? "Buy Course"
-                                  : "Enroll Course"}
-                              </div>
-                            ) : (
-                              <>
-                                <TbProgressCheck
-                                  size={30}
-                                  color="#22c55e"
-                                  className="hidden md:hidden lg:flex"
-                                />
-                                <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                                  {Math.floor(enrollmentData?.progress * 100)}%
-                                  Completed
-                                </div>
-                              </>
-                            )}
-                          </>
-                        )}
+                            About
+                          </p>
+                          <p
+                            className={`w-1/2 cursor-pointer  py-4 text-center text-lg font-semibold ${
+                              selectedTab === "material"
+                                ? "bg-primary text-white"
+                                : "bg-secondary text-blue"
+                            }`}
+                            onClick={() => {
+                              setSelectedTab("material");
+                            }}
+                          >
+                            Material Course
+                          </p>
+                        </div>
+                        <div className="px-6 py-4">
+                          {selectedTab === "about"
+                            ? renderAboutCourse()
+                            : renderLearningMaterial()}
+                        </div>
                       </div>
                     </>
+                  ) : (
+                    renderAboutCourse()
                   )}
                 </div>
+              </div>
 
-                {/* Chapter */}
-                {selectedCourse &&
-                  selectedCourse?.chapter &&
-                  selectedCourse?.chapter?.map((chapter, index) => (
-                    <div key={index} className="flex flex-col gap-4">
-                      {loadingChapters ? (
-                        <DetailCourseSkeleton2 />
-                      ) : (
-                        <div className="flex justify-between gap-10">
-                          <h2 className="font-semibold text-primary">
-                            Chapter {index + 1} - {chapter?.name}
-                          </h2>
-                          <h2 className="font-semibold text-blue">
-                            {chapter?.duration} Minute
-                          </h2>
-                        </div>
-                      )}
-                      {/* Lesson List */}
-                      {chapter?.lesson &&
-                        chapter?.lesson?.map((lesson, lessonIndex) => {
-                          const trackingData = storeTrackingsCourseEnroll
-                            ? storeTrackingsCourseEnroll?.find(
-                                (tracking) => tracking?.lessonId === lesson?.id,
-                              )
-                            : null;
-
-                          return (
-                            <div
-                              key={lessonIndex}
-                              className="flex items-center justify-between"
-                            >
-                              {loadingLessons ? (
-                                <DetailCourseSkeleton3 />
-                              ) : (
-                                <>
-                                  <div
-                                    className={`flex w-full ${
-                                      !token
-                                        ? ""
-                                        : !enrollmentData
-                                          ? "cursor-pointer"
-                                          : "cursor-pointer"
-                                    } items-center gap-4`}
-                                    onClick={
-                                      !token
-                                        ? null
-                                        : !enrollmentData
-                                          ? handleDialogOpen
-                                          : () =>
-                                              handleTrackings(
-                                                lesson.id,
-                                                lesson.videoURL,
-                                              )
-                                    }
-                                  >
-                                    <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                                      {lessonIndex + 1}
-                                    </p>
-                                    <p className="font-semibold">
-                                      {lesson?.lessonName}
-                                    </p>
-                                  </div>
-                                  <div
-                                    className={`${
-                                      !token
-                                        ? "text-slate-500"
-                                        : !enrollmentData
-                                          ? "cursor-pointer text-slate-500"
-                                          : trackingData && trackingData.status
-                                            ? "cursor-pointer text-slate-500"
-                                            : "cursor-pointer text-green"
-                                    }`}
-                                    onClick={
-                                      !token
-                                        ? null
-                                        : !enrollmentData
-                                          ? handleDialogOpen
-                                          : () =>
-                                              handleTrackings(
-                                                lesson.id,
-                                                lesson.videoURL,
-                                              )
-                                    }
-                                  >
-                                    {!token ? (
-                                      <BiSolidLock size={25} />
-                                    ) : !enrollmentData ? (
-                                      <BiSolidLock size={25} />
-                                    ) : (
-                                      <FaCirclePlay size={25} />
-                                    )}
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          );
-                        })}
-                    </div>
-                  ))}
+              {/* Right Container */}
+              {/* Sidebar */}
+              <div className="hidden h-fit w-2/5 gap-6  rounded-2xl border-2 bg-white px-6 pb-8 pt-4 shadow-lg md:flex md:flex-col">
+                {/* Materi Belajar */}
+                {isMobile ? "" : renderLearningMaterial()}
               </div>
             </div>
           </div>
@@ -702,145 +729,6 @@ export const DetailCourse = () => {
                 <FaArrowCircleRight size={17} className="text-white" />
               </div>
             </DialogFooter>
-          </Dialog>
-
-          {/* Dialog Chapter & Lesson */}
-          <Dialog open={open} handler={handleOpen} size="xxl">
-            <DialogHeader className="-mb-6 flex justify-end pr-4 pt-10">
-              <IoClose size={30} onClick={handleOpen} />
-            </DialogHeader>
-            <DialogBody className="bg-white">
-              {/* Materi Belajar */}
-              <div className="flex justify-between py-4">
-                <h1 className="text-xl font-bold">Materi Belajar</h1>
-                <div className="flex w-fit items-center justify-between gap-2 rounded-3xl">
-                  {!token ? (
-                    <div
-                      className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                      onClick={handleEnrollCourse}
-                    >
-                      {storeDetailCourses.isPremium
-                        ? "Buy Course"
-                        : "Enroll Course"}
-                    </div>
-                  ) : (
-                    <div>
-                      {!enrollmentData ? (
-                        <div
-                          className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                          onClick={handleEnrollCourse}
-                        >
-                          {storeDetailCourses?.isPremium
-                            ? "Buy Course"
-                            : "Enroll Course"}
-                        </div>
-                      ) : (
-                        <div className="flex gap-2">
-                          <TbProgressCheck size={30} color="#22c55e" />
-                          <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                            {Math.floor(enrollmentData?.progress * 100)}%
-                            Completed
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Chapter */}
-              {selectedCourse &&
-                selectedCourse?.chapter &&
-                selectedCourse?.chapter?.map((chapter, index) => (
-                  <div key={index} className="flex flex-col gap-4">
-                    <div className="flex justify-between px-2 pt-6 text-lg">
-                      <h2 className="font-bold text-primary">
-                        Chapter {index + 1}
-                      </h2>
-                      <h2 className="font-bold text-blue">
-                        {chapter.duration} Minute
-                      </h2>
-                    </div>
-                    <h2 className="text-center font-bold text-black">
-                      {chapter.name}
-                    </h2>
-                    {/* Lesson List */}
-                    {chapter?.lesson &&
-                      chapter?.lesson?.map((lesson, lessonIndex) => {
-                        const trackingData = storeTrackingsCourseEnroll
-                          ? storeTrackingsCourseEnroll?.find(
-                              (tracking) => tracking?.lessonId === lesson?.id,
-                            )
-                          : null;
-
-                        return (
-                          <div
-                            key={lessonIndex}
-                            className="flex items-center justify-between"
-                          >
-                            <div
-                              className={`flex w-full ${
-                                !token
-                                  ? ""
-                                  : !enrollmentData
-                                    ? "cursor-pointer"
-                                    : "cursor-pointer"
-                              }items-center gap-4`}
-                              onClick={
-                                !token
-                                  ? null
-                                  : !enrollmentData
-                                    ? handleDialogOpen
-                                    : () =>
-                                        handleTrackings(
-                                          lesson.id,
-                                          lesson.videoURL,
-                                        )
-                              }
-                            >
-                              <p className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-bold">
-                                {lessonIndex + 1}
-                              </p>
-                              <p className="font-semibold">
-                                {lesson?.lessonName}
-                              </p>
-                            </div>
-                            <div
-                              className={`${
-                                !token
-                                  ? "text-slate-500"
-                                  : !enrollmentData
-                                    ? "cursor-pointer text-slate-500"
-                                    : trackingData && trackingData.status
-                                      ? "cursor-pointer text-slate-500"
-                                      : "cursor-pointer text-green"
-                              }`}
-                              onClick={
-                                !token
-                                  ? null
-                                  : !enrollmentData
-                                    ? handleDialogOpen
-                                    : () =>
-                                        handleTrackings(
-                                          lesson.id,
-                                          lesson.videoURL,
-                                        )
-                              }
-                            >
-                              {!token ? (
-                                <BiSolidLock size={25} />
-                              ) : !enrollmentData ? (
-                                <BiSolidLock size={25} />
-                              ) : (
-                                <FaCirclePlay size={25} />
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ))}
-            </DialogBody>
           </Dialog>
         </>
       )}

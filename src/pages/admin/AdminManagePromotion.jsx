@@ -14,7 +14,7 @@ import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import { Pagination } from "../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
+import { AdminDataSkeleton } from "../../assets/components/skeleton/AdminDataSkeleton";
 
 // Helper
 import { showSuccessToast } from "../../helper/ToastHelper";
@@ -202,10 +202,6 @@ export const AdminManagePromotion = () => {
     }
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <div className="flex">
       <div className="w-1/6">
@@ -214,7 +210,7 @@ export const AdminManagePromotion = () => {
       <div className="flex w-5/6 flex-col pb-20">
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
-        <div className="flex w-full justify-between gap-10 px-14 py-10">
+        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
           <AdminCard title={"Active Users"} count={storeCountUsers.length} />
           <AdminCard
             title={"Active Class"}
@@ -270,49 +266,63 @@ export const AdminManagePromotion = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storePromotions.map((value, index) => (
-                      <tr
-                        className="border-b dark:border-gray-700"
-                        key={value?.id}
-                      >
-                        <th
-                          scope="row"
-                          className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white"
+                    {!storePromotions ? (
+                      <tr>
+                        <td
+                          className="px-4 py-3 text-center text-sm
+                    italic"
+                          colSpan={5}
                         >
-                          {index + 1}
-                        </th>
-                        <td className="px-4 py-3">{value?.discount * 100}%</td>
-                        <td className="px-4 py-3">{value?.startDate}</td>
-                        <td className="px-4 py-3">{value?.endDate}</td>
-                        <td className="flex gap-1 py-3 text-sm font-semibold text-white">
-                          <button
-                            className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditPromotion(value?.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="rounded-full bg-red-400 px-3 py-1"
-                            onClick={() => {
-                              handleDeletePromotion(value?.id);
-                            }}
-                          >
-                            Delete
-                          </button>
+                          Data Not Found
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      storePromotions.map((value, index) =>
+                        isLoading ? (
+                          <AdminDataSkeleton index={index} tdCount={5} />
+                        ) : (
+                          <tr className="dark:border-gray-700" key={value?.id}>
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
+                              {index + 1}
+                            </td>
+                            <td className="px-4 py-3">
+                              {value?.discount * 100}%
+                            </td>
+                            <td className="px-4 py-3">{value?.startDate}</td>
+                            <td className="px-4 py-3">{value?.endDate}</td>
+                            <td className="flex gap-1 py-3 text-sm font-semibold text-white">
+                              <button
+                                className="rounded-full bg-primary px-3 py-1"
+                                onClick={() => handleEditPromotion(value?.id)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="rounded-full bg-red-400 px-3 py-1"
+                                onClick={() => {
+                                  handleDeletePromotion(value?.id);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ),
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
-            <div className="mx-auto pt-5 font-semibold">
-              <Pagination
-                nextLink={storePaginationPromotions?.links?.next}
-                prevLink={storePaginationPromotions?.links?.prev}
-                totalItems={storePaginationPromotions?.total_items}
-              />
-            </div>
+            {isLoading ? null : (
+              <div className="mx-auto pt-5 font-semibold">
+                <Pagination
+                  nextLink={storePaginationPromotions?.links?.next}
+                  prevLink={storePaginationPromotions?.links?.prev}
+                  totalItems={storePaginationPromotions?.total_items}
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>

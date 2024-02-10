@@ -14,7 +14,7 @@ import { AdminNavbar } from "../../assets/components/admin/AdminNavbar";
 import { AdminSidebar } from "../../assets/components/admin/AdminSidebar";
 import { AdminCard } from "../../assets/components/admin/AdminCard";
 import { Pagination } from "../../assets/components/pagination/Pagination";
-import LoadingSpinner from "../../assets/components/loading/LoadingSpinner";
+import { AdminDataSkeleton } from "../../assets/components/skeleton/AdminDataSkeleton";
 
 // Helper
 import { showSuccessToast } from "../../helper/ToastHelper";
@@ -173,10 +173,6 @@ export const AdminManageChapter = () => {
     }
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
     <div className="flex">
       <div className="w-1/6">
@@ -185,7 +181,7 @@ export const AdminManageChapter = () => {
       <div className="flex w-5/6 flex-col pb-20">
         <AdminNavbar onSearch={handleSearch} />
         {/* Card */}
-        <div className="flex w-full justify-between gap-10 px-14 py-10">
+        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
           <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
           <AdminCard
             title={"Active Class"}
@@ -241,53 +237,70 @@ export const AdminManageChapter = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {storeChapters?.map((value, index) => (
-                      <tr
-                        className="border-b dark:border-gray-700"
-                        key={value?.id}
-                      >
-                        <th
-                          scope="row"
-                          className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white"
+                    {!storeChapters ? (
+                      <tr>
+                        <td
+                          className="px-4 py-3 text-center text-sm
+                    italic"
+                          colSpan={5}
                         >
-                          {index + 1}
-                        </th>
-                        <td className="px-4 py-3">{value?.name}</td>
-                        <td className="px-4 py-3">{value?.duration} Minute</td>
-                        <td className="px-4 py-3">
-                          {value?.course.courseName}
-                        </td>
-                        <td className="flex gap-1 py-3 text-sm font-semibold text-white">
-                          <button
-                            className="rounded-full bg-primary px-3 py-1"
-                            onClick={() => handleEditChapter(value?.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="rounded-full bg-red-400 px-3 py-1"
-                            onClick={() => {
-                              handleDeleteChapter(value?.id);
-                            }}
-                          >
-                            Delete
-                          </button>
+                          Data Not Found
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      storeChapters?.map((value, index) =>
+                        isLoading ? (
+                          <AdminDataSkeleton index={index} tdCount={5} />
+                        ) : (
+                          <tr
+                            className="border-b dark:border-gray-700"
+                            key={value?.id}
+                          >
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
+                              {index + 1}
+                            </td>
+                            <td className="px-4 py-3">{value?.name}</td>
+                            <td className="px-4 py-3">
+                              {value?.duration} Minute
+                            </td>
+                            <td className="px-4 py-3">
+                              {value?.course.courseName}
+                            </td>
+                            <td className="flex gap-1 py-3 text-sm font-semibold text-white">
+                              <button
+                                className="rounded-full bg-primary px-3 py-1"
+                                onClick={() => handleEditChapter(value?.id)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="rounded-full bg-red-400 px-3 py-1"
+                                onClick={() => {
+                                  handleDeleteChapter(value?.id);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ),
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
 
             {/* pagination */}
-            <div className="mx-auto pt-5 font-semibold">
-              <Pagination
-                nextLink={storePaginationChapters?.links?.next}
-                prevLink={storePaginationChapters?.links?.prev}
-                totalItems={storePaginationChapters?.total_items}
-              />
-            </div>
+            {isLoading ? null : (
+              <div className="mx-auto pt-5 font-semibold">
+                <Pagination
+                  nextLink={storePaginationChapters?.links?.next}
+                  prevLink={storePaginationChapters?.links?.prev}
+                  totalItems={storePaginationChapters?.total_items}
+                />
+              </div>
+            )}
           </div>
         </section>
       </div>
