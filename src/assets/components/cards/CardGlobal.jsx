@@ -35,7 +35,6 @@ export const CardGlobal = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // console.log(enrollmentData);
   const isLoadingCourses = useSelector((state) => state.courses.loading);
   const isLoadingLessons = useSelector((state) => state.lessons.loading);
   const isLoadingEnrollments = useSelector(

@@ -302,14 +302,11 @@ export const AllCourse = () => {
 
                     const enrollmentData = storeEnrollments?.find(
                       (enrollCourse) => {
-                        console.log(value);
                         return (
                           Number(enrollCourse.courseId) === Number(value.id)
                         );
                       },
                     );
-
-                    // console.log(enrollmentData);
 
                     return (
                       <CardGlobal

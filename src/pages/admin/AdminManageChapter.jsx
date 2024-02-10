@@ -49,6 +49,7 @@ export const AdminManageChapter = () => {
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
@@ -59,11 +60,18 @@ export const AdminManageChapter = () => {
     (state) => state.chapters.chapters.pagination,
   );
   const storeCourses = useSelector((state) => state.courses.courses.courses);
-  const isLoading = useSelector((state) => state.chapters.loading);
+
+  const loadingChapters = useSelector((state) => state.chapters.loading);
+  const loadingCourses = useSelector((state) => state.courses.loading);
+  const loadingUsers = useSelector((state) => state.users.loading);
 
   const countPremiumCourse = storeCourses.filter(
     (course) => course.isPremium === true,
   );
+
+  open
+    ? (document.body.style.overflow = "hidden")
+    : (document.body.style.overflow = "auto");
 
   useEffect(() => {
     getAllData();
@@ -81,6 +89,7 @@ export const AdminManageChapter = () => {
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
+  const handleOpen = (openValue) => setOpen(openValue);
 
   // New Chapter
   const handleNewChapter = async () => {
@@ -175,22 +184,28 @@ export const AdminManageChapter = () => {
 
   return (
     <div className="flex">
-      <div className="w-1/6">
+      <div className="hidden lg:flex lg:w-1/6">
         <AdminSidebar />
       </div>
-      <div className="flex w-5/6 flex-col pb-20">
-        <AdminNavbar onSearch={handleSearch} />
+      <div className="flex w-full flex-col pb-20 lg:w-5/6">
+        <AdminNavbar onSearch={handleSearch} onOpen={handleOpen} />
         {/* Card */}
-        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
+        <div className="flex w-full flex-wrap justify-between gap-2 px-4 py-10 md:gap-10 lg:px-14">
+          <AdminCard
+            title={"Active Users"}
+            count={storeCountUsers?.length}
+            isLoading={loadingUsers && loadingCourses}
+          />
           <AdminCard
             title={"Active Class"}
             count={storeCourses?.length}
+            isLoading={loadingUsers && loadingCourses}
             cardColor={"bg-green"}
           />
           <AdminCard
             title={"Premium Class"}
             count={countPremiumCourse?.length}
+            isLoading={loadingUsers && loadingCourses}
             cardColor={"bg-primary"}
           />
         </div>
@@ -198,21 +213,19 @@ export const AdminManageChapter = () => {
         {/* Table */}
         <section className="bg-white dark:bg-gray-900">
           <div className="mx-auto px-4 lg:px-12">
-            <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-              <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
-                <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Manage Chapter</h2>
-                </div>
-                <div className="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0">
-                  <div className="flex w-full items-center space-x-3 md:w-auto">
-                    <button
-                      className="flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-2 text-white transition-all hover:bg-primary-hover"
-                      onClick={handleDialogCreate}
-                    >
-                      <FiPlusCircle size={30} />
-                      <span className="font-semibold">Create</span>
-                    </button>
-                  </div>
+            <div className="relative overflow-hidden border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+              <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:gap-0">
+                <h2 className="w-fit break-words text-xl font-semibold">
+                  Manage Chapter
+                </h2>
+                <div className="flex w-fit items-center ">
+                  <button
+                    className="flex items-center justify-center gap-2 rounded-full bg-primary px-3 py-2 text-white hover:bg-primary-hover"
+                    onClick={handleDialogCreate}
+                  >
+                    <FiPlusCircle size={30} />
+                    <span className="font-semibold">Create</span>
+                  </button>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -249,14 +262,11 @@ export const AdminManageChapter = () => {
                       </tr>
                     ) : (
                       storeChapters?.map((value, index) =>
-                        isLoading ? (
+                        loadingChapters ? (
                           <AdminDataSkeleton index={index} tdCount={5} />
                         ) : (
-                          <tr
-                            className="border-b dark:border-gray-700"
-                            key={value?.id}
-                          >
-                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
+                          <tr className="dark:border-gray-700" key={value?.id}>
+                            <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
                               {index + 1}
                             </td>
                             <td className="px-4 py-3">{value?.name}</td>
@@ -266,7 +276,7 @@ export const AdminManageChapter = () => {
                             <td className="px-4 py-3">
                               {value?.course.courseName}
                             </td>
-                            <td className="flex gap-1 py-3 text-sm font-semibold text-white">
+                            <td className="flex gap-1 px-4 py-3 text-sm font-semibold text-white">
                               <button
                                 className="rounded-full bg-primary px-3 py-1"
                                 onClick={() => handleEditChapter(value?.id)}
@@ -292,7 +302,7 @@ export const AdminManageChapter = () => {
             </div>
 
             {/* pagination */}
-            {isLoading ? null : (
+            {loadingChapters ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
                   nextLink={storePaginationChapters?.links?.next}
