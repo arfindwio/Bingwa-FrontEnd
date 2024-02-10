@@ -36,7 +36,7 @@ export const NavbarCourse = () => {
   const location = useLocation();
 
   const [searchInput, setSearchInput] = useState("");
-  const [openMenu, setOpenMenu] = useState("");
+  const [openMenu, setOpenMenu] = useState(false);
 
   const currentPath = location.pathname;
 
