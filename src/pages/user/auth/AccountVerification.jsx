@@ -27,7 +27,6 @@ export const AccountVerification = () => {
 
   const handleSave = async () => {
     const loadingToastId = showLoadingToast("Loading ...");
-    console.log(Email);
 
     const verifyAccount = await dispatch(
       putResendOtp({

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
@@ -16,15 +16,25 @@ import { getAllPaymentsAction } from "../../redux/action/payments/PaymentsAction
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
 
+  const [open, setOpen] = useState(false);
+
   // Redux Store
   const storeCountUsers = useSelector((state) => state.users.users);
-  const storeCountCourses = useSelector((state) => state.users.users);
+  const storeCountCourses = useSelector(
+    (state) => state.courses.courses.courses,
+  );
   const storePayments = useSelector((state) => state.payments.payments);
-  const isLoading = useSelector((state) => state.payments.loading);
+  const loadingPayments = useSelector((state) => state.payments.loading);
+  const loadingUsers = useSelector((state) => state.users.loading);
+  const loadingCourses = useSelector((state) => state.courses.loading);
 
   const countPremiumCourse = storeCountCourses.filter(
     (course) => course.isPremium === true,
   );
+
+  open
+    ? (document.body.style.overflow = "hidden")
+    : (document.body.style.overflow = "auto");
 
   useEffect(() => {
     getAllData();
@@ -40,38 +50,44 @@ export const AdminDashboard = () => {
     dispatch(getAllPaymentsAction(formatSearch));
   };
 
+  const handleOpen = (openValue) => setOpen(openValue);
+
   return (
     <div className="flex">
-      <div className="w-1/6">
+      <div className="hidden lg:flex lg:w-1/6">
         <AdminSidebar />
       </div>
-      <div className="flex w-5/6 flex-col pb-20">
-        <div>
-          <AdminNavbar onSearch={handleSearch} />
-        </div>
+      <div className="flex w-full flex-col pb-20 lg:w-5/6">
+        <AdminNavbar onSearch={handleSearch} onOpen={handleOpen} />
         {/* Card */}
-        <div className="flex w-full flex-wrap justify-between gap-2 break-all px-14 py-10 sm:break-normal md:gap-10">
-          <AdminCard title={"Active Users"} count={storeCountUsers?.length} />
+        <div className="flex w-full flex-wrap justify-between gap-2 px-4 py-10 md:gap-10 lg:px-14">
+          <AdminCard
+            title={"Active Users"}
+            count={storeCountUsers?.length}
+            isLoading={loadingCourses && loadingUsers}
+          />
           <AdminCard
             title={"Active Class"}
             count={storeCountCourses?.length}
             cardColor={"bg-green"}
+            isLoading={loadingCourses && loadingUsers}
           />
           <AdminCard
             title={"Premium Class"}
             count={countPremiumCourse?.length}
             cardColor={"bg-primary"}
+            isLoading={loadingCourses && loadingUsers}
           />
         </div>
 
         {/* Table */}
-        <section className="bg-white dark:bg-gray-900">
+        <section className="px- bg-white dark:bg-gray-900">
           <div className="mx-auto px-4 lg:px-12">
-            <div className="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-              <div className="flex flex-col items-center justify-between space-y-3 p-4 md:flex-row md:space-x-4 md:space-y-0">
-                <div className="w-full md:w-1/2">
-                  <h2 className="text-xl font-semibold">Payment Status</h2>
-                </div>
+            <div className="relative overflow-hidden border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+              <div className="flex w-full items-center px-4 py-6">
+                <h2 className="break-words text-xl font-semibold">
+                  Payment Status
+                </h2>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-gray-500 dark:text-gray-400">
@@ -113,10 +129,10 @@ export const AdminDashboard = () => {
                       </tr>
                     ) : (
                       storePayments.payments.map((value, index) =>
-                        isLoading ? (
+                        loadingPayments ? (
                           <AdminDataSkeleton index={index} tdCount={7} />
                         ) : (
-                          <tr key={index} className="break-all text-xs">
+                          <tr key={index} className="text-xs">
                             <td className="px-4 py-3">
                               {value?.user?.userProfile?.fullName.split(" ")[0]}
                             </td>
@@ -144,7 +160,7 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Pagination */}
-            {isLoading ? null : (
+            {loadingPayments ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
                   nextLink={storePayments?.pagination?.links.next}
