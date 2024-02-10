@@ -36,6 +36,7 @@ export const NavbarCourse = () => {
   const location = useLocation();
 
   const [searchInput, setSearchInput] = useState("");
+  const [openMenu, setOpenMenu] = useState("");
 
   const currentPath = location.pathname;
 
@@ -154,11 +155,10 @@ export const NavbarCourse = () => {
               <div className="text-lg">Account</div>
             </div>
           ) : (
-            <Menu>
+            <Menu open={openMenu} handler={setOpenMenu} allowHover>
               <MenuHandler>
                 <Button
                   className="bg-primary p-0 shadow-none hover:shadow-none"
-                  ripple={false}
                   size="sm"
                 >
                   <LuUser size={30} />

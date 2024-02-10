@@ -33,7 +33,7 @@ export const HomePage = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [shuffledCourses, setShuffledCourses] = useState([]);
 
-  const isMobile = useMediaQuery({ maxWidth: 719 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   // Redux Store
   const storeCategories = useSelector(

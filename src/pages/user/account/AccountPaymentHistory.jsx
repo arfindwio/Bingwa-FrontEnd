@@ -19,7 +19,7 @@ import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction
 export const AccountPaymentHistory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeHistoryPayments = useSelector(

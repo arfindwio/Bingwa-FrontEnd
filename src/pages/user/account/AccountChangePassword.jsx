@@ -22,7 +22,7 @@ export const AccountChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const isMobile = useMediaQuery({ maxWidth: 720 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");

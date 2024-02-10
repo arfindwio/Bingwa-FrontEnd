@@ -13,7 +13,7 @@ let currentPage = 1;
 export const Pagination = ({ nextLink, prevLink, totalItems }) => {
   const dispatch = useDispatch();
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   if (!nextLink && !prevLink) return null;
 

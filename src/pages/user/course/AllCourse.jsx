@@ -51,7 +51,7 @@ export const AllCourse = () => {
   );
   const isLoadingCourses = useSelector((state) => state.courses.loading);
 
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
   const categoryFilter = CookieStorage.get(CookiesKeys.CategoryFilter);
