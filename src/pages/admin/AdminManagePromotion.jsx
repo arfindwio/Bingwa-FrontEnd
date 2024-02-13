@@ -241,7 +241,7 @@ export const AdminManagePromotion = () => {
         {/* Table */}
         <section className="bg-white dark:bg-gray-900">
           <div className="mx-auto px-4 lg:px-12">
-            <div className="relative overflow-hidden border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div className="relative border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:gap-0">
                 <h2 className="w-fit break-words text-xl font-semibold">
                   Manage Promotion
@@ -291,7 +291,9 @@ export const AdminManagePromotion = () => {
                     ) : (
                       storePromotions.map((value, index) =>
                         loadingPromotions ? (
-                          <AdminDataSkeleton index={index} tdCount={5} />
+                          <tr key={index} className="animate-pulse">
+                            <AdminDataSkeleton tdCount={5} />
+                          </tr>
                         ) : (
                           <tr className="dark:border-gray-700" key={value?.id}>
                             <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
@@ -340,8 +342,8 @@ export const AdminManagePromotion = () => {
       </div>
 
       {/* Dialog Create */}
-      <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
-        <DialogHeader className="flex flex-col">
+      <Dialog open={dialogCreate} handler={handleDialogCreate} size="md">
+        <DialogHeader className="flex flex-col bg-white">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Create Promotion</h1>
             <IoCloseSharp
@@ -352,56 +354,51 @@ export const AdminManagePromotion = () => {
           </div>
         </DialogHeader>
         <DialogBody
-          className="flex space-x-6 px-10 py-10"
+          className="flex flex-col justify-center gap-3 bg-white px-10"
           onKeyPress={(e) => (e.key === "Enter" ? handleNewPromotion() : "")}
           tabIndex={0}
         >
-          {/* Left Column */}
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">Discount</span>
-              <input
-                type="number"
-                value={newDiscount}
-                min={0}
-                max={1}
-                step={0.1}
-                onChange={(e) => setNewDiscount(e.target.value)}
-                placeholder="Input Discount"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Start Date</span>
-              <input
-                type="date"
-                value={newStartDate}
-                onChange={(e) => setNewStartDate(e.target.value)}
-                placeholder="Input Start Date"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Discount</span>
+            <input
+              type="number"
+              value={newDiscount}
+              min={0}
+              max={1}
+              step={0.1}
+              onChange={(e) => setNewDiscount(e.target.value)}
+              placeholder="Input Discount"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">End Date</span>
-              <input
-                type="date"
-                value={newEndDate}
-                onChange={(e) => setNewEndDate(e.target.value)}
-                placeholder="Input End Date"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Start Date</span>
+            <input
+              type="date"
+              value={newStartDate}
+              onChange={(e) => setNewStartDate(e.target.value)}
+              placeholder="Input Start Date"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">End Date</span>
+            <input
+              type="date"
+              value={newEndDate}
+              onChange={(e) => setNewEndDate(e.target.value)}
+              placeholder="Input End Date"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
+        <DialogFooter className="flex justify-center bg-white">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={() => handleNewPromotion()}
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
-            <button className="flex font-semibold text-white">Create</button>
-          </div>
+            Create
+          </button>
         </DialogFooter>
       </Dialog>
 
@@ -409,11 +406,11 @@ export const AdminManagePromotion = () => {
       <Dialog
         open={dialogEdit}
         handler={handleDialogEdit}
-        size="xxl"
+        size="md"
         onKeyPress={(e) => (e.key === "Enter" ? handleUpdatePromotion() : "")}
         tabIndex={0}
       >
-        <DialogHeader className="flex flex-col">
+        <DialogHeader className="flex flex-col bg-white">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Edit Promotion</h1>
             <IoCloseSharp
@@ -425,53 +422,48 @@ export const AdminManagePromotion = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
-          {/* Left Column */}
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">Discount</span>
-              <input
-                type="number"
-                value={updateDiscount}
-                min={0}
-                max={1}
-                step={0.1}
-                onChange={(e) => setUpdateDiscount(e.target.value)}
-                placeholder="Input Discount"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Start Date</span>
-              <input
-                type="date"
-                value={updateStartDate}
-                onChange={(e) => setUpdateStartDate(e.target.value)}
-                placeholder="Input Start Date"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+        <DialogBody className="flex flex-col justify-center gap-3 bg-white px-10">
+          <div className="flex flex-col">
+            <span className="text-slate-700">Discount</span>
+            <input
+              type="number"
+              value={updateDiscount}
+              min={0}
+              max={1}
+              step={0.1}
+              onChange={(e) => setUpdateDiscount(e.target.value)}
+              placeholder="Input Discount"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">End Date</span>
-              <input
-                type="date"
-                value={updateEndDate}
-                onChange={(e) => setUpdateEndDate(e.target.value)}
-                placeholder="Input End Date"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Start Date</span>
+            <input
+              type="date"
+              value={updateStartDate}
+              onChange={(e) => setUpdateStartDate(e.target.value)}
+              placeholder="Input Start Date"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">End Date</span>
+            <input
+              type="date"
+              value={updateEndDate}
+              onChange={(e) => setUpdateEndDate(e.target.value)}
+              placeholder="Input End Date"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
+        <DialogFooter className="flex justify-center bg-white">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={handleUpdatePromotion}
           >
-            <button className="flex font-semibold text-white">Edit</button>
-          </div>
+            Edit
+          </button>
         </DialogFooter>
       </Dialog>
     </div>

@@ -54,6 +54,9 @@ import {
   putTrackingAction,
 } from "../../../redux/action/trackings/TrackingsAction";
 
+// service
+import { reduxPostEnrollment } from "../../../services/enrollments/Enrollments";
+
 // Material Tailwind Components
 import {
   Dialog,
@@ -94,6 +97,7 @@ export const DetailCourse = () => {
   const loadingChapters = useSelector((state) => state.chapters.loading);
   const loadingLessons = useSelector((state) => state.lessons.loading);
   const loadingTracking = useSelector((state) => state.trackings.loading);
+  const loadingEnrollments = useSelector((state) => state.enrollments.loading);
 
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
@@ -129,10 +133,10 @@ export const DetailCourse = () => {
 
   useEffect(() => {
     dispatch(getAllCoursesAction());
+    getAllData();
     if (!filteredCourses) {
       return navigate("/all-courses");
     }
-    getAllData();
   }, [dispatch]);
 
   const getAllData = () => {
@@ -158,18 +162,23 @@ export const DetailCourse = () => {
 
   const handleEnrollCourse = async () => {
     try {
-      if (token !== undefined) {
-        const isPremium = storeDetailCourses?.isPremium;
-
-        if (isPremium) {
+      if (token) {
+        if (storeDetailCourses?.isPremium) {
           navigate(`/payment/${courseId}`, { state: { time: 60 * 60 } });
         }
 
-        if (!isPremium) {
-          await dispatch(postEnrollmentAction(storeDetailCourses.id));
-          dispatch(getAllEnrollmentsAction());
-          dispatch(getTrackingsByCourseId(courseId));
-          showSuccessToast("Successful Course Enrollments");
+        if (!storeDetailCourses?.isPremium) {
+          const enrollCourse = await reduxPostEnrollment(courseId);
+
+          if (enrollCourse) {
+            dispatch(getAllEnrollmentsAction());
+            dispatch(getTrackingsByCourseId(courseId));
+            showSuccessToast("Successful Course Enrollments");
+          }
+
+          if (!enrollCourse) {
+            showSuccessToast("Course Enrollments Failed");
+          }
         }
       }
 
@@ -184,8 +193,9 @@ export const DetailCourse = () => {
 
   const handleTrackings = async (lessonId, videoUrl) => {
     try {
-      await dispatch(putTrackingAction(lessonId));
-      if (!loadingTracking) {
+      const trackingLesson = await dispatch(putTrackingAction(lessonId));
+
+      if (trackingLesson) {
         setVideoLink(videoUrl.split("https://youtu.be/")[1]);
         dispatch(getTrackingsByCourseId(courseId));
         dispatch(getAllEnrollmentsAction());

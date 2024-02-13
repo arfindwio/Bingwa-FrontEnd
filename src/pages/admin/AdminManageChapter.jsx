@@ -213,7 +213,7 @@ export const AdminManageChapter = () => {
         {/* Table */}
         <section className="bg-white dark:bg-gray-900">
           <div className="mx-auto px-4 lg:px-12">
-            <div className="relative overflow-hidden border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div className="relative border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:gap-0">
                 <h2 className="w-fit break-words text-xl font-semibold">
                   Manage Chapter
@@ -263,7 +263,9 @@ export const AdminManageChapter = () => {
                     ) : (
                       storeChapters?.map((value, index) =>
                         loadingChapters ? (
-                          <AdminDataSkeleton index={index} tdCount={5} />
+                          <tr key={index} className="animate-pulse">
+                            <AdminDataSkeleton tdCount={5} />
+                          </tr>
                         ) : (
                           <tr className="dark:border-gray-700" key={value?.id}>
                             <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
@@ -316,8 +318,8 @@ export const AdminManageChapter = () => {
       </div>
 
       {/* Dialog Create */}
-      <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
-        <DialogHeader className="flex flex-col">
+      <Dialog open={dialogCreate} handler={handleDialogCreate} size="md">
+        <DialogHeader className="flex flex-col bg-white">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Create Chapter</h1>
             <IoCloseSharp
@@ -327,79 +329,76 @@ export const AdminManageChapter = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex flex-col justify-center gap-3 bg-white px-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleNewChapter() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
-          <div
-            className="flex-1 space-y-2"
-            onKeyPress={(e) => (e.key === "Enter" ? handleNewChapter() : "")}
-            tabIndex={0}
-          >
-            <div className="flex flex-col">
-              <span className="text-slate-700">Chapter Name</span>
-              <input
-                type="text"
-                value={newChapterName}
-                onChange={(e) => setNewChapterName(e.target.value)}
-                placeholder="Input Chapter Image"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Course</span>
-              <select
-                value={newCourseId}
-                onChange={(e) => setNewCourseId(e.target.value)}
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              >
-                {storeCourses.length === 0 ? (
-                  <option value="" hidden>
-                    No course available
-                  </option>
-                ) : (
-                  <>
-                    <option value="" hidden>
-                      Choose Course
-                    </option>
-                    {storeCourses.map((value) => (
-                      <option
-                        key={value?.id}
-                        value={value?.id}
-                        className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
-                      >
-                        {value?.courseName}
-                      </option>
-                    ))}
-                  </>
-                )}
-              </select>
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Chapter Name</span>
+            <input
+              type="text"
+              value={newChapterName}
+              onChange={(e) => setNewChapterName(e.target.value)}
+              placeholder="Input Chapter Image"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">Duration</span>
-              <input
-                type="number"
-                value={newDuration}
-                onChange={(e) => setNewDuration(e.target.value)}
-                placeholder="Input Duration"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Course</span>
+            <select
+              value={newCourseId}
+              onChange={(e) => setNewCourseId(e.target.value)}
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            >
+              {storeCourses.length === 0 ? (
+                <option value="" hidden>
+                  No course available
+                </option>
+              ) : (
+                <>
+                  <option value="" hidden>
+                    Choose Course
+                  </option>
+                  {storeCourses.map((value) => (
+                    <option
+                      key={value?.id}
+                      value={value?.id}
+                      className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                    >
+                      {value?.courseName}
+                    </option>
+                  ))}
+                </>
+              )}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Duration</span>
+            <input
+              type="number"
+              min={0}
+              value={newDuration}
+              onChange={(e) => setNewDuration(e.target.value)}
+              placeholder="Input Duration"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
+        <DialogFooter className="flex justify-center bg-white">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={() => handleNewChapter()}
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
-            <button className="flex font-semibold text-white">Create</button>
-          </div>
+            Create
+          </button>
         </DialogFooter>
       </Dialog>
 
       {/* Dialog Edit */}
-      <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
-        <DialogHeader className="flex flex-col">
+      <Dialog open={dialogEdit} handler={handleDialogEdit} size="md">
+        <DialogHeader className="flex flex-col bg-white">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Edit Chapter</h1>
             <IoCloseSharp
@@ -411,65 +410,61 @@ export const AdminManageChapter = () => {
             />
           </div>
         </DialogHeader>
-        <DialogBody className="flex space-x-6 px-10 py-10">
+        <DialogBody
+          className="flex flex-col justify-center gap-3 bg-white px-10"
+          onKeyPress={(e) => (e.key === "Enter" ? handleUpdateChapter() : "")}
+          tabIndex={0}
+        >
           {/* Left Column */}
-          <div
-            className="flex-1 space-y-2"
-            onKeyPress={(e) => (e.key === "Enter" ? handleUpdateChapter() : "")}
-            tabIndex={0}
-          >
-            <div className="flex flex-col">
-              <span className="text-slate-700">Chapter Name</span>
-              <input
-                type="text"
-                value={updateChapterName}
-                onChange={(e) => setUpdateChapterName(e.target.value)}
-                placeholder="Input Chapter Name"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-slate-700">Course</span>
-              <select
-                value={updateCourseId}
-                onChange={(e) => setUpdateCourseId(e.target.value)}
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              >
-                <option value={updateChapterDetail?.courseId} hidden>
-                  {updateChapterDetail?.course?.courseName}
-                </option>
-                {storeCourses.map((value) => (
-                  <option
-                    key={value.id}
-                    value={value.id}
-                    className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
-                  >
-                    {value?.courseName}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Chapter Name</span>
+            <input
+              type="text"
+              value={updateChapterName}
+              onChange={(e) => setUpdateChapterName(e.target.value)}
+              placeholder="Input Chapter Name"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
-              <span className="text-slate-700">Duration</span>
-              <input
-                type="number"
-                value={updateDuration}
-                onChange={(e) => setUpdateDuration(e.target.value)}
-                placeholder="Input Duration"
-                className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
-              />
-            </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Course</span>
+            <select
+              value={updateCourseId}
+              onChange={(e) => setUpdateCourseId(e.target.value)}
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            >
+              <option value={updateChapterDetail?.courseId} hidden>
+                {updateChapterDetail?.course?.courseName}
+              </option>
+              {storeCourses.map((value) => (
+                <option
+                  key={value.id}
+                  value={value.id}
+                  className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none"
+                >
+                  {value?.courseName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-slate-700">Duration</span>
+            <input
+              type="number"
+              value={updateDuration}
+              onChange={(e) => setUpdateDuration(e.target.value)}
+              placeholder="Input Duration"
+              className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
+            />
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
+        <DialogFooter className="flex justify-center bg-white">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={handleUpdateChapter}
           >
-            <button className="flex font-semibold text-white">Edit</button>
-          </div>
+            Edit
+          </button>
         </DialogFooter>
       </Dialog>
     </div>
