@@ -13,11 +13,11 @@ export const CardCategory = ({ thumbnail, category }) => {
   };
 
   return (
-    <div className="flex cursor-pointer flex-col items-center gap-2 transition-all hover:scale-95">
+    <div className="flex w-fit cursor-pointer flex-col items-center justify-center gap-2  transition-all hover:scale-95">
       <img
         src={thumbnail}
         alt="Thumbnail"
-        className="w-52 rounded-2xl"
+        className="h-36 w-52 rounded-2xl object-cover"
         onClick={handleCategoryClick}
       />
       <div className="font-semibold">{category}</div>

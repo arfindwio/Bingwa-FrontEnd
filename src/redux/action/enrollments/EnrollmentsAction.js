@@ -55,8 +55,7 @@ export const getEnrollmentByCourseIdAction = (courseId) => async (dispatch) => {
 export const postEnrollmentAction = (courseId) => async (dispatch) => {
   try {
     dispatch(startLoading());
-    const result = await reduxPostEnrollment(courseId);
-    dispatch(addEnrollment(result.data.data.enrollments));
+    await reduxPostEnrollment(courseId);
 
     return true;
   } catch (err) {

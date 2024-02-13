@@ -1,13 +1,10 @@
-// Skeleton Component
-import Skeleton from "react-loading-skeleton";
+import React from "react";
 
 export const CardCategorySkeleton = () => {
-  const loadCards = Array(6).fill(null);
-
-  return loadCards.map((_, i) => (
-    <div className="flex flex-col gap-2" key={i}>
-      <Skeleton borderRadius={"1rem"} height={130} />
-      <Skeleton borderRadius={"0.75rem"} height={20} />
+  return (
+    <div className="flex w-fit animate-pulse flex-col items-center justify-center gap-2">
+      <div className="h-36 w-52 rounded-2xl bg-slate-300 bg-opacity-60" />
+      <div className="h-5 w-full rounded bg-slate-300 bg-opacity-60"></div>
     </div>
-  ));
+  );
 };

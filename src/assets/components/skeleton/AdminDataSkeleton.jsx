@@ -1,4 +1,4 @@
-export const AdminDataSkeleton = ({ index, tdCount }) => {
+export const AdminDataSkeleton = ({ tdCount }) => {
   const tdElements = [];
 
   for (let i = 0; i < tdCount; i++) {
@@ -9,9 +9,5 @@ export const AdminDataSkeleton = ({ index, tdCount }) => {
     );
   }
 
-  return (
-    <tr key={`skeleton-${index}`} className="animate-pulse">
-      {tdElements}
-    </tr>
-  );
+  return <>{tdElements}</>;
 };

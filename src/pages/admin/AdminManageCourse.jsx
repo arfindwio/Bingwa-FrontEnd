@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 // Material Tailwind Components
 import {
@@ -17,7 +18,11 @@ import { Pagination } from "../../assets/components/pagination/Pagination";
 import { AdminDataSkeleton } from "../../assets/components/skeleton/AdminDataSkeleton";
 
 // Helper
-import { showSuccessToast } from "../../helper/ToastHelper";
+import {
+  showSuccessToast,
+  showErrorToast,
+  showLoadingToast,
+} from "../../helper/ToastHelper";
 
 // Icons
 import { IoCloseSharp } from "react-icons/io5";
@@ -46,7 +51,7 @@ export const AdminManageCourse = () => {
   const [newMentor, setNewMentor] = useState("");
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [newForumUrl, setNewForumUrl] = useState("");
-  const [newCourseImg, setNewCourseImg] = useState("");
+  const [newImage, setNewImage] = useState("");
   const [newCategoryId, setNewCategoryId] = useState("");
   const [newPromotionId, setNewPromotionId] = useState("");
 
@@ -62,7 +67,7 @@ export const AdminManageCourse = () => {
   const [updateMentor, setUpdateMentor] = useState("");
   const [updateVideoUrl, setUpdateVideoUrl] = useState("");
   const [updateForumUrl, setUpdateForumUrl] = useState("");
-  const [updateCourseImg, setUpdateCourseImg] = useState("");
+  const [updateImage, setUpdateImage] = useState("");
   const [updateCategoryId, setUpdateCategoryId] = useState("");
   const [updatePromotionId, setUpdatePromotionId] = useState("");
   const [updateCourseDetail, setUpdateCourseDetail] = useState({});
@@ -115,25 +120,32 @@ export const AdminManageCourse = () => {
 
   // New Course
   const handleNewCourse = async () => {
-    const newCourse = await dispatch(
-      postCourseAction({
-        courseName: newCourseName,
-        price: Number(newPrice),
-        level: newLevel,
-        aboutCourse: newAboutCourse,
-        targetAudience: newTargetAudience,
-        learningMaterial: newLearningMaterial,
-        mentor: newMentor,
-        videoURL: newVideoUrl,
-        forumURL: newForumUrl,
-        courseImg: newCourseImg,
-        categoryId: Number(newCategoryId),
-        promotionId: newPromotionId ? Number(newPromotionId) : null,
-      }),
+    const loadingToastId = showLoadingToast("Loading...");
+
+    const formData = new FormData();
+    formData.append("courseName", newCourseName);
+    formData.append("price", Number(newPrice));
+    formData.append("level", newLevel);
+    formData.append("aboutCourse", newAboutCourse);
+    formData.append("targetAudience", newTargetAudience);
+    formData.append("learningMaterial", newLearningMaterial);
+    formData.append("mentor", newMentor);
+    formData.append("videoURL", newVideoUrl);
+    formData.append("forumURL", newForumUrl);
+    formData.append("image", newImage);
+    formData.append("categoryId", Number(newCategoryId));
+    formData.append(
+      "promotionId",
+      newPromotionId ? Number(newPromotionId) : null,
     );
+
+    const newCourse = await dispatch(postCourseAction(formData));
+
+    toast.dismiss(loadingToastId);
 
     if (!newCourse) {
       setDialogCreate(false);
+      showErrorToast("Course Failed Create!");
       dispatch(getAllCoursesAction());
     }
 
@@ -150,7 +162,6 @@ export const AdminManageCourse = () => {
       setNewMentor("");
       setNewVideoUrl("");
       setNewForumUrl("");
-      setNewCourseImg("");
       setNewCategoryId("");
       setNewPromotionId("");
 
@@ -180,7 +191,6 @@ export const AdminManageCourse = () => {
     setUpdateMentor(courseToEdit ? courseToEdit.mentor : null || null);
     setUpdateVideoUrl(courseToEdit ? courseToEdit.videoURL : null || null);
     setUpdateForumUrl(courseToEdit ? courseToEdit.forumURL : null || null);
-    setUpdateCourseImg(courseToEdit ? courseToEdit.courseImg : null || null);
     setUpdateCategoryId(courseToEdit ? courseToEdit.categoryId : null || null);
     setUpdatePromotionId(
       courseToEdit.promotionId ? courseToEdit.promotionId : null || null,
@@ -192,28 +202,34 @@ export const AdminManageCourse = () => {
 
   // Update Course
   const handleUpdateCourse = async () => {
-    const updatedCourse = await dispatch(
-      putCourseAction(
-        {
-          courseName: updateCourseName,
-          price: Number(updatePrice),
-          level: updateLevel,
-          aboutCourse: updateAboutCourse,
-          targetAudience: updateTargetAudience,
-          learningMaterial: updateLearningMaterial,
-          mentor: updateMentor,
-          videoURL: updateVideoUrl,
-          forumURL: updateForumUrl,
-          courseImg: updateCourseImg,
-          categoryId: updateCategoryId,
-          promotionId: updatePromotionId,
-        },
-        editingCourseId,
-      ),
+    const loadingToastId = showLoadingToast("Loading...");
+
+    const formData = new FormData();
+    formData.append("courseName", updateCourseName);
+    formData.append("price", Number(updatePrice));
+    formData.append("level", updateLevel);
+    formData.append("aboutCourse", updateAboutCourse);
+    formData.append("targetAudience", updateTargetAudience);
+    formData.append("learningMaterial", updateLearningMaterial);
+    formData.append("mentor", updateMentor);
+    formData.append("videoURL", updateVideoUrl);
+    formData.append("forumURL", updateForumUrl);
+    formData.append("image", updateImage);
+    formData.append("categoryId", Number(updateCategoryId));
+    formData.append(
+      "promotionId",
+      updatePromotionId ? Number(updatePromotionId) : null,
     );
+
+    const updatedCourse = await dispatch(
+      putCourseAction(formData, editingCourseId),
+    );
+
+    toast.dismiss(loadingToastId);
 
     if (!updatedCourse) {
       setDialogEdit(false);
+      showErrorToast("Course Failed update!");
       dispatch(getAllCoursesAction());
     }
 
@@ -232,7 +248,6 @@ export const AdminManageCourse = () => {
       setUpdateMentor("");
       setUpdateVideoUrl("");
       setUpdateForumUrl("");
-      setUpdateCourseImg("");
       setUpdateCategoryId("");
       setUpdatePromotionId("");
 
@@ -288,7 +303,7 @@ export const AdminManageCourse = () => {
         {/* Table */}
         <section className="bg-white dark:bg-gray-900">
           <div className="mx-auto px-4 lg:px-12">
-            <div className="relative overflow-hidden border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div className="relative border-2 bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
               <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:gap-0">
                 <h2 className="w-fit break-words text-xl font-semibold">
                   Manage Course
@@ -304,7 +319,7 @@ export const AdminManageCourse = () => {
                 </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full overflow-hidden text-left text-sm text-gray-500 dark:text-gray-400">
+                <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
                   <thead className="text-md bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-4 py-3">
@@ -344,7 +359,9 @@ export const AdminManageCourse = () => {
                     ) : (
                       storeAllCourse?.map((value, index) =>
                         loadingCourses ? (
-                          <AdminDataSkeleton index={index} tdCount={7} />
+                          <tr key={index} className="animate-pulse">
+                            <AdminDataSkeleton tdCount={7} />
+                          </tr>
                         ) : (
                           <tr className="dark:border-gray-700" key={value?.id}>
                             <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
@@ -409,8 +426,13 @@ export const AdminManageCourse = () => {
       </div>
 
       {/* Dialog Create */}
-      <Dialog open={dialogCreate} handler={handleDialogCreate} size="xxl">
-        <DialogHeader className="flex flex-col">
+      <Dialog
+        open={dialogCreate}
+        handler={handleDialogCreate}
+        size="xl"
+        className="h-full overflow-auto sm:h-auto"
+      >
+        <DialogHeader className="flex w-full flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Create Course</h1>
             <IoCloseSharp
@@ -421,12 +443,12 @@ export const AdminManageCourse = () => {
           </div>
         </DialogHeader>
         <DialogBody
-          className="flex space-x-6 px-10 py-10"
+          className="flex h-auto w-full flex-wrap gap-3 bg-white px-10 sm:gap-0"
           onKeyPress={(e) => (e.key === "Enter" ? handleNewCourse() : "")}
           tabIndex={0}
         >
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div className="flex w-full flex-col gap-3 sm:w-1/2 sm:pr-2">
             <div className="flex flex-col">
               <span className="text-slate-700">Course Name</span>
               <input
@@ -490,8 +512,8 @@ export const AdminManageCourse = () => {
           </div>
 
           {/* Right Column */}
-          <div className="flex-1 space-y-2">
-            <div className="flex flex-col">
+          <div className="flex w-full flex-col gap-3 sm:w-1/2 sm:pl-2">
+            <div className="flex flex-col ">
               <span className="text-slate-700">Mentor</span>
               <input
                 type="text"
@@ -524,10 +546,10 @@ export const AdminManageCourse = () => {
             <div className="flex flex-col">
               <span className="text-slate-700">Thumbnail Video URL</span>
               <input
-                type="text"
-                value={newCourseImg}
-                onChange={(e) => setNewCourseImg(e.target.value)}
-                placeholder="Input Thumbnail Video URL"
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={(e) => setNewImage(e.target.files[0])}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -591,18 +613,23 @@ export const AdminManageCourse = () => {
             </div>
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
+        <DialogFooter className="flex h-fit w-full justify-center gap-4">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={() => handleNewCourse()}
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
           >
-            <button className="flex font-semibold text-white">Tambah</button>
-          </div>
+            Create
+          </button>
         </DialogFooter>
       </Dialog>
 
       {/* Dialog Edit */}
-      <Dialog open={dialogEdit} handler={handleDialogEdit} size="xxl">
+      <Dialog
+        open={dialogEdit}
+        handler={handleDialogEdit}
+        size="xl"
+        className="h-full overflow-auto sm:h-auto"
+      >
         <DialogHeader className="flex flex-col">
           <div className="flex w-full items-center justify-between px-6 text-primary">
             <h1 className="font-semibold">Edit Course</h1>
@@ -616,14 +643,14 @@ export const AdminManageCourse = () => {
           </div>
         </DialogHeader>
         <DialogBody
-          className="flex space-x-6 px-10 py-10"
+          className="flex h-auto w-full flex-wrap gap-3 bg-white px-10 sm:gap-0"
           onKeyPress={(e) => (e.key === "Enter" ? handleUpdateCourse() : "")}
           tabIndex={0}
         >
           {/* Left Column */}
-          <div className="flex-1 space-y-2">
+          <div className="flex w-full flex-col gap-3 sm:w-1/2 sm:pr-2">
             <div className="flex flex-col">
-              <span className="text-slate-700">Nama Kelas</span>
+              <span className="text-slate-700">Course Name</span>
               <input
                 type="text"
                 value={updateCourseName}
@@ -633,7 +660,7 @@ export const AdminManageCourse = () => {
               />
             </div>
             <div className="flex flex-col ">
-              <span className="text-slate-700 ">Harga</span>
+              <span className="text-slate-700 ">Price</span>
               <input
                 type="number"
                 value={updatePrice}
@@ -653,7 +680,7 @@ export const AdminManageCourse = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Tentang Course</span>
+              <span className="text-slate-700">About Course</span>
               <input
                 type="text"
                 value={updateAboutCourse}
@@ -685,7 +712,7 @@ export const AdminManageCourse = () => {
           </div>
 
           {/* Right Column */}
-          <div className="flex-1 space-y-2">
+          <div className="flex w-full flex-col gap-3 sm:w-1/2 sm:pl-2">
             <div className="flex flex-col">
               <span className="text-slate-700">Mentor</span>
               <input
@@ -719,10 +746,10 @@ export const AdminManageCourse = () => {
             <div className="flex flex-col">
               <span className="text-slate-700">Link Thumbnail</span>
               <input
-                type="text"
-                value={updateCourseImg}
-                onChange={(e) => setUpdateCourseImg(e.target.value)}
-                placeholder="Masukkan Link Thumbnail"
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={(e) => setUpdateImage(e.target.files[0])}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               />
             </div>
@@ -761,7 +788,9 @@ export const AdminManageCourse = () => {
                 ) : (
                   <>
                     <option value={updateCourseDetail?.promotionId} hidden>
-                      {updateCourseDetail?.promotion?.discount * 100}%
+                      {updateCourseDetail.promotionId
+                        ? `${updateCourseDetail?.promotion?.discount * 100} %`
+                        : "Choose Promotion"}
                     </option>
                     {storePromotions?.map((value) => (
                       <option
@@ -778,13 +807,13 @@ export const AdminManageCourse = () => {
             </div>
           </div>
         </DialogBody>
-        <DialogFooter className="flex justify-center gap-4">
-          <div
-            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 transition-all hover:bg-primary-hover"
+        <DialogFooter className="flex w-full justify-center gap-4 bg-white">
+          <button
+            className="flex cursor-pointer rounded-full bg-primary px-10 py-2 font-semibold text-white transition-all hover:bg-primary-hover"
             onClick={handleUpdateCourse}
           >
-            <button className="flex font-semibold text-white">Edit</button>
-          </div>
+            Edit
+          </button>
         </DialogFooter>
       </Dialog>
     </div>

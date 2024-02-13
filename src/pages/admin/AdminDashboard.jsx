@@ -130,7 +130,9 @@ export const AdminDashboard = () => {
                     ) : (
                       storePayments.payments.map((value, index) =>
                         loadingPayments ? (
-                          <AdminDataSkeleton index={index} tdCount={7} />
+                          <tr key={index} className="animate-pulse">
+                            <AdminDataSkeleton tdCount={7} />
+                          </tr>
                         ) : (
                           <tr key={index} className="text-xs">
                             <td className="px-4 py-3">
