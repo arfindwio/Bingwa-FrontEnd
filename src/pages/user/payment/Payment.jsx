@@ -57,10 +57,9 @@ export const Payment = () => {
   const [timeRemaining, setTimeRemaining] = useState(null);
 
   const storeCourses = useSelector((state) => state.courses.courses.courses);
-  const redirectUrl = useSelector(
-    (state) => state.payments?.paymentMidtrans?.transaction.redirect_url,
+  const storePaymentMidtrans = useSelector(
+    (state) => state.payments.paymentMidtrans.transaction,
   );
-  const isLoading = useSelector((state) => state.payments.loading);
   const storeEnrollments = useSelector(
     (state) => state.enrollments.enrollments,
   );
@@ -135,8 +134,8 @@ export const Payment = () => {
     if (payment) {
       showSuccessToast("Payment Success...!!!");
       setTimeout(() => {
-        if (!isLoading) {
-          window.location.href = redirectUrl;
+        if (storePaymentMidtrans) {
+          window.location.href = storePaymentMidtrans.redirect_url;
         }
       }, 1000);
     }

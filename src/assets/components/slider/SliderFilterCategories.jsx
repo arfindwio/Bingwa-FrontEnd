@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -6,33 +6,43 @@ import { useDispatch, useSelector } from "react-redux";
 import "react-alice-carousel/lib/alice-carousel.css";
 
 // Redux Actions
-import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
+import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
-export const SliderFilterCategories = ({
-  selectedCategory,
-  handleCategoryFilter,
-}) => {
+export const SliderFilterCategories = () => {
   const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const storeCategories = useSelector(
     (state) => state.categories.categories.categories,
   );
 
-  const getCategories = () => {
-    dispatch(getAllCategoriesAction());
-  };
-
   useEffect(() => {
-    getCategories();
-  }, [dispatch]);
+    if (selectedCategory === "all") {
+      dispatch(getAllCoursesAction());
+    } else {
+      const formatQuery = `c=${selectedCategory}`;
+      dispatch(getAllCoursesAction(formatQuery));
+    }
+  }, [dispatch, selectedCategory]);
 
-  const allCategory = { id: "all", categoryName: "All" };
-  const categoriesWithAll = storeCategories
-    ? [allCategory, ...storeCategories]
-    : [];
+  // Membuat elemen untuk kategori "All" secara statis di luar pemetaan map
+  const allCategoryElement = (
+    <div
+      key="all"
+      className={`mx-2 flex h-auto cursor-pointer items-center justify-center rounded-xl px-5 py-1 text-base font-semibold transition-all ${
+        selectedCategory === "all"
+          ? "bg-primary text-white"
+          : "bg-secondary hover:bg-primary hover:text-white"
+      }`}
+      onClick={() => setSelectedCategory("all")}
+    >
+      All
+    </div>
+  );
 
-  const items =
-    categoriesWithAll &&
-    categoriesWithAll?.map((value) => (
+  // Menggabungkan elemen "All" dengan elemen-elemen kategori yang dihasilkan dari pemetaan map
+  const items = [
+    allCategoryElement,
+    ...(storeCategories?.map((value) => (
       <div
         key={value.id}
         className={`mx-2 flex h-auto cursor-pointer items-center justify-center rounded-xl px-5 py-1 text-base font-semibold transition-all ${
@@ -40,11 +50,12 @@ export const SliderFilterCategories = ({
             ? "bg-primary text-white"
             : "bg-secondary hover:bg-primary hover:text-white"
         }`}
-        onClick={() => handleCategoryFilter(value.categoryName)}
+        onClick={() => setSelectedCategory(value.categoryName)}
       >
         {value.categoryName}
       </div>
-    ));
+    )) || []),
+  ];
 
   return (
     <AliceCarousel

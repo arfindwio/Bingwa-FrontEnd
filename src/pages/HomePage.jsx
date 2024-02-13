@@ -9,7 +9,6 @@ import Header from "../assets/img/Header.webp";
 // Components
 import { CardGlobal } from "../assets/components/cards/CardGlobal";
 import { NavbarCourse } from "../assets/components/navbar/NavbarCourse";
-import { CardCategorySkeleton } from "../assets/components/skeleton/CardCategorySkeleton";
 import { Footer } from "../assets/components/footer/Footer";
 import { NavbarMobile } from "../assets/components/navbar/NavbarMobile";
 import { SearchMobile } from "../assets/components/search/SearchMobile";
@@ -30,15 +29,11 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   const [showAllCourses, setShowAllCourses] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [shuffledCourses, setShuffledCourses] = useState([]);
 
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   // Redux Store
-  const storeCategories = useSelector(
-    (state) => state.categories.categories.categories,
-  );
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storeLessons = useSelector((state) => state.lessons.lessons.lessons);
   const storeEnrollments = useSelector(
@@ -74,10 +69,6 @@ export const HomePage = () => {
     setShowAllCourses(!showAllCourses);
   };
 
-  const handleCategoryFilter = (category) => {
-    setSelectedCategory(category);
-  };
-
   const shuffleArray = (array) => {
     let shuffledArray = [...array];
     for (let i = shuffledArray?.length - 1; i > 0; i--) {
@@ -91,7 +82,7 @@ export const HomePage = () => {
   };
 
   const renderCourseCards = (courses, limit) => {
-    return courses.slice(0, limit).map((value) => {
+    return courses.slice(0, limit)?.map((value) => {
       const lessonsData = storeLessons
         ? storeLessons?.filter(
             (lesson) => lesson?.chapter?.course?.id === value?.id,
@@ -136,7 +127,7 @@ export const HomePage = () => {
       <div className="flex flex-col md:mt-[5rem] lg:mt-[5rem]">
         {isMobile ? <SearchMobile /> : null}
         {/* Hero Section */}
-        <div className="hidden md:flex lg:flex">
+        <div className="hidden md:flex">
           <div className="relative -z-10 w-2/3">
             <img src={Header} alt="Header" className="h-full w-full" />
             <div className="absolute inset-0 bg-gradient-to-l from-primary"></div>
@@ -168,15 +159,9 @@ export const HomePage = () => {
               Category Course
             </div>
           </div>
-          {!storeCategories ? (
-            <div className="grid grid-cols-6 gap-4">
-              <CardCategorySkeleton />
-            </div>
-          ) : (
-            <div className="-ms-6">
-              <SliderCardCategories />
-            </div>
-          )}
+          <div className="w-full cursor-pointer">
+            <SliderCardCategories />
+          </div>
         </div>
         {/* End Kategori Belajar Section */}
 
@@ -200,22 +185,18 @@ export const HomePage = () => {
 
           {/* Filter */}
           <div className="-ms-3">
-            <SliderFilterCategories
-              storeCategories={storeCategories}
-              selectedCategory={selectedCategory}
-              handleCategoryFilter={handleCategoryFilter}
-            />
+            <SliderFilterCategories />
           </div>
 
           {/* Container Card Kelas */}
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
             {showAllCourses
-              ? shuffledCourses?.length > 0
-                ? renderCourseCards(shuffledCourses, 6)
-                : renderNoCourseMessage()
-              : shuffledCourses?.length > 0
-                ? renderCourseCards(shuffledCourses, 3)
-                : renderNoCourseMessage()}
+              ? storeCourses?.length === 0
+                ? renderNoCourseMessage()
+                : renderCourseCards(shuffledCourses, 6)
+              : storeCourses?.length === 0
+                ? renderNoCourseMessage()
+                : renderCourseCards(shuffledCourses, 3)}
           </div>
         </div>
         {/* End Kursus Populer */}
