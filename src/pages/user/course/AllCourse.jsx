@@ -61,18 +61,18 @@ export const AllCourse = () => {
   }, []);
 
   useEffect(() => {
-    getAllData();
-  }, [dispatch]);
-
-  useEffect(() => {
     if (categoryFilter) {
       if (!selectedCategories.includes(categoryFilter)) {
-        setSelectedCategories([categoryFilter]);
+        return setSelectedCategories([categoryFilter]);
       }
 
-      CookieStorage.remove(CookiesKeys.CategoryFilter);
+      return CookieStorage.remove(CookiesKeys.CategoryFilter);
+    } else {
+      return getAllData();
     }
+  }, [categoryFilter, filters, selectedCategories, selectedLevels, dispatch]);
 
+  useEffect(() => {
     const formatSearch = searchInput ? `search=${searchInput}` : "";
     const fullQuery = formatSearch
       ? `${formatSearch}&${queryParams}`
