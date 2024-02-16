@@ -27,17 +27,6 @@ export const AdminLogin = () => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
 
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "email") {
-        setEmail(e.target.value);
-      }
-      if (e.target.id === "password") {
-        setPassword(e.target.value);
-      }
-    }
-  };
-
   const handleLogin = async () => {
     const loadingToastId = showLoadingToast("Loading ...");
 
@@ -195,7 +184,8 @@ export const AdminLogin = () => {
             <div className="flex flex-col gap-2 ">
               <span className="text-left text-lg">Email</span>
               <input
-                onChange={handleInput}
+                onChange={(e) => setEmail(e.target.value)}
+                value={Email}
                 id="email"
                 placeholder="bingwa@gmail.com"
                 className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
@@ -212,7 +202,7 @@ export const AdminLogin = () => {
               </div>
               <div className="relative flex flex-col">
                 <input
-                  onChange={handleInput}
+                  onChange={(e) => setPassword(e.target.value)}
                   id="password"
                   placeholder="**********"
                   className="rounded-xl border-[3px] border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
