@@ -165,9 +165,9 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
+    <div className="flex h-full w-full ">
+      <div className="mx-auto min-h-screen w-full rounded-lg bg-white py-6 md:flex md:w-3/5 md:items-center md:justify-center">
+        <div className="mx-auto flex w-[70%] flex-col">
           <span className="items-center py-8 text-4xl font-bold text-primary">
             Login
           </span>
@@ -196,7 +196,7 @@ export const Login = () => {
                     navigate("/forget-password");
                   }}
                 >
-                  Lupa Kata Sandi
+                  Forget Password
                 </span>
               </div>
               <div className="relative flex flex-col">
@@ -270,13 +270,11 @@ export const Login = () => {
         </div>
       </div>
 
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
-        </div>
+      <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
+        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <span className="text-center font-sans text-6xl text-white">
+          Bingwa
+        </span>
       </div>
     </div>
   );

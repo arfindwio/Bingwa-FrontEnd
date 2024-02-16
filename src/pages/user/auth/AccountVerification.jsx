@@ -48,11 +48,11 @@ export const AccountVerification = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
+    <div className="flex h-full w-full ">
+      <div className="m-auto flex min-h-screen w-full items-center justify-center  rounded-lg bg-white py-6 md:w-3/5">
+        <div className="mx-auto flex w-[70%] flex-col">
           <div
-            className="relative flex w-fit cursor-pointer items-center font-semibold"
+            className="relative  flex w-fit cursor-pointer items-center font-semibold"
             onClick={() => {
               navigate("/login");
             }}
@@ -66,7 +66,7 @@ export const AccountVerification = () => {
 
           {/* Konfirmasi Password Baru */}
           <div
-            className="flex flex-col gap-2 py-4"
+            className="flex flex-col gap-2"
             onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
           >
             <div className="flex justify-between">
@@ -96,13 +96,11 @@ export const AccountVerification = () => {
         </div>
       </div>
 
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
-        </div>
+      <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
+        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <span className="text-center font-sans text-6xl text-white">
+          Bingwa
+        </span>
       </div>
     </div>
   );

@@ -45,20 +45,6 @@ export const AccountChangePassword = () => {
     setShowPassword3(!showPassword3);
   };
 
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "old pass") {
-        setOldPassword(e.target.value);
-      }
-      if (e.target.id === "new pass") {
-        setNewPassword(e.target.value);
-      }
-      if (e.target.id === "confirm pass") {
-        setConfirmPassword(e.target.value);
-      }
-    }
-  };
-
   const handleSave = async () => {
     const changePassword = await dispatch(
       putChangePasswordUser(
@@ -114,7 +100,7 @@ export const AccountChangePassword = () => {
               <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Enter Old Password</div>
                 <input
-                  onChange={handleInput}
+                  onChange={(e) => setOldPassword(e.target.value)}
                   type={showPassword1 ? "text" : "password"}
                   className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"
@@ -139,7 +125,7 @@ export const AccountChangePassword = () => {
               <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Enter New Password</div>
                 <input
-                  onChange={handleInput}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   type={showPassword2 ? "text" : "password"}
                   className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"
@@ -164,7 +150,7 @@ export const AccountChangePassword = () => {
               <div className="relative flex w-full flex-col gap-1 md:w-full xl:w-[80%] 2xl:w-[60%]">
                 <div className="text-left">Confirm New Password</div>
                 <input
-                  onChange={handleInput}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   type={showPassword3 ? "text" : "password"}
                   className="w-full rounded-2xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                   placeholder="**********"

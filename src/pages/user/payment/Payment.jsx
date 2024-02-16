@@ -39,6 +39,9 @@ import {
   showErrorToast,
 } from "../../../helper/ToastHelper";
 
+// Cookie
+import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
+
 export const Payment = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -133,6 +136,7 @@ export const Payment = () => {
 
     if (payment) {
       showSuccessToast("Payment Success...!!!");
+      CookieStorage.set(CookiesKeys.PaymentSuccess, "payment success");
       setTimeout(() => {
         if (storePaymentMidtrans) {
           window.location.href = storePaymentMidtrans.redirect_url;

@@ -117,9 +117,9 @@ export const Otp = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
+    <div className="flex h-full w-full">
+      <div className="mx-auto flex min-h-screen w-full items-center justify-center rounded-lg bg-white py-6 md:w-3/5">
+        <div className="mx-auto flex w-[70%] flex-col">
           <div
             className="relative flex w-fit cursor-pointer items-center font-semibold"
             onClick={() => {
@@ -142,18 +142,15 @@ export const Otp = () => {
 
             {/* Lingkaran Otp */}
             <div
-              className="flex items-center justify-center gap-4"
+              className="flex flex-wrap items-center justify-center gap-4"
               onKeyDown={(e) => (e.key === "Enter" ? handleSave() : "")}
             >
               {otpInputs.map((value, index) => (
-                <div
-                  key={index}
-                  className="h-[50px] w-[50px] rounded-xl border-2"
-                >
+                <div key={index} className="h-[50px] w-[50px] rounded-xl">
                   <input
                     id={`otp-input-${index}`}
                     placeholder=""
-                    className="h-full w-full rounded-xl border border-primary text-center font-semibold"
+                    className="h-10 w-10 rounded-xl border border-primary text-center font-semibold focus:border-primary"
                     type="text"
                     maxLength="1"
                     value={value}
@@ -171,19 +168,17 @@ export const Otp = () => {
               </span>
             ) : (
               <span
-                className="mx-auto my-6 w-fit cursor-pointer text-center text-xl font-bold text-red-500"
+                className="mx-auto my-3 w-fit cursor-pointer text-center text-xl font-bold text-red-500"
                 onClick={handleResend}
               >
                 Resend OTP
               </span>
             )}
-          </div>
 
-          {/* Button Simpan */}
-          <div className="flex flex-col py-4">
+            {/* Button Simpan */}
             <button
               type="button"
-              className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
+              className="mt-2 rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
               onClick={handleSave}
             >
               Submit
@@ -192,13 +187,11 @@ export const Otp = () => {
         </div>
       </div>
 
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
-        </div>
+      <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
+        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <span className="text-center font-sans text-6xl text-white">
+          Bingwa
+        </span>
       </div>
     </div>
   );
