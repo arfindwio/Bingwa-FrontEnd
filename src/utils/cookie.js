@@ -7,6 +7,7 @@ export const CookiesKeys = {
   RegisterToken: "registerToken",
   CategoryFilter: "categoryFilter",
   SearchFilter: "searchFilter",
+  PaymentSuccess: "paymentSuccess",
 };
 
 const CookieOptions = {

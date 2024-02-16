@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -7,10 +7,25 @@ import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
 // Images
 import payment from "../../../assets/img/payment.webp";
 
+// Cookie
+import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
+
 export const PaymentSuccess = () => {
   const navigate = useNavigate();
 
+  const [success, setSuccess] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const paymentSuccess = CookieStorage.get(CookiesKeys.PaymentSuccess);
+
+  useEffect(() => {
+    if (!paymentSuccess) return navigate(`/all-courses`);
+    if (!success) {
+      setSuccess(paymentSuccess);
+
+      CookieStorage.remove(CookiesKeys.PaymentSuccess);
+    }
+  }, []);
 
   const handleDialogOpen = () => setDialogOpen(!dialogOpen);
   return (

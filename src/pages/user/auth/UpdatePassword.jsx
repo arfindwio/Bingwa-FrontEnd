@@ -34,17 +34,6 @@ export const UpdatePassword = () => {
     setShowPassword2(!showPassword2);
   };
 
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "newPassword") {
-        setPassword(e.target.value);
-      }
-      if (e.target.id === "confirmPassword") {
-        setpasswordConfirmation(e.target.value);
-      }
-    }
-  };
-
   const handleSave = async () => {
     if (password !== passwordConfirmation) {
       showErrorToast("Passwords do not match. Please try again!");
@@ -68,78 +57,78 @@ export const UpdatePassword = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
-          <span className="items-center py-2 text-4xl font-bold text-primary">
+    <div className="flex h-full w-full">
+      <div className="mx-auto flex min-h-screen w-full items-center justify-center rounded-lg bg-white py-6 md:w-3/5">
+        <div className="mx-auto flex w-[70%] flex-col">
+          <span className="items-center pb-6 text-4xl font-bold text-primary">
             Reset Password
           </span>
 
-          {/* Password Baru */}
-          <div className="flex flex-col gap-2 pt-8">
-            <div className="flex justify-between">
-              <span className="text-left text-lg">Enter New Password</span>
-            </div>
-            <div className="relative flex flex-col">
-              <input
-                onChange={handleInput}
-                placeholder="Password Baru"
-                className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
-                type={showPassword1 ? "text" : "password"}
-                value={password}
-                id="newPassword"
-              />
-              {showPassword1 ? (
-                <FiEye
-                  size={27}
-                  className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
-                  onClick={handleShowPassword1}
+          <div className="flex flex-col gap-4">
+            {/* Password Baru */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-left text-lg">New Password</span>
+              </div>
+              <div className="relative flex flex-col">
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password Baru"
+                  className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                  type={showPassword1 ? "text" : "password"}
+                  value={password}
+                  id="newPassword"
                 />
-              ) : (
-                <FiEyeOff
-                  size={27}
-                  className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
-                  onClick={handleShowPassword1}
-                />
-              )}
+                {showPassword1 ? (
+                  <FiEye
+                    size={27}
+                    className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
+                    onClick={handleShowPassword1}
+                  />
+                ) : (
+                  <FiEyeOff
+                    size={27}
+                    className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
+                    onClick={handleShowPassword1}
+                  />
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Konfirmasi Password Baru */}
-          <div className="flex flex-col gap-2 pt-8">
-            <div className="flex justify-between">
-              <span className="text-left text-lg">Confrim New Password</span>
-            </div>
-            <div className="relative flex flex-col">
-              <input
-                onChange={handleInput}
-                placeholder="Confirm New Password"
-                className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
-                type={showPassword2 ? "text" : "password"}
-                value={passwordConfirmation}
-                id="confirmPassword"
-              />
-              {showPassword2 ? (
-                <FiEye
-                  size={27}
-                  className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
-                  onClick={handleShowPassword2}
+            {/* Konfirmasi Password Baru */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between">
+                <span className="text-left text-lg">Confirm New Password</span>
+              </div>
+              <div className="relative flex flex-col">
+                <input
+                  onChange={(e) => setpasswordConfirmation(e.target.value)}
+                  placeholder="Confirm New Password"
+                  className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                  type={showPassword2 ? "text" : "password"}
+                  value={passwordConfirmation}
+                  id="confirmPassword"
                 />
-              ) : (
-                <FiEyeOff
-                  size={27}
-                  className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
-                  onClick={handleShowPassword2}
-                />
-              )}
+                {showPassword2 ? (
+                  <FiEye
+                    size={27}
+                    className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
+                    onClick={handleShowPassword2}
+                  />
+                ) : (
+                  <FiEyeOff
+                    size={27}
+                    className="absolute inset-y-3 right-4 w-8 cursor-pointer text-slate-400"
+                    onClick={handleShowPassword2}
+                  />
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Button Simpan */}
-          <div className="flex flex-col py-6">
+            {/* Button Simpan */}
             <button
               type="button"
-              className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
+              className="mt-2 rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
               onClick={handleSave}
             >
               Submit
@@ -148,13 +137,11 @@ export const UpdatePassword = () => {
         </div>
       </div>
 
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
-        </div>
+      <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
+        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <span className="text-center font-sans text-6xl text-white">
+          Bingwa
+        </span>
       </div>
     </div>
   );

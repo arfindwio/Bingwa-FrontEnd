@@ -41,23 +41,6 @@ export const Register = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleInput = (e) => {
-    if (e) {
-      if (e.target.id === "fullName") {
-        setFullName(e.target.value);
-      }
-      if (e.target.id === "email") {
-        setEmail(e.target.value);
-      }
-      if (e.target.id === "phoneNumber") {
-        setPhoneNumber(e.target.value);
-      }
-      if (e.target.id === "password") {
-        setPassword(e.target.value);
-      }
-    }
-  };
-
   const handleRegister = async () => {
     const loadingToastId = showLoadingToast("Loading...");
 
@@ -181,10 +164,10 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="mx-auto w-full rounded-lg md:mt-0 md:max-w-md">
-        <div className="mx-auto flex w-[22rem] flex-col lg:w-[30rem]">
-          <span className="items-center py-6 text-4xl font-bold text-primary">
+    <div className="flex h-full w-full">
+      <div className="mx-auto flex min-h-screen w-full items-center justify-center rounded-lg bg-white py-6 md:w-3/5">
+        <div className="mx-auto flex w-[70%] flex-col">
+          <span className="items-center pb-6 text-4xl font-bold text-primary">
             Register
           </span>
 
@@ -197,7 +180,7 @@ export const Register = () => {
               <span className="text-left text-lg">Name</span>
               <input
                 placeholder="Full Name"
-                onChange={handleInput}
+                onChange={(e) => setFullName(e.target.value)}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="text"
                 value={FullName}
@@ -210,7 +193,7 @@ export const Register = () => {
               <span className="text-left text-lg">Email</span>
               <input
                 placeholder="bingwa@gmail.com"
-                onChange={handleInput}
+                onChange={(e) => setEmail(e.target.value)}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="email"
                 value={Email}
@@ -223,7 +206,7 @@ export const Register = () => {
               <span className="text-left text-lg">Phone Number</span>
               <input
                 placeholder="08123456789"
-                onChange={handleInput}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
                 type="tel"
                 value={PhoneNumber}
@@ -233,12 +216,12 @@ export const Register = () => {
 
             {/* Buat Password */}
             <div className="flex flex-col gap-2">
-              <span className="text-left text-lg">Buat Password</span>
+              <span className="text-left text-lg">Create Password</span>
               <div className="relative flex flex-col">
                 <input
                   placeholder="Masukkan Password"
-                  onChange={handleInput}
-                  className="rounded-xl border-2 border-slate-300 px-4 py-3 focus:border-primary focus:outline-none"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="rounded-xl border-2 border-slate-300 px-4 py-3 pr-14 focus:border-primary focus:outline-none"
                   type={showPassword ? "text" : "password"}
                   value={Password}
                   id="password"
@@ -261,17 +244,15 @@ export const Register = () => {
             </div>
 
             {/* Button Daftar */}
-            <div className="flex flex-col py-2">
-              <button
-                type="button"
-                className="rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
-                onClick={() => {
-                  validateForm();
-                }}
-              >
-                Register
-              </button>
-            </div>
+            <button
+              type="button"
+              className="mt-2 rounded-xl bg-primary py-3 text-lg font-semibold text-white hover:bg-primary-hover"
+              onClick={() => {
+                validateForm();
+              }}
+            >
+              Register
+            </button>
 
             <div className="flex flex-col text-center">
               <span className=" text-center text-black">
@@ -301,13 +282,11 @@ export const Register = () => {
         </div>
       </div>
 
-      <div className="hidden h-screen w-2/5 items-center justify-center bg-primary md:flex lg:flex">
-        <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
-          <span className="text-center font-sans text-6xl text-white">
-            Bingwa
-          </span>
-        </div>
+      <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
+        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <span className="text-center font-sans text-6xl text-white">
+          Bingwa
+        </span>
       </div>
     </div>
   );
