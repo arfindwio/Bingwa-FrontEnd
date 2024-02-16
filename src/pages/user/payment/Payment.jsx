@@ -136,7 +136,7 @@ export const Payment = () => {
 
     if (payment) {
       showSuccessToast("Payment Success...!!!");
-      CookieStorage.set(CookiesKeys.PaymentSuccess, "payment success");
+      CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
       setTimeout(() => {
         if (storePaymentMidtrans) {
           window.location.href = storePaymentMidtrans.redirect_url;
