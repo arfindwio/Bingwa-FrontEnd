@@ -13,8 +13,7 @@ import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
 export const PaymentSuccess = () => {
   const navigate = useNavigate();
 
-  const [success, setSuccess] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [success, setSuccess] = useState(null);
 
   const paymentSuccess = CookieStorage.get(CookiesKeys.PaymentSuccess);
 
@@ -27,7 +26,9 @@ export const PaymentSuccess = () => {
     }
   }, []);
 
-  const handleDialogOpen = () => setDialogOpen(!dialogOpen);
+  const handleNavigate = () => {
+    navigate(`/detail-course/${success}`);
+  };
   return (
     <>
       <NavbarCourse />
@@ -59,7 +60,7 @@ export const PaymentSuccess = () => {
         <div className="my-5 flex flex-col items-center">
           <div
             className="mb-3 w-fit cursor-pointer items-center rounded-full bg-primary px-20 py-2 text-center text-lg font-semibold text-white"
-            onClick={handleDialogOpen}
+            onClick={handleNavigate}
           >
             Start Learning
           </div>
