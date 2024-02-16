@@ -109,8 +109,8 @@ export const NavbarCourse = () => {
             navigate("/login");
           }}
         >
-          <CgLogIn size={30} className="hidden md:flex lg:flex" />
-          <div className="text-xl">Masuk</div>
+          <CgLogIn size={30} className="flex" />
+          <div className="text-xl">Login</div>
         </div>
       ) : (
         <div className="flex w-1/2 items-center justify-end gap-4 text-white ">

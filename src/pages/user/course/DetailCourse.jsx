@@ -99,7 +99,7 @@ export const DetailCourse = () => {
   const loadingTracking = useSelector((state) => state.trackings.loading);
   const loadingEnrollments = useSelector((state) => state.enrollments.loading);
 
-  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 647 });
 
   const handleDialogPreparationOpen = () =>
     setDialogPreparationOpen(!dialogPreparationOpen);
@@ -271,7 +271,7 @@ export const DetailCourse = () => {
             <p className="text-lg">{storeDetailCourses?.mentor}</p>
           </div>
 
-          <div className="flex flex-wrap gap-4 md:gap-10 lg:gap-10">
+          <div className="flex flex-wrap gap-4 md:gap-5">
             <div className="flex items-center gap-1">
               <RiShieldStarLine size={20} color="#22c55e" />
               <p className="text-sm font-semibold text-primary">
@@ -292,14 +292,17 @@ export const DetailCourse = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center gap-3 ">
-          <div className="flex w-[50%] cursor-pointer items-center justify-center break-all rounded-full bg-green px-6 py-2 text-center font-semibold text-white lg:w-[45%]">
-            Join Telegram Grup
-            <HiChatAlt2 size={20} className="ms-2" />
+        <div
+          className="flex w-full flex-col items-center
+         gap-3 sm:flex-row "
+        >
+          <div className="flex w-full cursor-pointer flex-wrap items-center justify-center gap-2 break-all rounded-full bg-green px-6 py-2 text-center font-semibold text-white sm:w-[50%] sm:flex-nowrap lg:w-[45%]">
+            <p>Join Telegram Grup</p>
+            <HiChatAlt2 size={20} className="" />
           </div>
           {!token ? null : !enrollmentData || enrollmentData.review ? null : (
             <div
-              className="w-[50%] cursor-pointer items-center break-all rounded-full border-2 border-green bg-white px-6 py-2 text-center font-semibold text-green lg:w-[45%]"
+              className="w-full cursor-pointer items-center break-all rounded-full border-2 border-green bg-white px-6 py-2 text-center font-semibold text-green sm:w-[50%] lg:w-[45%]"
               onClick={handleDialogReviewOpen}
             >
               Add Review This Course
@@ -477,7 +480,7 @@ export const DetailCourse = () => {
         <>
           <div className="flex min-h-screen flex-col px-0 pb-6 pt-20 md:px-4 lg:px-28">
             {/* Button Back */}
-            <div className="w-fit pb-2 pt-4 md:pb-0 md:pt-6">
+            <div className="w-fit px-4 pb-2 pt-4 md:mb-2 md:pb-0 md:pt-6">
               <div
                 className="flex cursor-pointer items-center gap-2 font-semibold"
                 onClick={() => {
@@ -595,7 +598,7 @@ export const DetailCourse = () => {
                 : false
             }
             handler={handleDialogPreparationOpen}
-            className="py-3"
+            className="flex h-full flex-col items-center justify-center overflow-auto pt-5 sm:h-auto sm:py-3"
           >
             <DialogHeader className="flex flex-col">
               <IoCloseSharp
@@ -603,7 +606,7 @@ export const DetailCourse = () => {
                 className="absolute right-4 top-4 cursor-pointer text-primary"
                 onClick={handleDialogPreparationOpen}
               />
-              <h1 className="text-3xl font-semibold text-primary">
+              <h1 className="break-all text-center text-3xl font-semibold text-primary sm:break-normal">
                 Onboarding...
               </h1>
             </DialogHeader>
@@ -632,15 +635,15 @@ export const DetailCourse = () => {
             handler={handleDialogReviewOpen}
             className="py-3"
           >
-            <DialogHeader className="relative flex flex-col items-center">
-              <IoCloseSharp
-                size={30}
-                className="absolute right-4 top-4 cursor-pointer text-primary"
-                onClick={handleDialogReviewOpen}
-              />
-              <h1 className="text-2xl font-semibold text-slate-700">
+            <DialogHeader className="flex items-center justify-center sm:relative">
+              <h1 className="break-words text-center text-2xl font-semibold text-slate-700 sm:break-normal">
                 Rate and Review
               </h1>
+              <IoCloseSharp
+                size={30}
+                className="cursor-pointer text-primary sm:absolute sm:right-4 sm:top-4"
+                onClick={handleDialogReviewOpen}
+              />
             </DialogHeader>
             <DialogBody className="w-full text-sm">
               <div className="flex flex-col gap-4">
