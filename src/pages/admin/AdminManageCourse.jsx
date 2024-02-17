@@ -85,6 +85,7 @@ export const AdminManageCourse = () => {
   const storeCategories = useSelector(
     (state) => state.categories.categories.categories,
   );
+  console.log(storeCategories);
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
   );
@@ -544,7 +545,7 @@ export const AdminManageCourse = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Thumbnail Video URL</span>
+              <span className="text-slate-700">Course Image</span>
               <input
                 type="file"
                 id="image"
@@ -560,7 +561,7 @@ export const AdminManageCourse = () => {
                 onChange={(e) => setNewCategoryId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
-                {storeAllCourse.length === 0 ? (
+                {!storeCategories.length ? (
                   <option value="" hidden>
                     No category available
                   </option>
@@ -569,7 +570,7 @@ export const AdminManageCourse = () => {
                     <option value="" hidden>
                       Choose Category
                     </option>
-                    {storeCategories?.map((value) => (
+                    {storeCategories.map((value) => (
                       <option
                         key={value.id}
                         value={value.id}
@@ -744,7 +745,7 @@ export const AdminManageCourse = () => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-slate-700">Link Thumbnail</span>
+              <span className="text-slate-700">Course Image</span>
               <input
                 type="file"
                 id="image"
