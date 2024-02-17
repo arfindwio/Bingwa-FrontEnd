@@ -84,7 +84,7 @@ export const AdminManageLesson = () => {
     dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
     dispatch(getAllLessonsAction());
-    dispatch(getAllChaptersAction());
+    dispatch(getAllChaptersAction("limit=1000"));
   };
 
   const handleSearch = (formatSearch) => {
@@ -111,8 +111,8 @@ export const AdminManageLesson = () => {
     }
 
     if (newLesson) {
-      showSuccessToast("Lesson successfully added!");
       setDialogCreate(false);
+      showSuccessToast("Lesson successfully added!");
 
       setNewLessonName("");
       setNewVideoURL("");

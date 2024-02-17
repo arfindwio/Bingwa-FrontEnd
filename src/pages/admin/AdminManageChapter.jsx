@@ -79,7 +79,7 @@ export const AdminManageChapter = () => {
 
   const getAllData = () => {
     dispatch(getAllUsersAction());
-    dispatch(getAllCoursesAction());
+    dispatch(getAllCoursesAction("limit=1000"));
     dispatch(getAllChaptersAction());
   };
 
@@ -107,8 +107,8 @@ export const AdminManageChapter = () => {
     }
 
     if (newChapter) {
-      showSuccessToast("Chapter successfully added!");
       setDialogCreate(false);
+      showSuccessToast("Chapter successfully added!");
 
       setNewChapterName("");
       setNewCourseId("");
