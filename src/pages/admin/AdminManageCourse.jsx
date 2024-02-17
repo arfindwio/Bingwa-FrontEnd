@@ -106,8 +106,8 @@ export const AdminManageCourse = () => {
   const getAllData = () => {
     dispatch(getAllUsersAction());
     dispatch(getAllCoursesAction());
-    dispatch(getAllCategoriesAction());
-    dispatch(getAllPromotionsAction());
+    dispatch(getAllCategoriesAction("limit=1000"));
+    dispatch(getAllPromotionsAction("limit=1000"));
   };
 
   const handleSearch = (formatSearch) => {
@@ -150,8 +150,8 @@ export const AdminManageCourse = () => {
     }
 
     if (newCourse) {
-      showSuccessToast("Course successfully added!");
       setDialogCreate(false);
+      showSuccessToast("Course successfully added!");
 
       setNewCourseName("");
       setNewPrice("");

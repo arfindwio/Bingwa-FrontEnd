@@ -112,8 +112,8 @@ export const AdminManageCategory = () => {
     }
 
     if (newCategory) {
-      showSuccessToast("Category successfully added!");
       setDialogCreate(false);
+      showSuccessToast("Category successfully added!");
 
       setNewCategoryName("");
 

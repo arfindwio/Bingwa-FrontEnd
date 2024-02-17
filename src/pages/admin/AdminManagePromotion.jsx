@@ -107,8 +107,8 @@ export const AdminManagePromotion = () => {
     }
 
     if (newPromotion) {
-      showSuccessToast("Promotion successfully added!");
       setDialogCreate(false);
+      showSuccessToast("Promotion successfully added!");
 
       setNewDiscount("");
       setNewStartDate("");
