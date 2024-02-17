@@ -303,6 +303,7 @@ export const AdminManageLesson = () => {
             {loadingLessons ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"lessons"}
                   nextLink={storePaginationLessons?.links?.next}
                   prevLink={storePaginationLessons?.links?.prev}
                   totalItems={storePaginationLessons?.total_items}

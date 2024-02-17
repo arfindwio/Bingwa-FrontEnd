@@ -335,6 +335,7 @@ export const AllCourse = () => {
               {isLoadingCourses ? null : (
                 <div className="mx-auto">
                   <Pagination
+                    type={"courses"}
                     nextLink={storePaginationCourses?.links?.next}
                     prevLink={storePaginationCourses?.links?.prev}
                     totalItems={storePaginationCourses?.total_items}

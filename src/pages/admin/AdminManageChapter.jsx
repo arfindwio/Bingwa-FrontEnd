@@ -307,6 +307,7 @@ export const AdminManageChapter = () => {
             {loadingChapters ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"chapters"}
                   nextLink={storePaginationChapters?.links?.next}
                   prevLink={storePaginationChapters?.links?.prev}
                   totalItems={storePaginationChapters?.total_items}

@@ -85,7 +85,6 @@ export const AdminManageCourse = () => {
   const storeCategories = useSelector(
     (state) => state.categories.categories.categories,
   );
-  console.log(storeCategories);
   const storePromotions = useSelector(
     (state) => state.promotions.promotions.promotions,
   );
@@ -416,6 +415,7 @@ export const AdminManageCourse = () => {
             {loadingCourses ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"courses"}
                   nextLink={storePaginationCourses.links.next}
                   prevLink={storePaginationCourses.links.prev}
                   totalItems={storePaginationCourses.total_items}

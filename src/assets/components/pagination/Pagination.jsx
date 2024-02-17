@@ -6,11 +6,16 @@ import { useMediaQuery } from "react-responsive";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 
 // Redux Action
+import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
+import { getAllChaptersAction } from "../../../redux/action/chapters/ChaptersAction";
+import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
+import { getAllPromotionsAction } from "../../../redux/action/promotions/PromotionsAction";
+import { getAllPaymentsAction } from "../../../redux/action/payments/PaymentsAction";
 
 let currentPage = 1;
 
-export const Pagination = ({ nextLink, prevLink, totalItems }) => {
+export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
   const dispatch = useDispatch();
 
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
@@ -22,19 +27,29 @@ export const Pagination = ({ nextLink, prevLink, totalItems }) => {
     let page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
 
     currentPage = page;
-    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/courses/?`)[1];
+    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
-    dispatch(getAllCoursesAction(formatLink));
+    if (type === "categories") dispatch(getAllCategoriesAction(formatLink));
+    if (type === "courses") dispatch(getAllCoursesAction(formatLink));
+    if (type === "chapters") dispatch(getAllChaptersAction(formatLink));
+    if (type === "lessons") dispatch(getAllLessonsAction(formatLink));
+    if (type === "promotions") dispatch(getAllPromotionsAction(formatLink));
+    if (type === "payments") dispatch(getAllPaymentsAction(formatLink));
   };
 
   const handleNumberPageChange = (numberPage) => {
     let link = !nextLink ? prevLink : nextLink;
-    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/courses/?`)[1];
+    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
     let newLink = formatLink.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    dispatch(getAllCoursesAction(newLink));
+    if (type === "categories") dispatch(getAllCategoriesAction(newLink));
+    if (type === "courses") dispatch(getAllCoursesAction(newLink));
+    if (type === "chapters") dispatch(getAllChaptersAction(newLink));
+    if (type === "lessons") dispatch(getAllLessonsAction(newLink));
+    if (type === "promotions") dispatch(getAllPromotionsAction(newLink));
+    if (type === "payments") dispatch(getAllPaymentsAction(newLink));
   };
 
   const renderPageNumbers = () => {

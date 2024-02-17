@@ -302,6 +302,7 @@ export const AdminManageCategory = () => {
             {loadingCategories ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"categories"}
                   nextLink={storePaginationCategories?.links?.next}
                   prevLink={storePaginationCategories?.links?.prev}
                   totalItems={storePaginationCategories?.total_items}
