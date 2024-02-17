@@ -129,6 +129,7 @@ export const SearchCourse = () => {
               {isLoading ? null : (
                 <div className="mx-auto mt-10 font-semibold">
                   <Pagination
+                    type={"courses"}
                     nextLink={storePaginationCourses?.links?.next}
                     prevLink={storePaginationCourses?.links?.prev}
                     totalItems={storePaginationCourses?.total_items}

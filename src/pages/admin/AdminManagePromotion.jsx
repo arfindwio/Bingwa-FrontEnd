@@ -331,6 +331,7 @@ export const AdminManagePromotion = () => {
             {loadingPromotions ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"promotions"}
                   nextLink={storePaginationPromotions?.links?.next}
                   prevLink={storePaginationPromotions?.links?.prev}
                   totalItems={storePaginationPromotions?.total_items}

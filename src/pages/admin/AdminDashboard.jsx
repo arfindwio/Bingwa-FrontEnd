@@ -165,6 +165,7 @@ export const AdminDashboard = () => {
             {loadingPayments ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  type={"payments"}
                   nextLink={storePayments?.pagination?.links.next}
                   prevLink={storePayments?.pagination?.links.prev}
                   totalItems={storePayments?.pagination?.total_items}
