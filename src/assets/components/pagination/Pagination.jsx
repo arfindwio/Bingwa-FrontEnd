@@ -29,12 +29,14 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     currentPage = page;
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
-    if (type === "categories") dispatch(getAllCategoriesAction(formatLink));
-    if (type === "courses") dispatch(getAllCoursesAction(formatLink));
-    if (type === "chapters") dispatch(getAllChaptersAction(formatLink));
-    if (type === "lessons") dispatch(getAllLessonsAction(formatLink));
-    if (type === "promotions") dispatch(getAllPromotionsAction(formatLink));
-    if (type === "payments") dispatch(getAllPaymentsAction(formatLink));
+    if (type === "categories")
+      return dispatch(getAllCategoriesAction(formatLink));
+    if (type === "courses") return dispatch(getAllCoursesAction(formatLink));
+    if (type === "chapters") return dispatch(getAllChaptersAction(formatLink));
+    if (type === "lessons") return dispatch(getAllLessonsAction(formatLink));
+    if (type === "promotions")
+      return dispatch(getAllPromotionsAction(formatLink));
+    if (type === "payments") return dispatch(getAllPaymentsAction(formatLink));
   };
 
   const handleNumberPageChange = (numberPage) => {
@@ -44,12 +46,12 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     let newLink = formatLink.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    if (type === "categories") dispatch(getAllCategoriesAction(newLink));
-    if (type === "courses") dispatch(getAllCoursesAction(newLink));
-    if (type === "chapters") dispatch(getAllChaptersAction(newLink));
-    if (type === "lessons") dispatch(getAllLessonsAction(newLink));
-    if (type === "promotions") dispatch(getAllPromotionsAction(newLink));
-    if (type === "payments") dispatch(getAllPaymentsAction(newLink));
+    if (type === "categories") return dispatch(getAllCategoriesAction(newLink));
+    if (type === "courses") return dispatch(getAllCoursesAction(newLink));
+    if (type === "chapters") return dispatch(getAllChaptersAction(newLink));
+    if (type === "lessons") return dispatch(getAllLessonsAction(newLink));
+    if (type === "promotions") return dispatch(getAllPromotionsAction(newLink));
+    if (type === "payments") return dispatch(getAllPaymentsAction(newLink));
   };
 
   const renderPageNumbers = () => {

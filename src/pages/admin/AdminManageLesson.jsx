@@ -358,7 +358,7 @@ export const AdminManageLesson = () => {
               onChange={(e) => setNewChapterId(e.target.value)}
               className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
             >
-              {storeChapters.length === 0 ? (
+              {storeChapters?.length === 0 ? (
                 <option value="" hidden>
                   No chapter available
                 </option>
@@ -367,7 +367,7 @@ export const AdminManageLesson = () => {
                   <option value="" hidden>
                     Choose Chapter
                   </option>
-                  {storeChapters.map((value) => (
+                  {storeChapters?.map((value) => (
                     <option
                       key={value?.id}
                       value={value?.id}
@@ -440,7 +440,7 @@ export const AdminManageLesson = () => {
               <option value={updateLessonDetail?.chapterId} hidden>
                 {updateLessonDetail?.chapter?.name}
               </option>
-              {storeChapters.map((value) => (
+              {storeChapters?.map((value) => (
                 <option
                   key={value.id}
                   value={value.id}
