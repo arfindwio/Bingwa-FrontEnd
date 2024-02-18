@@ -115,7 +115,7 @@ export const AdminManageCourse = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllCoursesAction(`${formatLink}`));
+    dispatch(getAllCoursesAction(formatLink));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);

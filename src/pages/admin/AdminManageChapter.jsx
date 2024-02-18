@@ -89,7 +89,7 @@ export const AdminManageChapter = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllChaptersAction(`${formatLink}`));
+    dispatch(getAllChaptersAction(formatLink));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);

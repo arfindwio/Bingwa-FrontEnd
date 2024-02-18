@@ -51,7 +51,7 @@ export const AdminDashboard = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllPaymentsAction(`${formatLink}`));
+    dispatch(getAllPaymentsAction(formatLink));
   };
 
   const handleOpen = (openValue) => setOpen(openValue);

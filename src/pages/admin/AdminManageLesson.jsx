@@ -92,7 +92,7 @@ export const AdminManageLesson = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllLessonsAction(`${formatLink}`));
+    dispatch(getAllLessonsAction(formatLink));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);

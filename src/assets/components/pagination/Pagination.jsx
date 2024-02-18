@@ -3,6 +3,7 @@ import { useMediaQuery } from "react-responsive";
 
 // Icon
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
+import { format } from "prettier";
 
 let currentPage = 1;
 
@@ -15,28 +16,47 @@ export const Pagination = ({
 }) => {
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
-  const [fullQuery, setFullQuery] = useState("");
+  const getValueBetweenStrings = (url, startString, endString) => {
+    const regex = new RegExp(`${startString}(.*?)${endString}`);
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
 
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);
     let page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
 
-    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
-
     currentPage = page;
-    setFullQuery(formatLink);
-    onQuery(fullQuery);
+
+    const formatLink = getValueBetweenStrings(
+      link,
+      `${process.env.REACT_APP_SERVER}/${type}/?`,
+      "&page=",
+    );
+
+    if (formatLink) {
+      onQuery(`${formatLink}&page=${page}&limit=10`);
+    } else {
+      onQuery(`page=${page}&limit=10`);
+    }
   };
 
   const handleNumberPageChange = (numberPage) => {
     let link = !nextLink ? prevLink : nextLink;
-    let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
-
-    let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    setFullQuery(newLink);
-    onQuery(fullQuery);
+
+    const newLink = getValueBetweenStrings(
+      link,
+      `${process.env.REACT_APP_SERVER}/${type}/?`,
+      "&page=",
+    );
+
+    if (newLink) {
+      onQuery(`${newLink}&page=${numberPage}&limit=10`);
+    } else {
+      onQuery(`page=${numberPage}&limit=10`);
+    }
   };
 
   const renderPageNumbers = () => {
