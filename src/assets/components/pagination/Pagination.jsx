@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 
@@ -20,15 +20,21 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
 
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
-  if (!nextLink && !prevLink) return null;
+  const [fullQuery, setFullQuery] = useState("");
+
+  useEffect(() => {
+    if (fullQuery) {
+      return getAllData(fullQuery);
+    }
+  }, [fullQuery, dispatch, type]);
 
   const getAllData = (formatLink) => {
-    dispatch(getAllCategoriesAction(formatLink));
-    dispatch(getAllCoursesAction(formatLink));
-    dispatch(getAllChaptersAction(formatLink));
-    dispatch(getAllLessonsAction(formatLink));
-    dispatch(getAllPromotionsAction(formatLink));
-    dispatch(getAllPaymentsAction(formatLink));
+    if (type === "categories") dispatch(getAllCategoriesAction(formatLink));
+    if (type === "courses") dispatch(getAllCoursesAction(formatLink));
+    if (type === "chapters") dispatch(getAllChaptersAction(formatLink));
+    if (type === "lessons") dispatch(getAllLessonsAction(formatLink));
+    if (type === "promotions") dispatch(getAllPromotionsAction(formatLink));
+    if (type === "payments") dispatch(getAllPaymentsAction(formatLink));
   };
 
   const handlePageChange = (link) => {
@@ -38,7 +44,7 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
     currentPage = page;
-    getAllData(formatLink);
+    setFullQuery(formatLink);
   };
 
   const handleNumberPageChange = (numberPage) => {
@@ -48,7 +54,7 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    getAllData(newLink);
+    setFullQuery(newLink);
   };
 
   const renderPageNumbers = () => {
@@ -127,6 +133,8 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
 
     return pageNumbers;
   };
+
+  if (!nextLink && !prevLink) return null;
 
   return (
     <div className="mt-4 flex flex-wrap items-center justify-center">
