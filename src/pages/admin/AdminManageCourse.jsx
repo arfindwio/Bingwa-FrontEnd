@@ -763,7 +763,7 @@ export const AdminManageCourse = () => {
             <div className="flex flex-col">
               <span className="text-slate-700">Category</span>
               <select
-                value={updatePromotionId}
+                value={updateCategoryId}
                 onChange={(e) => setUpdateCategoryId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
