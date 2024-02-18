@@ -114,6 +114,10 @@ export const AdminManageCourse = () => {
     dispatch(getAllCoursesAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllCoursesAction(formatLink));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
   const handleOpen = (openValue) => setOpen(openValue);
@@ -414,6 +418,7 @@ export const AdminManageCourse = () => {
             {loadingCourses ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"courses"}
                   nextLink={storePaginationCourses.links.next}
                   prevLink={storePaginationCourses.links.prev}

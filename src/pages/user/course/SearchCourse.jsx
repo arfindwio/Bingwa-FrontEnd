@@ -57,6 +57,10 @@ export const SearchCourse = () => {
     if (token) dispatch(getAllEnrollmentsAction());
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllCoursesAction(formatLink));
+  };
+
   return (
     <>
       {isMobile ? <NavbarMobile /> : <NavbarCourse />}
@@ -129,6 +133,7 @@ export const SearchCourse = () => {
               {isLoading ? null : (
                 <div className="mx-auto mt-10 font-semibold">
                   <Pagination
+                    onQuery={handleQuery}
                     type={"courses"}
                     nextLink={storePaginationCourses?.links?.next}
                     prevLink={storePaginationCourses?.links?.prev}

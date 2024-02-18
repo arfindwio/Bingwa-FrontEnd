@@ -91,6 +91,10 @@ export const AdminManageLesson = () => {
     dispatch(getAllLessonsAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllLessonsAction(formatLink));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
   const handleOpen = (openValue) => setOpen(openValue);
@@ -303,6 +307,7 @@ export const AdminManageLesson = () => {
             {loadingLessons ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"lessons"}
                   nextLink={storePaginationLessons?.links?.next}
                   prevLink={storePaginationLessons?.links?.prev}

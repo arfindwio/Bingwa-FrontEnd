@@ -1,41 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 
 // Icon
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 
-// Redux Action
-import { getAllCategoriesAction } from "../../../redux/action/categories/CategoriesAction";
-import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
-import { getAllChaptersAction } from "../../../redux/action/chapters/ChaptersAction";
-import { getAllLessonsAction } from "../../../redux/action/lessons/LessonsAction";
-import { getAllPromotionsAction } from "../../../redux/action/promotions/PromotionsAction";
-import { getAllPaymentsAction } from "../../../redux/action/payments/PaymentsAction";
-
 let currentPage = 1;
 
-export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
-  const dispatch = useDispatch();
-
+export const Pagination = ({
+  onQuery,
+  type,
+  nextLink,
+  prevLink,
+  totalItems,
+}) => {
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
-
-  const [fullQuery, setFullQuery] = useState("");
-
-  useEffect(() => {
-    if (fullQuery) {
-      return getAllData(fullQuery);
-    }
-  }, [fullQuery, dispatch, type]);
-
-  const getAllData = (formatLink) => {
-    if (type === "categories") dispatch(getAllCategoriesAction(formatLink));
-    if (type === "courses") dispatch(getAllCoursesAction(formatLink));
-    if (type === "chapters") dispatch(getAllChaptersAction(formatLink));
-    if (type === "lessons") dispatch(getAllLessonsAction(formatLink));
-    if (type === "promotions") dispatch(getAllPromotionsAction(formatLink));
-    if (type === "payments") dispatch(getAllPaymentsAction(formatLink));
-  };
 
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);
@@ -44,7 +22,7 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
     currentPage = page;
-    setFullQuery(formatLink);
+    onQuery(formatLink);
   };
 
   const handleNumberPageChange = (numberPage) => {
@@ -54,7 +32,7 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
     let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    setFullQuery(newLink);
+    onQuery(newLink);
   };
 
   const renderPageNumbers = () => {

@@ -50,6 +50,10 @@ export const AdminDashboard = () => {
     dispatch(getAllPaymentsAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllPaymentsAction(formatLink));
+  };
+
   const handleOpen = (openValue) => setOpen(openValue);
 
   return (
@@ -165,6 +169,7 @@ export const AdminDashboard = () => {
             {loadingPayments ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"payments"}
                   nextLink={storePayments?.pagination?.links.next}
                   prevLink={storePayments?.pagination?.links.prev}
