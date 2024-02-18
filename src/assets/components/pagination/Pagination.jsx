@@ -22,7 +22,7 @@ export const Pagination = ({
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
     currentPage = page;
-    onQuery(formatLink);
+    onQuery(formatLink.toString());
   };
 
   const handleNumberPageChange = (numberPage) => {
@@ -32,7 +32,7 @@ export const Pagination = ({
     let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    onQuery(newLink);
+    onQuery(newLink.toString());
   };
 
   const renderPageNumbers = () => {
