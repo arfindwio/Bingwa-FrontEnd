@@ -71,7 +71,6 @@ export const AdminManageCourse = () => {
   const [updateCategoryId, setUpdateCategoryId] = useState("");
   const [updatePromotionId, setUpdatePromotionId] = useState("");
   const [updateCourseDetail, setUpdateCourseDetail] = useState({});
-  console.log(updatePromotionId);
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);

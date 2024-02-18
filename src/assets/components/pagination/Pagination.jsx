@@ -22,36 +22,33 @@ export const Pagination = ({ type, nextLink, prevLink, totalItems }) => {
 
   if (!nextLink && !prevLink) return null;
 
+  const getAllData = (formatLink) => {
+    dispatch(getAllCategoriesAction(formatLink));
+    dispatch(getAllCoursesAction(formatLink));
+    dispatch(getAllChaptersAction(formatLink));
+    dispatch(getAllLessonsAction(formatLink));
+    dispatch(getAllPromotionsAction(formatLink));
+    dispatch(getAllPaymentsAction(formatLink));
+  };
+
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);
     let page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
 
-    currentPage = page;
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
-    if (type === "categories")
-      return dispatch(getAllCategoriesAction(formatLink));
-    if (type === "courses") return dispatch(getAllCoursesAction(formatLink));
-    if (type === "chapters") return dispatch(getAllChaptersAction(formatLink));
-    if (type === "lessons") return dispatch(getAllLessonsAction(formatLink));
-    if (type === "promotions")
-      return dispatch(getAllPromotionsAction(formatLink));
-    if (type === "payments") return dispatch(getAllPaymentsAction(formatLink));
+    currentPage = page;
+    getAllData(formatLink);
   };
 
   const handleNumberPageChange = (numberPage) => {
     let link = !nextLink ? prevLink : nextLink;
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
-    let newLink = formatLink.replace(/(page=)\d+/, "$1" + numberPage);
+    let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    if (type === "categories") return dispatch(getAllCategoriesAction(newLink));
-    if (type === "courses") return dispatch(getAllCoursesAction(newLink));
-    if (type === "chapters") return dispatch(getAllChaptersAction(newLink));
-    if (type === "lessons") return dispatch(getAllLessonsAction(newLink));
-    if (type === "promotions") return dispatch(getAllPromotionsAction(newLink));
-    if (type === "payments") return dispatch(getAllPaymentsAction(newLink));
+    getAllData(newLink);
   };
 
   const renderPageNumbers = () => {
