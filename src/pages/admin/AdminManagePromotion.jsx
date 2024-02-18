@@ -87,6 +87,10 @@ export const AdminManagePromotion = () => {
     dispatch(getAllPromotionsAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllPromotionsAction(formatLink));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
   const handleOpen = (openValue) => setOpen(openValue);
@@ -331,6 +335,7 @@ export const AdminManagePromotion = () => {
             {loadingPromotions ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"promotions"}
                   nextLink={storePaginationPromotions?.links?.next}
                   prevLink={storePaginationPromotions?.links?.prev}

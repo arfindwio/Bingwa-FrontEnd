@@ -90,6 +90,10 @@ export const AdminManageCategory = () => {
     dispatch(getAllCategoriesAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllCategoriesAction(formatLink));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
   const handleOpen = (openValue) => setOpen(openValue);
@@ -302,6 +306,7 @@ export const AdminManageCategory = () => {
             {loadingCategories ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"categories"}
                   nextLink={storePaginationCategories?.links?.next}
                   prevLink={storePaginationCategories?.links?.prev}

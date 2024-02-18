@@ -94,7 +94,9 @@ export const AllCourse = () => {
     if (token) dispatch(getAllEnrollmentsAction());
   };
 
-  // Function to handle filter changes
+  const handleQuery = (formatLink) => {
+    dispatch(getAllCoursesAction(formatLink));
+  };
 
   const handleFilterChange = (filterType, value) => {
     if (filterType === "filter") {
@@ -335,6 +337,7 @@ export const AllCourse = () => {
               {isLoadingCourses ? null : (
                 <div className="mx-auto">
                   <Pagination
+                    onQuery={handleQuery}
                     type={"courses"}
                     nextLink={storePaginationCourses?.links?.next}
                     prevLink={storePaginationCourses?.links?.prev}

@@ -87,6 +87,10 @@ export const AdminManageChapter = () => {
     dispatch(getAllChaptersAction(formatSearch));
   };
 
+  const handleQuery = (formatLink) => {
+    dispatch(getAllChaptersAction(formatLink));
+  };
+
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);
   const handleDialogEdit = () => setDialogEdit(!dialogEdit);
   const handleOpen = (openValue) => setOpen(openValue);
@@ -307,6 +311,7 @@ export const AdminManageChapter = () => {
             {loadingChapters ? null : (
               <div className="mx-auto pt-5 font-semibold">
                 <Pagination
+                  onQuery={handleQuery}
                   type={"chapters"}
                   nextLink={storePaginationChapters?.links?.next}
                   prevLink={storePaginationChapters?.links?.prev}
