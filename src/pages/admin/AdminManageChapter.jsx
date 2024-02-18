@@ -32,6 +32,7 @@ import {
   deleteChapterAction,
 } from "../../redux/action/chapters/ChaptersAction";
 import { getAllCoursesAction } from "../../redux/action/courses/CoursesAction";
+import { type } from "@testing-library/user-event/dist/type";
 
 export const AdminManageChapter = () => {
   const dispatch = useDispatch();
