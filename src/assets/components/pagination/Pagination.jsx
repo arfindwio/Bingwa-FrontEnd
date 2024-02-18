@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 // Icon
@@ -15,6 +15,8 @@ export const Pagination = ({
 }) => {
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
+  const [fullQuery, setFullQuery] = useState("");
+
   const handlePageChange = (link) => {
     const pageMatch = link.match(/page=(\d+)/);
     let page = pageMatch ? parseInt(pageMatch[1], 10) : 1;
@@ -22,7 +24,8 @@ export const Pagination = ({
     let formatLink = link.split(`${process.env.REACT_APP_SERVER}/${type}/?`)[1];
 
     currentPage = page;
-    onQuery(formatLink.toString());
+    setFullQuery(formatLink);
+    onQuery(fullQuery);
   };
 
   const handleNumberPageChange = (numberPage) => {
@@ -32,7 +35,8 @@ export const Pagination = ({
     let newLink = formatLink?.replace(/(page=)\d+/, "$1" + numberPage);
 
     currentPage = numberPage;
-    onQuery(newLink.toString());
+    setFullQuery(newLink);
+    onQuery(fullQuery);
   };
 
   const renderPageNumbers = () => {
