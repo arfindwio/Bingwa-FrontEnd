@@ -71,6 +71,7 @@ export const AdminManageCourse = () => {
   const [updateCategoryId, setUpdateCategoryId] = useState("");
   const [updatePromotionId, setUpdatePromotionId] = useState("");
   const [updateCourseDetail, setUpdateCourseDetail] = useState({});
+  console.log(updatePromotionId);
 
   const [dialogCreate, setDialogCreate] = useState(false);
   const [dialogEdit, setDialogEdit] = useState(false);
@@ -193,7 +194,9 @@ export const AdminManageCourse = () => {
     setUpdateForumUrl(courseToEdit ? courseToEdit.forumURL : null || null);
     setUpdateCategoryId(courseToEdit ? courseToEdit.categoryId : null || null);
     setUpdatePromotionId(
-      courseToEdit.promotionId ? courseToEdit.promotionId : null || null,
+      !courseToEdit.promotionId
+        ? null
+        : Number(courseToEdit.promotionId) || null,
     );
     setUpdateCourseDetail(courseToEdit);
 
@@ -216,10 +219,7 @@ export const AdminManageCourse = () => {
     formData.append("forumURL", updateForumUrl);
     formData.append("image", updateImage);
     formData.append("categoryId", Number(updateCategoryId));
-    formData.append(
-      "promotionId",
-      updatePromotionId ? Number(updatePromotionId) : null,
-    );
+    formData.append("promotionId", updatePromotionId);
 
     const updatedCourse = await dispatch(
       putCourseAction(formData, editingCourseId),
@@ -599,6 +599,8 @@ export const AdminManageCourse = () => {
                     <option value="" hidden>
                       Choose Promotion
                     </option>
+                    <option value="null">Not promotion</option>
+
                     {storePromotions?.map((value) => (
                       <option
                         key={value.id}
@@ -757,8 +759,8 @@ export const AdminManageCourse = () => {
             <div className="flex flex-col">
               <span className="text-slate-700">Category</span>
               <select
-                value={newCategoryId}
-                onChange={(e) => setNewCategoryId(e.target.value)}
+                value={updatePromotionId}
+                onChange={(e) => setUpdateCategoryId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
                 <option value={updateCourseDetail?.categoryId} hidden>
@@ -778,16 +780,17 @@ export const AdminManageCourse = () => {
             <div className="flex flex-col">
               <span className="text-slate-700">Promotion</span>
               <select
-                value={newPromotionId}
-                onChange={(e) => setNewPromotionId(e.target.value)}
+                value={updatePromotionId}
+                onChange={(e) => setUpdatePromotionId(e.target.value)}
                 className="flex rounded-xl border-2 border-slate-300 px-4 py-2 outline-none focus:border-primary"
               >
-                {storePromotions?.length === 0 ? (
+                {!storePromotions?.length ? (
                   <option value="" hidden>
                     No promotion available
                   </option>
                 ) : (
                   <>
+                    <option value="null">Not promotion</option>
                     <option value={updateCourseDetail?.promotionId} hidden>
                       {updateCourseDetail.promotionId
                         ? `${updateCourseDetail?.promotion?.discount * 100} %`
