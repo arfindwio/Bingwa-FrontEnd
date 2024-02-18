@@ -91,7 +91,7 @@ export const AdminManageCategory = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllCategoriesAction(formatLink));
+    dispatch(getAllCategoriesAction(`${formatLink}`));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);

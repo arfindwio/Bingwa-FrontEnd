@@ -88,7 +88,7 @@ export const AdminManagePromotion = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllPromotionsAction(formatLink));
+    dispatch(getAllPromotionsAction(`${formatLink}`));
   };
 
   const handleDialogCreate = () => setDialogCreate(!dialogCreate);

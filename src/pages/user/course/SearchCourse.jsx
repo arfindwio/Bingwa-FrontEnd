@@ -58,7 +58,7 @@ export const SearchCourse = () => {
   };
 
   const handleQuery = (formatLink) => {
-    dispatch(getAllCoursesAction(formatLink));
+    dispatch(getAllCoursesAction(`${formatLink}`));
   };
 
   return (
