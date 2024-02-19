@@ -31,7 +31,7 @@ export const CardDetailCourse = ({
       {isLoading ? (
         <CardCourseSkeleton />
       ) : (
-        <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md">
+        <div className="flex flex-col overflow-hidden rounded-2xl border-2 bg-white shadow-md">
           <div
             className="h-32 min-w-fit scale-105 bg-center bg-no-repeat"
             style={{
@@ -61,40 +61,28 @@ export const CardDetailCourse = ({
               <div className="font-semibold text-slate-800">{title}</div>
               <div className="text-slate-500">by {author}</div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-0">
               <div className="flex items-center gap-1">
-                <RiShieldStarLine
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <RiShieldStarLine size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {level}
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <LiaBookSolid
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <LiaBookSolid size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {modul} Modul
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <IoTime
-                  size={20}
-                  color="#22c55e"
-                  className="hidden md:flex lg:flex"
-                />
+                <IoTime size={20} color="#22c55e" className="flex" />
                 <div className="text-sm font-semibold text-primary">
                   {duration} Minute
                 </div>
               </div>
             </div>
             {isPremium ? (
-              <div className="flex items-center">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover">
                   <div className="flex items-center gap-2">
                     <IoDiamond size={20} color="white" />
@@ -107,8 +95,8 @@ export const CardDetailCourse = ({
                   </div>
                 </div>
                 {promotion.discount ? (
-                  <div className="ms-2 font-bold text-red-500">
-                    <span className="me-1 font-semibold text-slate-500 line-through">
+                  <div className="font-bold text-red-500">
+                    <span className="mr-1 font-semibold text-slate-500 line-through">
                       Rp {price}
                     </span>
                     {promotion?.discount * 100}%
