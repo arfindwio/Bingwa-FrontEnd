@@ -99,7 +99,7 @@ export const DetailCourse = () => {
   const loadingTracking = useSelector((state) => state.trackings.loading);
   const loadingEnrollments = useSelector((state) => state.enrollments.loading);
 
-  const isMobile = useMediaQuery({ maxDeviceWidth: 647 });
+  const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   const handleDialogPreparationOpen = () =>
     setDialogPreparationOpen(!dialogPreparationOpen);
@@ -151,13 +151,8 @@ export const DetailCourse = () => {
     }
   };
 
-  const handleDetail = () => {
-    handleDialogOpen();
-    setDialogOpen(false);
-  };
-
   const handleDialogOpen = () => {
-    setDialogOpen(true);
+    setDialogOpen(!dialogOpen);
   };
 
   const handleEnrollCourse = async () => {
@@ -350,7 +345,7 @@ export const DetailCourse = () => {
                 {!token ? (
                   <div
                     className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                    onClick={handleEnrollCourse}
+                    onClick={handleDialogOpen}
                   >
                     {storeDetailCourses?.isPremium
                       ? "Buy Course"
@@ -361,7 +356,7 @@ export const DetailCourse = () => {
                     {!enrollmentData ? (
                       <div
                         className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                        onClick={handleEnrollCourse}
+                        onClick={handleDialogOpen}
                       >
                         {storeDetailCourses?.isPremium
                           ? "Buy Course"
@@ -395,11 +390,11 @@ export const DetailCourse = () => {
               {loadingChapters ? (
                 <DetailCourseSkeleton2 />
               ) : (
-                <div className="flex justify-between gap-10 pt-2">
-                  <h2 className="font-semibold text-primary">
+                <div className="flex justify-between pt-2">
+                  <h2 className="w-[75%] font-semibold text-primary">
                     Chapter {index + 1} - {chapter?.name}
                   </h2>
-                  <h2 className="font-semibold text-blue">
+                  <h2 className="w-[25%] text-right font-semibold text-blue">
                     {chapter?.duration} Minute
                   </h2>
                 </div>
@@ -613,7 +608,7 @@ export const DetailCourse = () => {
             <DialogBody className="flex flex-col items-center justify-center px-20 text-center">
               <img src={onboarding} alt="onboarding" className="w-[50%]" />
               <h1 className="my-6 font-semibold text-slate-800">
-                Persiapkan hal berikut untuk belajar yang maksimal:
+                Things to prepare for maximum learning:
               </h1>
               <p className="text-slate-600">
                 {storeDetailCourses?.learningMaterial}
@@ -699,21 +694,25 @@ export const DetailCourse = () => {
           </Dialog>
 
           {/* Dialog Payment */}
-          <Dialog open={dialogOpen} handler={handleDialogOpen} className="py-3">
+          <Dialog
+            open={dialogOpen}
+            handler={handleDialogOpen}
+            className="rounded-3xl py-3 "
+          >
             <DialogHeader className="relative flex flex-col items-center">
               <IoCloseSharp
                 size={30}
                 className="absolute right-4 top-4 cursor-pointer text-primary"
-                onClick={handleDetail}
+                onClick={handleDialogOpen}
               />
-              <h1 className="text-lg font-semibold text-slate-700">
+              <h1 className="pr-4 text-center text-xl font-bold text-slate-700 sm:pr-0">
                 One step closer to
               </h1>
-              <h1 className="text-lg font-semibold text-primary">
-                Your Pride Course
+              <h1 className="pr-4 text-center text-xl font-semibold text-primary sm:pr-0">
+                Premium Course
               </h1>
             </DialogHeader>
-            <DialogBody className="w-full text-sm">
+            <DialogBody className="w-full py-0">
               <CardDetailCourse
                 image={storeDetailCourses?.courseImg}
                 category={storeDetailCourses?.category?.categoryName}

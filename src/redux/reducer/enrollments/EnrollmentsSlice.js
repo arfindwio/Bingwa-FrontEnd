@@ -45,6 +45,7 @@ const enrollmentSlice = createSlice({
     setEnrollmentPreparation: (state, action) => {
       state.enrollmentPreparation = action.payload;
     },
+    resetEnrollment: () => initialState,
     startLoading: (state) => {
       state.loading = true;
     },
@@ -62,6 +63,7 @@ export const {
   updateEnrollment,
   deleteEnrollment,
   setEnrollmentPreparation,
+  resetEnrollment,
   startLoading,
   endLoading,
 } = enrollmentSlice.actions;

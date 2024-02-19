@@ -58,7 +58,7 @@ export const Login = () => {
     if (login) {
       showSuccessToast("Login Successful!");
       setTimeout(() => {
-        navigate("/");
+        navigate(window.history.back());
       }, 2000);
     }
   };

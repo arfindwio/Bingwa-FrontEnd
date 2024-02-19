@@ -47,7 +47,7 @@ export const NavbarCourse = () => {
       if (token) {
         const user = await dispatch(getUserAuthenticateAction());
         if (!user) {
-          CookieStorage.remove(CookiesKeys.AuthToken);
+          dispatch(logoutUserAction());
         }
       }
     };
@@ -104,7 +104,7 @@ export const NavbarCourse = () => {
 
       {!token ? (
         <div
-          className="flex w-[40%] cursor-pointer justify-end gap-2 font-semibold text-white"
+          className="flex w-1/2 cursor-pointer justify-end gap-2 font-semibold text-white"
           onClick={() => {
             navigate("/login");
           }}
