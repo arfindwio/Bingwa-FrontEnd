@@ -291,11 +291,17 @@ export const DetailCourse = () => {
           className="flex w-full flex-col items-center
          gap-3 sm:flex-row "
         >
-          <div className="flex w-full cursor-pointer flex-wrap items-center justify-center gap-2 break-all rounded-full bg-green px-6 py-2 text-center font-semibold text-white sm:w-[50%] sm:flex-nowrap lg:w-[45%]">
+          <div
+            className="flex w-full cursor-pointer flex-wrap items-center justify-center gap-2 break-all rounded-full bg-green px-6 py-2 text-center font-semibold text-white sm:w-[50%] sm:flex-nowrap lg:w-[45%]"
+            onClick={() => {
+              if (token && enrollmentData)
+                window.open(storeDetailCourses?.forumURL, "_blank");
+            }}
+          >
             <p>Join Telegram Grup</p>
-            <HiChatAlt2 size={20} className="" />
+            <HiChatAlt2 size={20} />
           </div>
-          {!token ? null : !enrollmentData || enrollmentData.review ? null : (
+          {!token || !enrollmentData || enrollmentData.review ? null : (
             <div
               className="w-full cursor-pointer items-center break-all rounded-full border-2 border-green bg-white px-6 py-2 text-center font-semibold text-green sm:w-[50%] lg:w-[45%]"
               onClick={handleDialogReviewOpen}
@@ -342,39 +348,46 @@ export const DetailCourse = () => {
             <>
               <h1 className="text-xl font-bold">Learning Materials</h1>
               <div className="flex w-fit items-center justify-between gap-2 rounded-xl">
-                {!token ? (
+                {!token && (
                   <div
                     className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                    onClick={handleDialogOpen}
+                    onClick={
+                      storeDetailCourses?.isPremium && token
+                        ? handleDialogOpen
+                        : handleEnrollCourse
+                    }
                   >
                     {storeDetailCourses?.isPremium
                       ? "Buy Course"
                       : "Enroll Course"}
                   </div>
-                ) : (
+                )}
+
+                {token && !enrollmentData && (
+                  <div
+                    className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                    onClick={
+                      storeDetailCourses?.isPremium && token
+                        ? handleDialogOpen
+                        : handleEnrollCourse
+                    }
+                  >
+                    {storeDetailCourses?.isPremium
+                      ? "Buy Course"
+                      : "Enroll Course"}
+                  </div>
+                )}
+
+                {token && enrollmentData && (
                   <>
-                    {!enrollmentData ? (
-                      <div
-                        className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
-                        onClick={handleDialogOpen}
-                      >
-                        {storeDetailCourses?.isPremium
-                          ? "Buy Course"
-                          : "Enroll Course"}
-                      </div>
-                    ) : (
-                      <>
-                        <TbProgressCheck
-                          size={30}
-                          color="#22c55e"
-                          className="hidden md:hidden lg:flex"
-                        />
-                        <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                          {Math.floor(enrollmentData?.progress * 100)}%
-                          Completed
-                        </div>
-                      </>
-                    )}
+                    <TbProgressCheck
+                      size={30}
+                      color="#22c55e"
+                      className="hidden md:hidden lg:flex"
+                    />
+                    <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
+                      {Math.floor(enrollmentData?.progress * 100)}% Completed
+                    </div>
                   </>
                 )}
               </div>
