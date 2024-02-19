@@ -21,6 +21,7 @@ import {
   startLoading,
   endLoading,
 } from "../../reducer/users/UsersSlice";
+import { resetEnrollment } from "../../reducer/enrollments/EnrollmentsSlice";
 import { showErrorToast } from "../../../helper/ToastHelper";
 import { CookiesKeys, CookieStorage } from "../../../utils/cookie";
 
@@ -63,8 +64,18 @@ export const postLoginUserAction = (input) => async (dispatch) => {
 };
 
 export const logoutUserAction = () => (dispatch) => {
-  CookieStorage.remove(CookiesKeys.AuthToken);
-  window.location.href = "/";
+  try {
+    dispatch(resetEnrollment());
+    CookieStorage.remove(CookiesKeys.AuthToken);
+  } catch (err) {
+    if (err.response) {
+      if (err.response.status >= 400 && err.response.status <= 500) {
+        showErrorToast(err.response.data.message);
+      } else {
+        console.error("unexpected Error", err);
+      }
+    }
+  }
 };
 
 export const putVerifyOtpAction = (email) => async (dispatch) => {

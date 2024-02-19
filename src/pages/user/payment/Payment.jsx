@@ -61,7 +61,7 @@ export const Payment = () => {
 
   const storeCourses = useSelector((state) => state.courses.courses.courses);
   const storePaymentMidtrans = useSelector(
-    (state) => state.payments.paymentMidtrans.transaction,
+    (state) => state.payments?.paymentMidtrans?.transaction,
   );
   const storeEnrollments = useSelector(
     (state) => state.enrollments.enrollments,
@@ -573,10 +573,12 @@ export const Payment = () => {
               </div>
               <div className="text-base font-semibold text-primary md:text-xl lg:text-lg">
                 Rp{" "}
-                {filteredCourses?.price -
-                  filteredCourses?.promotion?.discount *
-                    filteredCourses?.price +
-                  0.11 * filteredCourses?.price}
+                {!filteredCourses?.promotion
+                  ? filteredCourses?.price + 0.11 * filteredCourses?.price
+                  : filteredCourses?.price -
+                    filteredCourses?.promotion?.discount *
+                      filteredCourses?.price +
+                    0.11 * filteredCourses?.price}
               </div>
             </div>
           </div>
