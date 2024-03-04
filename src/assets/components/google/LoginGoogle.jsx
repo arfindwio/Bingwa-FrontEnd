@@ -5,8 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 
 export const LoginGoogle = () => {
   const handleLoginGoogle = async () => {
-    // window.location = "https://bingwa-b11.vercel.app/api/v1/users/google";
-    window.location = "http://localhost:8000/api/v1/users/google";
+    window.location = `${process.env.REACT_APP_SERVER}/users/google`;
   };
 
   return (
