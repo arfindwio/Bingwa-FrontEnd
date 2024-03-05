@@ -14,7 +14,7 @@ export const LoginGoogle = () => {
       onClick={handleLoginGoogle}
     >
       <FcGoogle size={30} />
-      <span className="font-semibold">Masuk dengan Google</span>
+      <span className="font-semibold">Login With Google</span>
     </div>
   );
 };
