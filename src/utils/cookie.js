@@ -8,6 +8,7 @@ export const CookiesKeys = {
   CategoryFilter: "categoryFilter",
   SearchFilter: "searchFilter",
   PaymentSuccess: "paymentSuccess",
+  GoogleToken: "googleToken",
 };
 
 const CookieOptions = {
