@@ -55,14 +55,6 @@ export const NavbarCourse = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const myCookieValue = getCookie("googleToken");
-    if (myCookieValue) {
-      CookieStorage.set(CookiesKeys.AuthToken, myCookieValue);
-      CookieStorage.remove(CookiesKeys.GoogleToken);
-    }
-  }, []);
-
   const handleSearchCourse = (searchInput) => {
     const search = dispatch(getAllCoursesAction(searchInput));
 
@@ -86,6 +78,12 @@ export const NavbarCourse = () => {
     }
     return null;
   };
+
+  const myCookieValue = getCookie("googleToken");
+  if (myCookieValue) {
+    CookieStorage.set(CookiesKeys.AuthToken, myCookieValue);
+    CookieStorage.remove(CookiesKeys.GoogleToken);
+  }
 
   return (
     <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-primary px-2 py-4  md:px-6 lg:px-28">
