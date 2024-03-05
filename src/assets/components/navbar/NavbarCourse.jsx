@@ -38,16 +38,19 @@ export const NavbarCourse = () => {
   const [searchInput, setSearchInput] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
 
+  const urlParams = new URLSearchParams(window.location.search);
   const currentPath = location.pathname;
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
-  const googleToken = CookieStorage.get(CookiesKeys.GoogleToken);
-  console.log(googleToken);
 
-  if (googleToken) {
-    CookieStorage.set(CookiesKeys.AuthToken, googleToken);
-    localStorage.removeItem("googleToken");
-  }
+  const googleToken = urlParams.get("googleToken");
+
+  useEffect(() => {
+    if (googleToken) {
+      CookieStorage.set(CookiesKeys.AuthToken, googleToken);
+      navigate(`/`);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
