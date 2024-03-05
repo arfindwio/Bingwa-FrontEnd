@@ -55,6 +55,14 @@ export const NavbarCourse = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const myCookieValue = getCookie("googleToken");
+    if (myCookieValue) {
+      CookieStorage.set(CookiesKeys.AuthToken, myCookieValue);
+      CookieStorage.remove(CookiesKeys.GoogleToken);
+    }
+  }, []);
+
   const handleSearchCourse = (searchInput) => {
     const search = dispatch(getAllCoursesAction(searchInput));
 
@@ -66,6 +74,17 @@ export const NavbarCourse = () => {
 
   const handleLogout = () => {
     dispatch(logoutUserAction());
+  };
+
+  const getCookie = (name) => {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        return cookie.substring(name.length + 1);
+      }
+    }
+    return null;
   };
 
   return (
