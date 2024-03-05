@@ -43,7 +43,6 @@ export const NavbarCourse = () => {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
   const googleToken = CookieStorage.get(CookiesKeys.GoogleToken);
   console.log(googleToken);
-  CookieStorage.set(CookiesKeys.AuthToken, googleToken);
 
   if (googleToken) {
     CookieStorage.set(CookiesKeys.AuthToken, googleToken);
