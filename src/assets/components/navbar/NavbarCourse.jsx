@@ -41,6 +41,14 @@ export const NavbarCourse = () => {
   const currentPath = location.pathname;
 
   const token = CookieStorage.get(CookiesKeys.AuthToken);
+  const googleToken = CookieStorage.get(CookiesKeys.GoogleToken);
+  console.log(googleToken);
+  CookieStorage.set(CookiesKeys.AuthToken, googleToken);
+
+  if (googleToken) {
+    CookieStorage.set(CookiesKeys.AuthToken, googleToken);
+    localStorage.removeItem("googleToken");
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,23 +75,6 @@ export const NavbarCourse = () => {
   const handleLogout = () => {
     dispatch(logoutUserAction());
   };
-
-  const getCookie = (name) => {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + "=")) {
-        return cookie.substring(name.length + 1);
-      }
-    }
-    return null;
-  };
-
-  const myCookieValue = getCookie("googleToken");
-  if (myCookieValue) {
-    CookieStorage.set(CookiesKeys.AuthToken, myCookieValue);
-    CookieStorage.remove(CookiesKeys.GoogleToken);
-  }
 
   return (
     <div className="fixed top-0 z-20 flex w-full items-center justify-between bg-primary px-2 py-4  md:px-6 lg:px-28">
