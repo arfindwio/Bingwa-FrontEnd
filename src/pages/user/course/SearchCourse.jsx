@@ -34,6 +34,7 @@ export const SearchCourse = () => {
 
   const [searchInput, setSearchInput] = useState("");
 
+  // Get Token
   const token = CookieStorage.get(CookiesKeys.AuthToken);
   const searchFilter = CookieStorage.get(CookiesKeys.SearchFilter);
 
@@ -47,16 +48,12 @@ export const SearchCourse = () => {
     } else {
       dispatch(getAllCoursesAction("limit=15"));
     }
-  }, [searchFilter]);
+  }, [searchFilter, dispatch]);
 
   useEffect(() => {
-    getAllData();
-  }, [dispatch]);
-
-  const getAllData = () => {
     dispatch(getAllLessonsAction());
     if (token) dispatch(getAllEnrollmentsAction());
-  };
+  }, [dispatch, token]);
 
   const handleQuery = (formatLink) => {
     dispatch(getAllCoursesAction(formatLink));
