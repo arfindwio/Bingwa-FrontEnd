@@ -47,16 +47,12 @@ export const SearchCourse = () => {
     } else {
       dispatch(getAllCoursesAction("limit=15"));
     }
-  }, [searchFilter]);
+  }, [searchFilter, dispatch]);
 
   useEffect(() => {
-    getAllData();
-  }, [dispatch]);
-
-  const getAllData = () => {
     dispatch(getAllLessonsAction());
     if (token) dispatch(getAllEnrollmentsAction());
-  };
+  }, [dispatch, token]);
 
   const handleQuery = (formatLink) => {
     dispatch(getAllCoursesAction(formatLink));
