@@ -66,7 +66,9 @@ export const NavbarCourse = () => {
   }, []);
 
   const handleSearchCourse = (searchInput) => {
-    const search = dispatch(getAllCoursesAction(searchInput));
+    const search = dispatch(
+      getAllCoursesAction(`search=${searchInput}&limit=15`),
+    );
 
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);

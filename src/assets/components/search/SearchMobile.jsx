@@ -18,13 +18,16 @@ export const SearchMobile = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearchCourse = (searchInput) => {
-    const search = dispatch(getAllCoursesAction(searchInput));
+    const search = dispatch(
+      getAllCoursesAction(`search=${searchInput}&limit=15`),
+    );
 
     if (search) {
       CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
       navigate(`/search-course`);
     }
   };
+
   return (
     <div className=" bg-secondary px-3 pt-5 md:absolute md:w-full">
       <div className="relative rounded-2xl shadow-lg">

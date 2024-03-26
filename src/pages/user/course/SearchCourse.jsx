@@ -45,7 +45,7 @@ export const SearchCourse = () => {
       dispatch(getAllCoursesAction(formatSearch));
 
       CookieStorage.remove(CookiesKeys.SearchFilter);
-    } else {
+    } else if (!searchFilter) {
       dispatch(getAllCoursesAction("limit=15"));
     }
   }, [searchFilter, dispatch]);
