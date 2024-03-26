@@ -34,6 +34,7 @@ export const SearchCourse = () => {
 
   const [searchInput, setSearchInput] = useState("");
 
+  // Get Token
   const token = CookieStorage.get(CookiesKeys.AuthToken);
   const searchFilter = CookieStorage.get(CookiesKeys.SearchFilter);
 
