@@ -50,7 +50,7 @@ export const NavbarCourse = () => {
       CookieStorage.set(CookiesKeys.AuthToken, googleToken);
       navigate(`/`);
     }
-  }, []);
+  }, [googleToken, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +63,7 @@ export const NavbarCourse = () => {
     };
 
     fetchData();
-  }, []);
+  }, [dispatch, token]);
 
   const handleSearchCourse = (searchInput) => {
     const search = dispatch(
@@ -71,8 +71,7 @@ export const NavbarCourse = () => {
     );
 
     if (search) {
-      CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
-      navigate(`/search-course`);
+      navigate(`/search-course`, { state: { inputSearch: searchInput } });
     }
   };
 

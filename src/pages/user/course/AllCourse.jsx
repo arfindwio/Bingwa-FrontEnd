@@ -61,24 +61,38 @@ export const AllCourse = () => {
   }, []);
 
   useEffect(() => {
-    if (categoryFilter) {
-      if (!selectedCategories.includes(categoryFilter)) {
-        return setSelectedCategories([categoryFilter]);
-      }
+    const timeoutId = setTimeout(() => {
+      if (categoryFilter) {
+        if (!selectedCategories.includes(categoryFilter)) {
+          return setSelectedCategories([categoryFilter]);
+        }
 
-      return CookieStorage.remove(CookiesKeys.CategoryFilter);
-    } else {
-      return getAllData();
-    }
+        return CookieStorage.remove(CookiesKeys.CategoryFilter);
+      } else {
+        dispatch(getAllCoursesAction());
+        dispatch(getAllLessonsAction());
+        if (token) dispatch(getAllEnrollmentsAction());
+      }
+    }, 800);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [categoryFilter, filters, selectedCategories, selectedLevels, dispatch]);
 
   useEffect(() => {
-    const formatSearch = searchInput ? `search=${searchInput}` : "";
-    const fullQuery = formatSearch
-      ? `${formatSearch}&${queryParams}`
-      : queryParams;
+    const timeoutId = setTimeout(() => {
+      const formatSearch = searchInput ? `search=${searchInput}` : "";
+      const fullQuery = formatSearch
+        ? `${formatSearch}&${queryParams}`
+        : queryParams;
 
-    dispatch(getAllCoursesAction(fullQuery));
+      dispatch(getAllCoursesAction(fullQuery));
+    }, 800);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [
     categoryFilter,
     filters,
@@ -87,12 +101,6 @@ export const AllCourse = () => {
     searchInput,
     dispatch,
   ]);
-
-  const getAllData = () => {
-    dispatch(getAllCoursesAction());
-    dispatch(getAllLessonsAction());
-    if (token) dispatch(getAllEnrollmentsAction());
-  };
 
   const handleQuery = (formatLink) => {
     dispatch(getAllCoursesAction(formatLink));
