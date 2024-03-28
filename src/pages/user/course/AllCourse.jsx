@@ -56,52 +56,6 @@ export const AllCourse = () => {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
   const categoryFilter = CookieStorage.get(CookiesKeys.CategoryFilter);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (categoryFilter) {
-        if (!selectedCategories.includes(categoryFilter)) {
-          return setSelectedCategories([categoryFilter]);
-        }
-
-        return CookieStorage.remove(CookiesKeys.CategoryFilter);
-      } else {
-        dispatch(getAllCoursesAction());
-        dispatch(getAllLessonsAction());
-        if (token) dispatch(getAllEnrollmentsAction());
-      }
-    }, 800);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [categoryFilter, filters, selectedCategories, selectedLevels, dispatch]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const formatSearch = searchInput ? `search=${searchInput}` : "";
-      const fullQuery = formatSearch
-        ? `${formatSearch}&${queryParams}`
-        : queryParams;
-
-      dispatch(getAllCoursesAction(fullQuery));
-    }, 800);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [
-    categoryFilter,
-    filters,
-    selectedCategories,
-    selectedLevels,
-    searchInput,
-    dispatch,
-  ]);
-
   const handleQuery = (formatLink) => {
     dispatch(getAllCoursesAction(formatLink));
   };
@@ -205,6 +159,63 @@ export const AllCourse = () => {
   };
 
   const handleOpen = () => setOpen(!open);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (categoryFilter) {
+        if (!selectedCategories.includes(categoryFilter)) {
+          return setSelectedCategories([categoryFilter]);
+        }
+
+        return CookieStorage.remove(CookiesKeys.CategoryFilter);
+      } else {
+        dispatch(getAllLessonsAction());
+        if (token) dispatch(getAllEnrollmentsAction());
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [
+    categoryFilter,
+    filters,
+    selectedCategories,
+    selectedLevels,
+    token,
+    dispatch,
+  ]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchInput || queryParams) {
+        const formatSearch = searchInput ? `search=${searchInput}` : "";
+        const fullQuery = formatSearch
+          ? `${formatSearch}&${queryParams}`
+          : queryParams;
+
+        dispatch(getAllCoursesAction(fullQuery));
+      } else {
+        dispatch(getAllCoursesAction());
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [
+    queryParams,
+    categoryFilter,
+    filters,
+    selectedCategories,
+    selectedLevels,
+    searchInput,
+    dispatch,
+  ]);
 
   return (
     <>
