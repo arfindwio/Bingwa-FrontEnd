@@ -8,9 +8,6 @@ import { BiSearchAlt } from "react-icons/bi";
 // Redux Actions
 import { getAllCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
-// Cookie
-import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
-
 export const SearchMobile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,8 +20,7 @@ export const SearchMobile = () => {
     );
 
     if (search) {
-      CookieStorage.set(CookiesKeys.SearchFilter, searchInput);
-      navigate(`/search-course`);
+      navigate(`/search-course`, { state: { inputSearch: searchInput } });
     }
   };
 

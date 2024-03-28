@@ -6,7 +6,6 @@ export const CookiesKeys = {
   AuthToken: "authToken",
   RegisterToken: "registerToken",
   CategoryFilter: "categoryFilter",
-  SearchFilter: "searchFilter",
   PaymentSuccess: "paymentSuccess",
 };
 
