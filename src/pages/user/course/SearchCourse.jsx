@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
+import { useLocation } from "react-router-dom";
 
 // Components
 import { NavbarCourse } from "../../../assets/components/navbar/NavbarCourse";
@@ -19,6 +20,7 @@ import { CookieStorage, CookiesKeys } from "../../../utils/cookie";
 
 export const SearchCourse = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
   // Redux Store
@@ -32,23 +34,17 @@ export const SearchCourse = () => {
   );
   const isLoading = useSelector((state) => state.courses.loading);
 
-  const [searchInput, setSearchInput] = useState("");
-
   // Get Token
   const token = CookieStorage.get(CookiesKeys.AuthToken);
-  const searchFilter = CookieStorage.get(CookiesKeys.SearchFilter);
 
   useEffect(() => {
-    if (searchFilter) {
-      setSearchInput(searchFilter);
-      const formatSearch = `search=${searchFilter}&limit=15`;
+    if (location.state) {
+      const formatSearch = `search=${location.state.inputSearch}&limit=15`;
       dispatch(getAllCoursesAction(formatSearch));
-
-      CookieStorage.remove(CookiesKeys.SearchFilter);
-    } else if (!searchFilter) {
+    } else {
       dispatch(getAllCoursesAction("limit=15"));
     }
-  }, [searchFilter, dispatch]);
+  }, [location, dispatch]);
 
   useEffect(() => {
     dispatch(getAllLessonsAction());
@@ -75,11 +71,11 @@ export const SearchCourse = () => {
           <div className="flex items-start justify-center py-4 md:justify-between md:py-0 lg:justify-between lg:py-0">
             {/* Button */}
             <div className="flex w-full flex-wrap items-center justify-between px-0 md:px-5 lg:px-0">
-              {searchInput ? (
+              {location.state.inputSearch ? (
                 <div className="-mt-12 font-medium md:mt-0 md:py-4 md:text-lg lg:mt-0 lg:pb-4 lg:pt-0 lg:text-lg">
-                  Result for{" "}
-                  <span className="font-bold text-primary">
-                    "{searchInput}"
+                  Result for
+                  <span className="ms-2 font-bold text-primary">
+                    "{location.state.inputSearch}"
                   </span>
                 </div>
               ) : null}
