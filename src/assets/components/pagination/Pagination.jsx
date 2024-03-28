@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 
 // Icon
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import { format } from "prettier";
 
 let currentPage = 1;
 
