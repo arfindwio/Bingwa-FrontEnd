@@ -11,7 +11,6 @@ import {
   setEnrollments,
   setEnrollByCourseId,
   setEnrollmentPreparation,
-  addEnrollment,
   startLoading,
   endLoading,
 } from "../../reducer/enrollments/EnrollmentsSlice";
