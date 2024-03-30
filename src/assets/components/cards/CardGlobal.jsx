@@ -109,14 +109,15 @@ export const CardGlobal = ({
             </div>
             {enrollmentData ? (
               <>
-                <div className="flex w-full">
-                  <Progress
-                    value={Math.floor(enrollmentData?.progress * 100)}
-                    size="lg"
-                    label="Completed"
-                    color="blue"
-                    className="text-md h-8 font-semibold"
-                  />
+                <div className="relative h-7 w-full overflow-hidden rounded-full bg-slate-300 shadow-[inset_2px_2px_3px_#5b6065,_inset_-2px_-2px_3px_#5b6065]">
+                  <div
+                    className={`h-full w-[${Math.floor(
+                      enrollmentData?.progress * 100,
+                    )}%] rounded-full bg-primary`}
+                  ></div>
+                  <p className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform text-center text-sm font-bold text-white">
+                    {Math.floor(enrollmentData?.progress * 100)}% Complete
+                  </p>
                 </div>
               </>
             ) : isPremium ? (
