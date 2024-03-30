@@ -137,10 +137,8 @@ export const DetailCourse = () => {
         dispatch(putEnrollmentPreparationAction(courseId));
       }
     }
-    if (!filteredCourses) {
-      return navigate("/all-courses");
-    }
-  }, [dispatch, filteredCourses, navigate, courseId, enrollmentData, token]);
+    if (!filteredCourses) return navigate("/all-courses");
+  }, [dispatch]);
 
   const handleDialogOpen = () => {
     setDialogOpen(!dialogOpen);
@@ -379,12 +377,12 @@ export const DetailCourse = () => {
                     />
                     <div className="relative h-7 w-full overflow-hidden rounded-full bg-slate-300 shadow-[inset_2px_2px_3px_#5b6065,_inset_-2px_-2px_3px_#5b6065]">
                       <div
-                        className={`h-full w-[${
-                          enrollmentData?.progress * 100
-                        }%] rounded-full bg-primary`}
+                        className={`h-full w-[${Math.floor(
+                          enrollmentData?.progress * 100,
+                        )}%] rounded-full bg-primary`}
                       ></div>
                       <p className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform text-center text-sm font-bold text-white">
-                        {enrollmentData?.progress * 100}% Complete
+                        {Math.floor(enrollmentData?.progress * 100)}% Complete
                       </p>
                     </div>
                   </>
@@ -452,7 +450,7 @@ export const DetailCourse = () => {
                                 ? "text-slate-500"
                                 : !enrollmentData
                                   ? "cursor-pointer text-slate-500"
-                                  : trackingData && trackingData.status
+                                  : trackingData && trackingData?.status
                                     ? "cursor-pointer text-slate-500"
                                     : "cursor-pointer text-green"
                             }`}
