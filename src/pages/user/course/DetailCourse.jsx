@@ -30,7 +30,7 @@ import { GoArrowLeft } from "react-icons/go";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { RiShieldStarLine } from "react-icons/ri";
 import { LiaBookSolid } from "react-icons/lia";
-import { IoClose, IoCloseSharp, IoTime } from "react-icons/io5";
+import { IoCloseSharp, IoTime } from "react-icons/io5";
 import { HiChatAlt2 } from "react-icons/hi";
 import { FaCirclePlay } from "react-icons/fa6";
 import { BiSolidLock } from "react-icons/bi";
@@ -53,9 +53,6 @@ import {
   getTrackingsByCourseId,
   putTrackingAction,
 } from "../../../redux/action/trackings/TrackingsAction";
-
-// service
-import { reduxPostEnrollment } from "../../../services/enrollments/Enrollments";
 
 // Material Tailwind Components
 import {
@@ -96,8 +93,6 @@ export const DetailCourse = () => {
   const loadingCourses = useSelector((state) => state.courses.loading);
   const loadingChapters = useSelector((state) => state.chapters.loading);
   const loadingLessons = useSelector((state) => state.lessons.loading);
-  const loadingTracking = useSelector((state) => state.trackings.loading);
-  const loadingEnrollments = useSelector((state) => state.enrollments.loading);
 
   const isMobile = useMediaQuery({ maxDeviceWidth: 719 });
 
@@ -112,7 +107,7 @@ export const DetailCourse = () => {
   const token = CookieStorage.get(CookiesKeys.AuthToken);
 
   const enrollmentData = storeEnrollments
-    ? storeEnrollments.find((enrollCourse) => {
+    ? storeEnrollments?.find((enrollCourse) => {
         return Number(enrollCourse.courseId) === Number(courseId);
       })
     : null;
@@ -123,7 +118,7 @@ export const DetailCourse = () => {
       ? storeDetailCourses
       : enrollmentData.course;
 
-  const filteredCourses = storeCourses.find(
+  const filteredCourses = storeCourses?.find(
     (course) => Number(course.id) === Number(courseId),
   );
 
@@ -133,13 +128,6 @@ export const DetailCourse = () => {
 
   useEffect(() => {
     dispatch(getAllCoursesAction());
-    getAllData();
-    if (!filteredCourses) {
-      return navigate("/all-courses");
-    }
-  }, [dispatch]);
-
-  const getAllData = () => {
     dispatch(getDetailCoursesAction(courseId));
     dispatch(getAllLessonsByCourseIdAction(courseId));
     if (token) {
@@ -149,7 +137,8 @@ export const DetailCourse = () => {
         dispatch(putEnrollmentPreparationAction(courseId));
       }
     }
-  };
+    if (!filteredCourses) return navigate("/all-courses");
+  }, [dispatch]);
 
   const handleDialogOpen = () => {
     setDialogOpen(!dialogOpen);
@@ -163,9 +152,10 @@ export const DetailCourse = () => {
         }
 
         if (!storeDetailCourses?.isPremium) {
-          const enrollCourse = await reduxPostEnrollment(courseId);
+          const enrollCourse = await dispatch(postEnrollmentAction(courseId));
 
           if (enrollCourse) {
+            navigate(`/detail-course/${courseId}`);
             dispatch(getAllEnrollmentsAction());
             dispatch(getTrackingsByCourseId(courseId));
             showSuccessToast("Successful Course Enrollments");
@@ -340,17 +330,17 @@ export const DetailCourse = () => {
 
   const renderLearningMaterial = () => {
     return (
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-row items-center justify-between">
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex w-full flex-row items-center justify-between">
           {loadingChapters ? (
             <DetailCourseSkeleton1 />
           ) : (
             <>
-              <h1 className="text-xl font-bold">Learning Materials</h1>
-              <div className="flex w-fit items-center justify-between gap-2 rounded-xl">
+              <h1 className="w-1/2 text-xl font-bold">Learning Materials</h1>
+              <div className="flex w-1/2 items-center gap-2 rounded-xl">
                 {!token && (
                   <div
-                    className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                    className="ms-auto cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                     onClick={
                       storeDetailCourses?.isPremium && token
                         ? handleDialogOpen
@@ -365,7 +355,7 @@ export const DetailCourse = () => {
 
                 {token && !enrollmentData && (
                   <div
-                    className="cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
+                    className="ms-auto cursor-pointer rounded-xl bg-green px-3 py-1 font-bold text-white"
                     onClick={
                       storeDetailCourses?.isPremium && token
                         ? handleDialogOpen
@@ -385,8 +375,15 @@ export const DetailCourse = () => {
                       color="#22c55e"
                       className="hidden md:hidden lg:flex"
                     />
-                    <div className="rounded-3xl bg-primary px-3 py-1 font-bold text-white">
-                      {Math.floor(enrollmentData?.progress * 100)}% Completed
+                    <div className="relative h-7 w-full overflow-hidden rounded-full bg-slate-300 shadow-[inset_2px_2px_3px_#5b6065,_inset_-2px_-2px_3px_#5b6065]">
+                      <div
+                        className={`h-full w-[${Math.floor(
+                          enrollmentData?.progress * 100,
+                        )}%] rounded-full bg-primary`}
+                      ></div>
+                      <p className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform text-center text-sm font-bold text-white">
+                        {Math.floor(enrollmentData?.progress * 100)}% Complete
+                      </p>
                     </div>
                   </>
                 )}
@@ -453,7 +450,7 @@ export const DetailCourse = () => {
                                 ? "text-slate-500"
                                 : !enrollmentData
                                   ? "cursor-pointer text-slate-500"
-                                  : trackingData && trackingData.status
+                                  : trackingData && trackingData?.status
                                     ? "cursor-pointer text-slate-500"
                                     : "cursor-pointer text-green"
                             }`}
@@ -589,7 +586,7 @@ export const DetailCourse = () => {
 
               {/* Right Container */}
               {/* Sidebar */}
-              <div className="hidden h-fit w-2/5 gap-6  rounded-2xl border-2 bg-white px-6 pb-8 pt-4 shadow-lg md:flex md:flex-col">
+              <div className="hidden h-fit w-2/5 gap-6 rounded-2xl border-2 bg-white px-6 pb-8 pt-4 shadow-lg md:flex md:flex-col">
                 {/* Materi Belajar */}
                 {isMobile ? "" : renderLearningMaterial()}
               </div>
