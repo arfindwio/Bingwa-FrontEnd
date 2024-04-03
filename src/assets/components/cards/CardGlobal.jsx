@@ -11,9 +11,6 @@ import { IoDiamond, IoTime } from "react-icons/io5";
 // Component
 import { CardCourseSkeleton } from "../skeleton/CardCourseSkeleton";
 
-// Material Tailwind
-import { Progress } from "@material-tailwind/react";
-
 // Redux Actions
 import { getDetailCoursesAction } from "../../../redux/action/courses/CoursesAction";
 
@@ -128,18 +125,13 @@ export const CardGlobal = ({
                 >
                   <div className="flex items-center gap-2">
                     <IoDiamond size={20} color="white" />
-                    <div className="font-bold text-white">
-                      Rp{" "}
-                      {promotion?.discount
-                        ? price - promotion?.discount * price
-                        : price}
-                    </div>
+                    <div className="font-bold text-white">Rp {price}</div>
                   </div>
                 </div>
                 {promotion.discount ? (
                   <div className="ms-2 font-bold text-red-500">
                     <span className="me-1 font-semibold text-slate-500 line-through">
-                      Rp {price}
+                      Rp {price / (1 - promotion?.discount)}
                     </span>
                     {promotion?.discount * 100}%
                   </div>

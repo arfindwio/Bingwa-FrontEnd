@@ -549,12 +549,7 @@ export const Payment = () => {
                 Price
               </div>
               <div className="text-base font-semibold md:text-xl lg:text-lg">
-                Rp{" "}
-                {!filteredCourses?.promotion
-                  ? filteredCourses?.price
-                  : filteredCourses?.price -
-                    filteredCourses?.promotion?.discount *
-                      filteredCourses?.price}
+                Rp {filteredCourses?.price}
               </div>
             </div>
 
@@ -572,13 +567,7 @@ export const Payment = () => {
                 Total Amount
               </div>
               <div className="text-base font-semibold text-primary md:text-xl lg:text-lg">
-                Rp{" "}
-                {!filteredCourses?.promotion
-                  ? filteredCourses?.price + 0.11 * filteredCourses?.price
-                  : filteredCourses?.price -
-                    filteredCourses?.promotion?.discount *
-                      filteredCourses?.price +
-                    0.11 * filteredCourses?.price}
+                Rp {filteredCourses?.price + 0.11 * filteredCourses?.price}
               </div>
             </div>
           </div>
