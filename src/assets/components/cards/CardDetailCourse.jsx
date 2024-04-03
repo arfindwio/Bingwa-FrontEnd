@@ -86,18 +86,13 @@ export const CardDetailCourse = ({
                 <div className="flex w-fit cursor-pointer justify-between rounded-3xl bg-blue px-4 py-1 transition-all hover:bg-blue-hover">
                   <div className="flex items-center gap-2">
                     <IoDiamond size={20} color="white" />
-                    <div className="font-bold text-white">
-                      Rp{" "}
-                      {promotion?.discount
-                        ? price - promotion?.discount * price
-                        : price}
-                    </div>
+                    <div className="font-bold text-white">Rp {price}</div>
                   </div>
                 </div>
                 {promotion.discount ? (
                   <div className="font-bold text-red-500">
                     <span className="mr-1 font-semibold text-slate-500 line-through">
-                      Rp {price}
+                      Rp {price / (1 - promotion?.discount)}
                     </span>
                     {promotion?.discount * 100}%
                   </div>
