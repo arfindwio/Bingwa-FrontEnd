@@ -72,7 +72,12 @@ export const AdminNavbar = ({ onSearch, onOpen }) => {
       <Drawer open={open} onClose={openDrawer} className="bg-primary py-6">
         <div className="mb-6 flex items-center justify-between px-4 ">
           <div className="flex flex-wrap items-center justify-start gap-2">
-            <img src={BrandLogo} alt="Brand Logo" className="w-10" />
+            <img
+              src={BrandLogo}
+              alt="Brand Logo"
+              loading="lazy"
+              className="w-10"
+            />
             <span className="text-center font-sans text-2xl font-semibold text-white lg:text-xl xl:text-3xl">
               Bingwa
             </span>

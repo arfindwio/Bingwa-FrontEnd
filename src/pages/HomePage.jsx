@@ -129,7 +129,12 @@ export const HomePage = () => {
         {/* Hero Section */}
         <div className="hidden md:flex">
           <div className="relative -z-10 w-2/3">
-            <img src={Header} alt="Header" className="h-full w-full" />
+            <img
+              src={Header}
+              alt="Header"
+              loading="lazy"
+              className="h-full w-full"
+            />
             <div className="absolute inset-0 bg-gradient-to-l from-primary"></div>
           </div>
           <div className="flex w-full items-center justify-center bg-primary md:w-1/3 md:pr-10 lg:w-1/3 lg:pr-6">

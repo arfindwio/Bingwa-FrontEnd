@@ -60,8 +60,8 @@ export const postPaymentAction = (input, courseId) => async (dispatch) => {
   try {
     dispatch(startLoading());
     const result = await reduxPostPayment(input, courseId);
-    dispatch(setPostPayment(result.data.data));
-    return true;
+    // dispatch(setPostPayment(result.data.data));
+    return result.data.data;
   } catch (err) {
     if (err.response.status >= 400 && err.response.status <= 500) {
       showErrorToast(err.response.data.message);

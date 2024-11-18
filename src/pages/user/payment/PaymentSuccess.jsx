@@ -45,7 +45,12 @@ export const PaymentSuccess = () => {
         </div>
 
         <div className=" mx-auto my-5 flex w-[25%] items-center justify-center pl-14">
-          <img src={payment} className="max-h-full max-w-full" alt="Header" />
+          <img
+            src={payment}
+            loading="lazy"
+            className="max-h-full max-w-full"
+            alt="Header"
+          />
         </div>
 
         <div className="flex flex-col">

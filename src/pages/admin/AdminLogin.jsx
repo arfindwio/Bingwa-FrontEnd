@@ -163,7 +163,12 @@ export const AdminLogin = () => {
     <div className="flex">
       <div className="hidden h-screen w-2/5 items-center justify-center bg-primary lg:flex">
         <div className="flex items-center justify-center gap-6">
-          <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+          <img
+            src={BrandLogo}
+            alt="Brand Logo"
+            loading="lazy"
+            className="w-[15%]"
+          />
           <span className="text-center font-sans text-6xl text-white">
             Bingwa
           </span>
