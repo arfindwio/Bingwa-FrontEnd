@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -9,23 +9,26 @@ import { CardPembayaran } from "../../../assets/components/cards/CardPayment";
 
 // Icons
 import { GoArrowLeft } from "react-icons/go";
-import { GoChevronDown } from "react-icons/go";
-import { GoChevronUp } from "react-icons/go";
 import { HiArrowCircleRight } from "react-icons/hi";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowUp } from "react-icons/md";
+import { IoMdInformationCircle } from "react-icons/io";
 
 // Images
-import mastercard from "../../../assets/img/mastercard.webp";
-import visa from "../../../assets/img/visa.webp";
-import amex from "../../../assets/img/amex.webp";
-import paypal from "../../../assets/img/paypal.webp";
-import bca from "../../../assets/img/BCA.webp";
-import bni from "../../../assets/img/BNI.webp";
-import bri from "../../../assets/img/BRI.webp";
-import mandiri from "../../../assets/img/MANDIRI.webp";
-import gopay from "../../../assets/img/Gopay.webp";
-import permata from "../../../assets/img/Permata.webp";
-import alfamart from "../../../assets/img/ALFAMART.webp";
-import indomaret from "../../../assets/img/INDOMARET.webp";
+import MasterCard from "../../../assets/img/mastercard.webp";
+import Visa from "../../../assets/img/visa.webp";
+import Amex from "../../../assets/img/amex.webp";
+import Paypal from "../../../assets/img/paypal.webp";
+import Gopay from "../../../assets/img/Gopay.webp";
+import Alfamart from "../../../assets/img/Alfamart.webp";
+import Indomaret from "../../../assets/img/Indomaret.webp";
+import BCA from "../../../assets/img/BCA.webp";
+import BNI from "../../../assets/img/BNI.webp";
+import BRI from "../../../assets/img/BRI.webp";
+import Cimb from "../../../assets/img/Cimb.webp";
+import MandiriBill from "../../../assets/img/MandiriBill.webp";
+import Permata from "../../../assets/img/Permata.webp";
+import Akulaku from "../../../assets/img/Akulaku.webp";
 
 // Redux Actions
 import { postPaymentMidtransAction } from "../../../redux/action/payments/PaymentsAction";
@@ -48,21 +51,29 @@ export const Payment = () => {
   const location = useLocation();
   const { courseId } = useParams();
 
-  const [newMethodPayment, setNewMethodPayment] = useState("");
-  const [newCardNumber, setNewCardNumber] = useState("");
-  const [newCardHolderName, setNewCardHolderName] = useState("");
-  const [newCvv, setNewCvv] = useState("");
-  const [newExpiryDate, setNewExpiryDate] = useState("");
-  const [newBankName, setNewBankName] = useState("");
-  const [newStore, setNewStore] = useState("");
-  const [newMessage, setNewMessage] = useState("");
-
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [qrCode, setQrCode] = useState(null);
+  const [virtualAccount, setVirtualAccount] = useState(null);
+  const [billPayment, setBillPayment] = useState({
+    billerCode: "",
+    billKey: "",
+  });
+  const [paymentCounter, setPaymentCounter] = useState({
+    paymentCode: "",
+    merchantId: "",
+  });
+  const [paymentInput, setPaymentInput] = useState({
+    methodPayment: "",
+    cardNumber: "",
+    cvv: "",
+    expiryDate: "",
+    bankName: "bca",
+    store: "indomaret",
+    message: "",
+  });
   const [timeRemaining, setTimeRemaining] = useState(null);
 
   const storeCourses = useSelector((state) => state.courses.courses.courses);
-  const storePaymentMidtrans = useSelector(
-    (state) => state.payments?.paymentMidtrans?.transaction,
-  );
   const storeEnrollments = useSelector(
     (state) => state.enrollments.enrollments,
   );
@@ -101,93 +112,386 @@ export const Payment = () => {
     };
   }, [timeRemaining, setTimeRemaining]);
 
-  // Handle Payment
-  const handlePayment = async () => {
-    const loadingToastId = showLoadingToast("Loading...");
-
-    const payment = await dispatch(
-      postPaymentMidtransAction(
-        {
-          methodPayment: newMethodPayment,
-          ...(newMethodPayment === "Credit Card"
-            ? {
-                cardNumber: newCardNumber.replace(/\s/g, ""),
-                cvv: newCvv,
-                expiryDate: newExpiryDate,
-              }
-            : newMethodPayment === "Bank Transfer"
-              ? {
-                  bankName: newBankName,
-                }
-              : newMethodPayment === "Counter"
-                ? {
-                    store: newStore,
-                    message: newMessage,
-                  }
-                : {}),
-        },
-        courseId,
-      ),
-    );
-
-    toast.dismiss(loadingToastId);
-
-    if (!payment) showErrorToast("Payment Failed!!!");
-
-    if (payment) {
-      showSuccessToast("Payment Success...!!!");
-      CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
-      setTimeout(() => {
-        if (storePaymentMidtrans) {
-          window.location.href = storePaymentMidtrans.redirect_url;
-        }
-      }, 1000);
-    }
-  };
-
-  const handlePaymentMethodClick = (method) => {
-    setNewMethodPayment((prevMethod) => (prevMethod === method ? "" : method));
-  };
-
-  const handleCardNumberChange = (e) => {
-    const inputValue = e.target.value.replace(/\D/g, "");
-    const formattedValue = formatCardNumber(inputValue);
-    setNewCardNumber(formattedValue);
-  };
-
-  const formatCardNumber = (value) => {
-    const maxLength = 16;
-    const formattedValue = value
-      .substring(0, maxLength)
-      .match(/.{1,4}/g)
-      ?.join(" ");
-    return formattedValue || "";
-  };
-
-  const handleCvvChange = (e) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setNewCvv(value.substring(0, 3));
-  };
-
-  const handleExpiryDateChange = (e) => {
-    const inputValue = e.target.value.replace(/\D/g, "");
-    const formattedValue = formatExpiryDate(inputValue);
-    setNewExpiryDate(formattedValue);
-  };
-
-  const formatExpiryDate = (value) => {
-    const maxLength = 4;
-    const formattedValue = value
-      .substring(0, maxLength)
-      .match(/.{1,2}/g)
-      ?.join("/");
-    return formattedValue || "";
-  };
-
   const formatTime = (seconds) =>
     `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(
       seconds % 60,
     ).padStart(2, "0")}`;
+
+  const handlePaymentMethodClick = (method) => {
+    setPaymentInput((prevPaymentInput) => ({
+      ...prevPaymentInput,
+      methodPayment: prevPaymentInput.methodPayment === method ? "" : method,
+    }));
+  };
+
+  const handlePaymentInput = (e, field) => {
+    const value = e.target.value;
+
+    if (field === "cardNumber") {
+      const maxLength = 16;
+      const inputValue = value.replace(/\D/g, "");
+      const formattedValue =
+        inputValue
+          .substring(0, maxLength)
+          .match(/.{1,4}/g)
+          ?.join(" ") || "";
+      setPaymentInput((prevPaymentInput) => ({
+        ...prevPaymentInput,
+        cardNumber: formattedValue,
+      }));
+    }
+
+    if (field === "cvv") {
+      const inputValue = value.replace(/\D/g, "");
+      setPaymentInput((prevPaymentInput) => ({
+        ...prevPaymentInput,
+        cvv: inputValue.substring(0, 3),
+      }));
+    }
+
+    if (field === "expiryDate") {
+      const maxLength = 4;
+      const inputValue = value.replace(/\D/g, "");
+      const formattedValue =
+        inputValue
+          .substring(0, maxLength)
+          .match(/.{1,2}/g)
+          ?.join("/") || "";
+      setPaymentInput((prevPaymentInput) => ({
+        ...prevPaymentInput,
+        expiryDate: formattedValue,
+      }));
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setPaymentInput((prevPaymentInput) => ({
+      ...prevPaymentInput,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handlePay = async () => {
+    if (isProcessing || !paymentInput.methodPayment) return;
+    setIsProcessing(true);
+
+    const loadingToastId = showLoadingToast("Loading...");
+
+    if (paymentInput.methodPayment === "Credit Card") {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+            cardNumber: paymentInput.cardNumber,
+            cvv: paymentInput.cvv,
+            expiryDate: paymentInput.expiryDate,
+          },
+          courseId,
+        ),
+      );
+      toast.dismiss(loadingToastId);
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        setTimeout(() => {
+          window.location.href = payment.transaction.redirect_url;
+        }, 1000);
+      }
+    }
+
+    if (paymentInput.methodPayment === "Cardless Credit") {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+          },
+          courseId,
+        ),
+      );
+      toast.dismiss(loadingToastId);
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        setTimeout(() => {
+          window.location.href = payment.transaction.redirect_url;
+        }, 1000);
+      }
+    }
+
+    if (paymentInput.methodPayment === "Gopay") {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+          },
+          courseId,
+        ),
+      );
+
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        document.body.style.overflow = "hidden";
+        setQrCode(payment.transaction.actions[0].url);
+      }
+    }
+
+    if (
+      paymentInput.methodPayment === "Bank Transfer" ||
+      paymentInput.methodPayment === "Permata"
+    ) {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+          },
+          courseId,
+        ),
+      );
+
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        document.body.style.overflow = "hidden";
+        if (paymentInput.methodPayment === "Bank Transfer") {
+          setVirtualAccount(payment.transaction.va_numbers[0].va_number);
+        }
+        if (paymentInput.methodPayment === "Permata") {
+          setVirtualAccount(payment.transaction.permata_va_number);
+        }
+      }
+    }
+
+    if (paymentInput.methodPayment === "Mandiri Bill") {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+          },
+          courseId,
+        ),
+      );
+
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        document.body.style.overflow = "hidden";
+        setBillPayment({
+          billerCode: payment.transaction.biller_code,
+          billKey: payment.transaction.bill_key,
+        });
+      }
+    }
+
+    if (paymentInput.methodPayment === "Counter") {
+      const payment = await dispatch(
+        postPaymentMidtransAction(
+          {
+            methodPayment: paymentInput.methodPayment,
+            store: paymentInput.store,
+            message: paymentInput.message,
+          },
+          courseId,
+        ),
+      );
+
+      if (!payment) showErrorToast("Payment Failed");
+      if (payment) {
+        showSuccessToast("Payment Successful");
+        CookieStorage.set(CookiesKeys.PaymentSuccess, courseId);
+        document.body.style.overflow = "hidden";
+        setPaymentCounter({
+          paymentCode: payment.transaction.payment_code,
+          merchantId:
+            paymentInput.store === "indomaret"
+              ? payment.transaction.merchant_id
+              : "",
+        });
+      }
+    }
+    setIsProcessing(false);
+  };
+
+  const renderBankTransfer = () => {
+    if (paymentInput.bankName === "bca") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">other transactions</span> on the
+            main menu.
+          </li>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">transfer</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Select to <span className="font-bold">BCA virtual account</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Insert <span className="font-bold">BCA Virtual account number</span>
+            .
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">payable amount,</span> then{" "}
+            <span className="font-bold">confirm</span>.
+          </li>
+          <li className="text-sm font-normal">Payment completed.</li>
+        </>
+      );
+    }
+    if (paymentInput.bankName === "bni") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">other</span> on the main menu.
+          </li>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">transfer</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Select to <span className="font-bold">BNI account</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">payment account number</span>
+            .
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">payable amount</span> then{" "}
+            <span className="font-bold">confirm</span>.
+          </li>
+          <li className="text-sm font-normal">Payment completed.</li>
+        </>
+      );
+    }
+    if (paymentInput.bankName === "bri") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">other transactions</span> on the
+            main menu.
+          </li>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">payment</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Select to <span className="font-bold">other</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">BRIVA</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">BRIVA number,</span> then{" "}
+            <span className="font-bold">confirm</span>.
+          </li>
+          <li className="text-sm font-normal">Payment completed.</li>
+        </>
+      );
+    }
+    if (paymentInput.bankName === "cimb") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">other transactions</span> on the
+            main menu.
+          </li>
+          <li className="text-sm font-normal">
+            Select <span className="font-bold">payment</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Select to <span className="font-bold">other</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Insert the <span className="font-bold">Cimb virtual account</span>{" "}
+            then <span className="font-bold">confirm</span>.
+          </li>
+          <li className="text-sm font-normal">Payment completed.</li>
+        </>
+      );
+    }
+  };
+
+  const renderCounter = () => {
+    if (paymentInput.store === "alfamart") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Tap <span className="font-bold">Download payment info</span>to get a
+            copy of your unique payment details.
+          </li>
+          <li className="text-sm font-normal">
+            Go to the nearest
+            <span className="font-bold">Alfamart</span> store near you and
+            <span className="font-bold">
+              show your barcode/payment code to the cashier
+            </span>
+            .
+          </li>
+          <li className="text-sm font-normal">
+            The cashier will confirm your transaction details.
+          </li>
+          <li className="text-sm font-normal">
+            Confirm your payment with the cashier.
+          </li>
+          <li className="text-sm font-normal">
+            Once your transaction is successful you'll receive the payment
+            confirmation e-mail.
+          </li>
+          <li className="text-sm font-normal">
+            Please keep your Alfamart payment receipt in case you'll need
+            further help via support.
+          </li>
+        </>
+      );
+    }
+    if (paymentInput.store === "indomaret") {
+      return (
+        <>
+          <li className="text-sm font-normal">
+            Top <span className="font-bold">Download payment info</span> to get
+            a copy of your unique payment details.
+          </li>
+          <li className="text-sm font-normal">
+            If you're going to pay{" "}
+            <span className="font-bold">on the counter</span> go to the nearest
+            Indomarel store and{" "}
+            <span className="font-bold">
+              show your payment code/barcode to the cashier
+            </span>
+            .
+          </li>
+          <li className="text-sm font-normal">
+            The cashier will confirm your transaction details. Once your
+            transaction is successful. you'll receive the payment confirmation e
+            mail
+          </li>
+          <li className="text-sm font-normal">
+            if you're going to pay via Isaku, open the app and top{" "}
+            <span className="font-bold">Bayar</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Choose the merchant you'd like to pay to and enter your{" "}
+            <span className="font-bold">payment code</span>.
+          </li>
+          <li className="text-sm font-normal">
+            Tap <span className="font-bold">Selanjutnya</span> and check your
+            transaction details.
+          </li>
+          <li className="text-sm font-normal">
+            Tap <span className="font-bold">Bayar sekarang</span> to confirm
+            your payment.
+          </li>
+          <li className="text-sm font-normal">
+            Please keep your Indomaret payment receipt in case you'll need
+            further help via support
+          </li>
+        </>
+      );
+    }
+  };
 
   return (
     <>
@@ -213,326 +517,407 @@ export const Payment = () => {
 
       <div className=" flex flex-col justify-center gap-4 px-8 py-10 pt-4  lg:flex-row lg:gap-0 lg:px-28">
         {/* Payment Method */}
-        <div className="flex flex-col gap-2 lg:w-[60%] lg:pr-6">
-          <div className="flex flex-col">
-            <div
-              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
-                newMethodPayment === "Bank Transfer"
+        <div className="flex w-full flex-col gap-4 lg:w-[60%] lg:pr-6">
+          {/* Credit Card */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Credit Card"
                   ? "bg-primary"
                   : "bg-slate-950"
-              }`}
-              onClick={() => {
-                handlePaymentMethodClick("Bank Transfer");
-              }}
-            >
-              <div className="flex w-full items-center justify-between px-4">
-                <div className="font-semibold">Bank Transfer</div>
-                <div>
-                  {newMethodPayment === "Bank Transfer" ? (
-                    <GoChevronUp />
-                  ) : (
-                    <GoChevronDown />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Bank Transfer" ? "block" : "hidden"
-              }`}
-            >
-              <div className="flex items-center justify-center gap-4 px-32">
-                <div className="flex items-center">
-                  <img src={bca} className="" alt="BCA" />
-                </div>
-                <div className="flex items-center">
-                  <img src={bni} className="" alt="BNI" />
-                </div>
-                <div className="flex items-center">
-                  <img src={bri} className="" alt="BRI" />
-                </div>
-                <div className="flex items-center">
-                  <img src={mandiri} className="" alt="Mandiri" />
-                </div>
-              </div>
-              <div className="mx-auto w-full px-20 pt-4">
-                <div className="flex flex-col text-start">
-                  <span className="text-xl font-semibold">Bank Name</span>
-                  <input
-                    type="text"
-                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                    placeholder="BCA"
-                    value={newBankName}
-                    onChange={(e) => {
-                      setNewBankName(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div
-              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
-                newMethodPayment === "Credit Card"
-                  ? "bg-primary"
-                  : "bg-slate-950"
-              }`}
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
               onClick={() => {
                 handlePaymentMethodClick("Credit Card");
               }}
             >
-              <div className="font-semibold">Credit Card</div>
-              <div>
-                {newMethodPayment === "Credit Card" ? (
-                  <GoChevronUp />
-                ) : (
-                  <GoChevronDown />
-                )}
-              </div>
-            </div>
-
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Credit Card" ? "block" : "hidden"
-              }`}
-            >
-              <div className="flex  items-center justify-center gap-4 px-48">
-                <div className="flex-1 items-center">
-                  <img src={mastercard} className="" alt="Master Card" />
-                </div>
-                <div className="flex-1 items-center">
-                  <img src={visa} className="" alt="Visa" />
-                </div>
-                <div className="flex-1 items-center">
-                  <img src={amex} className="" alt="American Express" />
-                </div>
-                <div className="flex-1 items-center">
-                  <img src={paypal} className="" alt="PayPal" />
-                </div>
-              </div>
-              <div className="mx-auto w-full px-20 pt-4">
-                <div className="flex flex-col text-start">
-                  <span className="text-xl font-semibold">Card Number</span>
-                  <input
-                    type="text"
-                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                    placeholder="4811 1111 1111 1114"
-                    value={newCardNumber}
-                    onChange={handleCardNumberChange}
+              <p>Credit Card</p>
+              {paymentInput.methodPayment === "Credit Card" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
+            {paymentInput.methodPayment === "Credit Card" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={MasterCard}
+                    alt="Master Card Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={Visa}
+                    alt="Visa Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={Amex}
+                    alt="American Express Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={Paypal}
+                    alt="Paypal Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
                   />
                 </div>
-                <div className="mt-8 flex flex-col text-start">
-                  <span className="text-xl font-semibold">
+                <div className="flex w-[70%] flex-col gap-2">
+                  <label htmlFor="cardNumber" className="text-sm font-medium">
+                    Card Number
+                  </label>
+                  <input
+                    type="text"
+                    id="cardNumber"
+                    placeholder="4480 0000 0000 0000"
+                    className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                    value={paymentInput.cardNumber}
+                    onChange={(e) => handlePaymentInput(e, "cardNumber")}
+                  />
+                </div>
+                <div className="flex w-[70%] flex-col gap-2">
+                  <label htmlFor="cardHolder" className="text-sm font-medium">
                     Card Holder Name
-                  </span>
+                  </label>
                   <input
                     type="text"
-                    className="mt-1 border-b-[3px] px-2 py-2 text-xl focus:outline-none"
+                    id="cardHolder"
                     placeholder="Budi Cahyono"
-                    value={newCardHolderName}
-                    onChange={(e) => {
-                      setNewCardHolderName(e.target.value);
-                    }}
+                    className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
                   />
                 </div>
-                <div className="flex w-full gap-2 ">
-                  <div className="mt-8 flex w-full flex-col text-start">
-                    <span className="text-xl font-semibold">CVV</span>
+                <div className="flex w-[70%] justify-between gap-2">
+                  <div className="flex w-[47%] flex-col">
+                    <label htmlFor="cvv" className="text-sm font-medium">
+                      CVV
+                    </label>
                     <input
                       type="number"
-                      className="mt-1 border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                      placeholder="123"
-                      value={newCvv}
-                      onChange={handleCvvChange}
+                      maxLength={3}
+                      id="cvv"
+                      placeholder="000"
+                      className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                      onWheel={(e) => e.target.blur()}
+                      value={paymentInput.cvv}
+                      onChange={(e) => handlePaymentInput(e, "cvv")}
                     />
                   </div>
-                  <div className="mt-8 flex w-full flex-col text-start">
-                    <span className="text-xl font-semibold">Expiry date</span>
+                  <div className="flex w-[47%] flex-col">
+                    <label htmlFor="expiryDate" className="text-sm font-medium">
+                      Expiry Date
+                    </label>
                     <input
                       type="text"
-                      className="mt-1 border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                      placeholder="02/25"
-                      value={newExpiryDate}
-                      onChange={handleExpiryDateChange}
+                      id="expiryDate"
+                      placeholder="07/24"
+                      className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                      value={paymentInput.expiryDate}
+                      onChange={(e) => handlePaymentInput(e, "expiryDate")}
                     />
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
-          <div className="flex flex-col">
-            <div
-              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
-                newMethodPayment === "Mandiri Bill"
+          {/* Gopay */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Gopay"
                   ? "bg-primary"
                   : "bg-slate-950"
-              }`}
-              onClick={() => {
-                handlePaymentMethodClick("Mandiri Bill");
-              }}
-            >
-              <div className="font-semibold">Mandiri Bill</div>
-              <div>
-                {newMethodPayment === "Mandiri Bill" ? (
-                  <GoChevronUp />
-                ) : (
-                  <GoChevronDown />
-                )}
-              </div>
-            </div>
-
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Mandiri Bill" ? "block" : "hidden"
-              }`}
-            >
-              <div className="flex  items-center justify-center gap-4 px-60">
-                <div className="flex-1 items-center">
-                  <img src={mandiri} className="" alt="Mandiri Bill" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div
-              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
-                newMethodPayment === "Permata" ? "bg-primary" : "bg-slate-950"
-              }`}
-              onClick={() => {
-                handlePaymentMethodClick("Permata");
-              }}
-            >
-              <div className="font-semibold">Permata</div>
-              <div>
-                {newMethodPayment === "Permata" ? (
-                  <GoChevronUp />
-                ) : (
-                  <GoChevronDown />
-                )}
-              </div>
-            </div>
-
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Permata" ? "block" : "hidden"
-              }`}
-            >
-              <div className="flex  items-center justify-center gap-4 px-60">
-                <div className="flex-1 items-center">
-                  <img src={permata} className="" alt="Permata" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div
-              className={` flex cursor-pointer items-center justify-between rounded-xl px-4 py-4 text-xl text-white ${
-                newMethodPayment === "Gopay" ? "bg-primary" : "bg-slate-950"
-              }`}
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
               onClick={() => {
                 handlePaymentMethodClick("Gopay");
               }}
             >
-              <div className="font-semibold">Gopay</div>
-              <div>
-                {newMethodPayment === "Gopay" ? (
-                  <GoChevronUp />
-                ) : (
-                  <GoChevronDown />
-                )}
-              </div>
-            </div>
+              <p>Gopay</p>
+              {paymentInput.methodPayment === "Gopay" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
 
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Gopay" ? "block" : "hidden"
-              }`}
-            >
-              <div className="flex  items-center justify-center gap-4 px-60">
-                <div className="flex-1 items-center">
-                  <img src={gopay} className="" alt="PayPal" />
+            {paymentInput.methodPayment === "Gopay" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={Gopay}
+                    alt="Gopay Logo"
+                    width={1}
+                    height={1}
+                    className="w-[20%] object-contain"
+                  />
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
-          <div className="flex flex-col">
-            <div
-              className={`flex cursor-pointer items-center rounded-xl py-4 text-xl text-white ${
-                newMethodPayment === "Counter" ? "bg-primary" : "bg-slate-950"
-              }`}
+          {/* Bank Transfer */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Bank Transfer"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
+              onClick={() => {
+                handlePaymentMethodClick("Bank Transfer");
+              }}
+            >
+              <p>Bank Transfer</p>
+              {paymentInput.methodPayment === "Bank Transfer" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
+
+            {paymentInput.methodPayment === "Bank Transfer" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={BCA}
+                    alt="BCA Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={BNI}
+                    alt="BNI Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={BRI}
+                    alt="BRI Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                  <img
+                    src={Cimb}
+                    alt="Cimb Logo"
+                    width={1}
+                    height={1}
+                    className="w-[8%] object-contain"
+                  />
+                </div>
+                <div className="flex w-[70%] flex-col gap-2">
+                  <label htmlFor="bankName" className="text-[#151515]">
+                    Bank Name
+                  </label>
+                  <select
+                    name="bankName"
+                    id="bankName"
+                    value={paymentInput.bankName}
+                    onChange={handleInputChange}
+                    className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                  >
+                    <option value="bca">BCA</option>
+                    <option value="bni">BNI</option>
+                    <option value="bri">BRI</option>
+                    <option value="cimb">CIMB</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mandiri Bill */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Mandiri Bill"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
+              onClick={() => {
+                handlePaymentMethodClick("Mandiri Bill");
+              }}
+            >
+              <p>Mandiri Bill</p>
+              {paymentInput.methodPayment === "Mandiri Bill" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
+
+            {paymentInput.methodPayment === "Mandiri Bill" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={MandiriBill}
+                    alt="Mandiri Bill Logo"
+                    width={1}
+                    height={1}
+                    className="w-[20%] object-contain"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Permata */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Permata"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
+              onClick={() => {
+                handlePaymentMethodClick("Permata");
+              }}
+            >
+              <p>Permata</p>
+              {paymentInput.methodPayment === "Permata" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
+
+            {paymentInput.methodPayment === "Permata" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={Permata}
+                    alt="Permata Logo"
+                    width={1}
+                    height={1}
+                    className="w-[20%] object-contain"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Counter */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Counter"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
               onClick={() => {
                 handlePaymentMethodClick("Counter");
               }}
             >
-              <div className="flex w-full items-center justify-between px-4">
-                <div className="font-semibold">Counter</div>
-                <div>
-                  {newMethodPayment === "Counter" ? (
-                    <GoChevronUp />
-                  ) : (
-                    <GoChevronDown />
-                  )}
-                </div>
-              </div>
-            </div>
+              <p>Counter</p>
+              {paymentInput.methodPayment === "Counter" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
 
-            <div
-              className={`flex w-full flex-col gap-4 rounded-xl px-4 py-8 shadow-lg ${
-                newMethodPayment === "Counter" ? "block" : "hidden"
-              }`}
+            {paymentInput.methodPayment === "Counter" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={Indomaret}
+                    alt="Indomaret Logo"
+                    width={1}
+                    height={1}
+                    className="w-[15%] object-contain"
+                  />
+                  <img
+                    src={Alfamart}
+                    alt="Alfamart Logo"
+                    width={1}
+                    height={1}
+                    className="w-[15%] object-contain"
+                  />
+                </div>
+                <div className="flex w-[70%] flex-col gap-2">
+                  <label htmlFor="store" className="text-[#151515]">
+                    Store
+                  </label>
+                  <select
+                    name="store"
+                    id="store"
+                    value={paymentInput.store}
+                    onChange={handleInputChange}
+                    className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                  >
+                    <option value="indomaret">Indomaret</option>
+                    <option value="alfamart">Alfamart</option>
+                  </select>
+                </div>
+                <div className="flex w-[70%] flex-col gap-2">
+                  <label htmlFor="message" className="text-[#151515]">
+                    Message
+                  </label>
+                  <input
+                    type="text"
+                    id="message"
+                    placeholder="Input Message Here"
+                    className="border-b border-[#D0D0D0] px-1 py-1 outline-none"
+                    value={paymentInput.message}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Cardless Credit */}
+          <div className="flex flex-col gap-2">
+            <button
+              className={`${
+                paymentInput.methodPayment === "Cardless Credit"
+                  ? "bg-primary"
+                  : "bg-slate-950"
+              } flex w-full justify-between rounded px-5 py-4 text-xl font-medium text-white`}
+              onClick={() => {
+                handlePaymentMethodClick("Cardless Credit");
+              }}
             >
-              <div className="flex items-center justify-center gap-4 px-40">
-                <div className="flex items-center">
-                  <img src={alfamart} className="" alt="Alfamart" />
-                </div>
-                <div className="flex items-center">
-                  <img src={indomaret} className="" alt="Indomaret" />
-                </div>
-              </div>
-              <div className="mx-auto flex w-full flex-col gap-2 px-20 pt-4">
-                <div className="flex flex-col text-start">
-                  <span className="text-xl font-semibold">Store</span>
-                  <input
-                    type="text"
-                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                    placeholder="Alfamart"
-                    value={newStore}
-                    onChange={(e) => {
-                      setNewStore(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col text-start">
-                  <span className="text-xl font-semibold">Message</span>
-                  <input
-                    type="text"
-                    className="mt-1 appearance-none border-b-[3px] px-2 py-2 text-xl tracking-widest focus:outline-none"
-                    placeholder="I want to make a payment for order"
-                    value={newMessage}
-                    onChange={(e) => {
-                      setNewMessage(e.target.value);
-                    }}
+              <p>Cardless Credit</p>
+              {paymentInput.methodPayment === "Cardless Credit" ? (
+                <MdKeyboardArrowUp size={25} />
+              ) : (
+                <MdKeyboardArrowDown size={25} />
+              )}
+            </button>
+
+            {paymentInput.methodPayment === "Cardless Credit" && (
+              <div className="flex flex-col items-center justify-center gap-5 pt-6">
+                <div className="flex w-full justify-center gap-4">
+                  <img
+                    src={Akulaku}
+                    alt="Akulaku Logo"
+                    width={1}
+                    height={1}
+                    className="w-[20%] object-contain"
                   />
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        <div className="flex h-fit w-fit flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2 shadow-xl focus:outline-none md:w-auto lg:w-[40%]">
+        <div className="flex h-fit w-full flex-col gap-2 rounded-xl border-[1px] border-primary px-6 pb-6 pt-2 shadow-xl focus:outline-none  lg:w-[40%]">
           <div className="flex flex-col items-center text-2xl font-bold">
             Course Payment
           </div>
 
           {/* Main Content */}
-          <div className="w-full gap-6 px-0 md:px-44 lg:px-0">
+          <div className="mx-auto w-full gap-6 px-0 sm:w-1/2 md:w-full md:px-44 lg:px-0">
             {/* Card Item */}
             <CardPembayaran
               image={filteredCourses?.courseImg}
@@ -574,7 +959,7 @@ export const Payment = () => {
 
           <div
             className="flex w-full cursor-pointer flex-row items-center justify-center gap-2 rounded-2xl bg-red-500 px-6 py-2 text-white"
-            onClick={handlePayment}
+            onClick={handlePay}
           >
             <div className="text-center text-lg font-bold">
               Lifetime Access to the Course
@@ -583,6 +968,178 @@ export const Payment = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal QRCODE */}
+      {qrCode && (
+        <div className="fixed top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#151515] bg-opacity-50">
+          <div className="flex max-h-[90vh] w-[90%] flex-col gap-3 overflow-auto rounded-md bg-white px-6 py-4 shadow-sm shadow-white sm:w-[70%] lg:w-[30%]">
+            <h1 className="text-center text-xl font-bold">Gopay</h1>
+            <img
+              src={qrCode}
+              alt="QR CODE"
+              className="mx-auto w-[60%] border object-contain shadow-md lg:w-[70%] xl:w-[60%]"
+            />
+            <div className="flex flex-col">
+              <h5 className="flex items-center gap-1 text-base font-semibold text-blue-500">
+                <IoMdInformationCircle size={18} />
+                How to pay
+              </h5>
+              <ol className="flex list-outside list-decimal flex-col gap-1 px-4">
+                <li className="text-sm font-normal">
+                  Open your <span className="font-bold">Gojek, Gopay</span> or{" "}
+                  <span className="font-bold">Other e-wallet app.</span>
+                </li>
+                <li className="text-sm font-normal">
+                  <span className="font-bold">Scan QRIS</span> on your monitor
+                </li>
+                <li className="text-sm font-normal">
+                  Confirm payment in the app
+                </li>
+                <li className="text-sm font-normal">Payment Complete</li>
+              </ol>
+            </div>
+            <div className="flex flex-col justify-center gap-2">
+              <Link
+                to={"/history"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-[#151515] px-4 py-2 text-center text-sm text-white hover:bg-opacity-70 md:text-base"
+              >
+                Check Payment History
+              </Link>
+              <Link
+                to={"/"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-white px-4 py-2 text-center text-sm text-[#151515] hover:bg-[#151515] hover:text-white md:text-base"
+              >
+                Back to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Virtual Account */}
+      {virtualAccount && (
+        <div className="fixed top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#151515] bg-opacity-50">
+          <div className="flex w-[90%] flex-col gap-3 rounded-md bg-white px-6 py-4 shadow-sm shadow-white sm:w-[60%] lg:w-[30%]">
+            <h1 className="text-center text-xl font-bold">Bank Transfer</h1>
+            <div className="border border-[#8A8A8A] p-2 text-center">
+              <h5 className="text-sm font-semibold">
+                Virtual Account {paymentInput.bankName.toLocaleUpperCase()}
+              </h5>
+              <p className="text-lg tracking-widest">{virtualAccount}</p>
+            </div>
+            <div className="flex flex-col">
+              <h5 className="flex items-center gap-1 text-base font-semibold text-blue-500">
+                <IoMdInformationCircle size={18} />
+                How to pay
+              </h5>
+              <ol className="flex list-outside list-decimal flex-col gap-1 px-4">
+                {renderBankTransfer()}
+              </ol>
+            </div>
+            <div className="flex flex-col justify-center gap-2">
+              <Link
+                to={"/history"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-[#151515] px-4 py-2 text-center text-sm text-white hover:bg-opacity-70 md:text-base"
+              >
+                Check Payment History
+              </Link>
+              <Link
+                to={"/"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-white px-4 py-2 text-center text-sm text-[#151515] hover:bg-[#151515] hover:text-white md:text-base"
+              >
+                Back to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Bill Payment */}
+      {(billPayment.billKey || billPayment.billerCode) && (
+        <div className="fixed top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#151515] bg-opacity-50">
+          <div className="flex w-[90%] flex-col gap-3 rounded-md bg-white px-6 py-4 shadow-sm shadow-white sm:w-[60%] lg:w-[30%]">
+            <h1 className="text-center text-xl font-bold">Mandiri Bill</h1>
+            <div className="border border-[#8A8A8A] p-2 text-center">
+              <h5 className="text-sm font-semibold">Biller Code</h5>
+              <p className="text-lg tracking-widest">
+                {billPayment.billerCode}
+              </p>
+            </div>
+            <div className="border border-[#8A8A8A] p-2 text-center">
+              <h5 className="text-sm font-semibold">Bill Key</h5>
+              <p className="text-lg tracking-widest">{billPayment.billKey}</p>
+            </div>
+            <div className="flex flex-col justify-center gap-2">
+              <Link
+                to={"/history"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-[#151515] px-4 py-2 text-center text-sm text-white hover:bg-opacity-70 md:text-base"
+              >
+                Check Payment History
+              </Link>
+              <Link
+                to={"/"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-white px-4 py-2 text-center text-sm text-[#151515] hover:bg-[#151515] hover:text-white md:text-base"
+              >
+                Back to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Counter */}
+      {paymentCounter.paymentCode && (
+        <div className="fixed top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#151515] bg-opacity-50">
+          <div className="gap-3overflow-auto flex max-h-[90vh] w-[70%] flex-col rounded-md bg-white px-6 py-4 shadow-sm shadow-white md:h-auto lg:w-[50%] xl:w-[40%]">
+            <h1 className="text-center text-xl font-bold">Counter</h1>
+            <div className="border border-[#8A8A8A] p-2 text-center">
+              <h5 className="text-sm font-semibold">Payment Code</h5>
+              <p className="text-lg tracking-widest">
+                {paymentCounter.paymentCode}
+              </p>
+            </div>
+            {paymentCounter.merchantId && (
+              <div className="border border-[#8A8A8A] p-2 text-center">
+                <h5 className="text-sm font-semibold">Merchant ID</h5>
+                <p className="text-lg tracking-widest">
+                  {paymentCounter.merchantId}
+                </p>
+              </div>
+            )}
+            <div className="flex flex-col">
+              <h5 className="flex items-center gap-1 text-base font-semibold text-blue-500">
+                <IoMdInformationCircle size={18} />
+                How to pay
+              </h5>
+              <ol className="flex list-outside list-decimal flex-col gap-1 px-4">
+                {renderCounter()}
+              </ol>
+            </div>
+            <div className="flex flex-col justify-center gap-2">
+              <Link
+                to={"/history"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-[#151515] px-4 py-2 text-center text-sm text-white hover:bg-opacity-70 md:text-base"
+              >
+                Check Payment History
+              </Link>
+              <Link
+                to={"/"}
+                onClick={() => (document.body.style.overflow = "auto")}
+                className="mx-auto w-fit rounded-xl border border-[#151515] bg-white px-4 py-2 text-center text-sm text-[#151515] hover:bg-[#151515] hover:text-white md:text-base"
+              >
+                Back to home
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
