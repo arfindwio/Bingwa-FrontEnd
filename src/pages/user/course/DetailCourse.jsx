@@ -616,7 +616,12 @@ export const DetailCourse = () => {
               </h1>
             </DialogHeader>
             <DialogBody className="flex flex-col items-center justify-center px-20 text-center">
-              <img src={onboarding} alt="onboarding" className="w-[50%]" />
+              <img
+                src={onboarding}
+                alt="onboarding"
+                loading="lazy"
+                className="w-[50%]"
+              />
               <h1 className="my-6 font-semibold text-slate-800">
                 Things to prepare for maximum learning:
               </h1>

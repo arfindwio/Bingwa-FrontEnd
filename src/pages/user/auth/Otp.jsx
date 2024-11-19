@@ -188,7 +188,12 @@ export const Otp = () => {
       </div>
 
       <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
-        <img src={BrandLogo} alt="Brand Logo" className="w-[15%]" />
+        <img
+          src={BrandLogo}
+          alt="Brand Logo"
+          loading="lazy"
+          className="w-[15%]"
+        />
         <span className="text-center font-sans text-6xl text-white">
           Bingwa
         </span>

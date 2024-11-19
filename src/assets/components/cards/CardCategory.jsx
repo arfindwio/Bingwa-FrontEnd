@@ -18,6 +18,7 @@ export const CardCategory = ({ thumbnail, category }) => {
         src={thumbnail}
         alt="Thumbnail"
         className="h-36 w-52 rounded-2xl object-cover"
+        loading="lazy"
         onClick={handleCategoryClick}
       />
       <div className="font-semibold">{category}</div>

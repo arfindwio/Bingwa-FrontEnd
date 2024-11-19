@@ -140,6 +140,7 @@ export const AccountProfile = () => {
                           "https://ik.imagekit.io/arfin07/images.png?updatedAt=1706817534316"
                     }
                     alt="profile"
+                    loading="lazy"
                     className="h-full w-full cursor-pointer rounded-full object-cover"
                   />
                   {storeUserProfile?.userProfile?.userProfile

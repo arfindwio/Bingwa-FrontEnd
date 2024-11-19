@@ -88,7 +88,12 @@ export const NavbarCourse = () => {
             navigate("/");
           }}
         >
-          <img src={BrandLogo} alt="Brand Logo" className="w-10" />
+          <img
+            src={BrandLogo}
+            alt="Brand Logo"
+            loading="lazy"
+            className="w-10"
+          />
           <div className="text-3xl font-semibold text-white">Bingwa</div>
         </div>
 
