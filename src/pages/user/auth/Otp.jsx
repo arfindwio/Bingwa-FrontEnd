@@ -83,25 +83,27 @@ export const Otp = () => {
   };
 
   // Verify-Otp
-  const handleSave = async () => {
-    const otpData = await dispatch(
-      putVerifyOtpAction({
-        email: Email,
-        otp: otpInputs.join(""),
-      }),
-    );
+  const handleSave = async (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      const otpData = await dispatch(
+        putVerifyOtpAction({
+          email: Email,
+          otp: otpInputs.join(""),
+        }),
+      );
 
-    showLoadingToast("Loading...");
+      showLoadingToast("Loading...");
 
-    if (otpData) {
-      showErrorToast("Account verification Failed");
-    }
+      if (otpData) {
+        showErrorToast("Account verification Failed");
+      }
 
-    if (otpData) {
-      showSuccessToast("Account verification successful");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+      if (otpData) {
+        showSuccessToast("Account verification successful");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
     }
   };
 
