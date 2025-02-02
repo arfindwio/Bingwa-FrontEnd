@@ -121,7 +121,7 @@ export const Otp = () => {
   return (
     <div className="flex h-full w-full">
       <div className="mx-auto flex min-h-screen w-full items-center justify-center rounded-lg bg-white py-6 md:w-3/5">
-        <div className="mx-auto flex w-[70%] flex-col">
+        <form className="mx-auto flex w-[70%] flex-col" onKeyDown={handleSave}>
           <div
             className="relative flex w-fit cursor-pointer items-center font-semibold"
             onClick={() => {
@@ -186,7 +186,7 @@ export const Otp = () => {
               Submit
             </button>
           </div>
-        </div>
+        </form>
       </div>
 
       <div className="hidden min-h-screen gap-6 bg-primary md:flex md:w-2/5 md:items-center md:justify-center">
