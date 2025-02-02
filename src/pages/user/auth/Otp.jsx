@@ -94,7 +94,7 @@ export const Otp = () => {
 
       showLoadingToast("Loading...");
 
-      if (otpData) {
+      if (!otpData) {
         showErrorToast("Account verification Failed");
       }
 
