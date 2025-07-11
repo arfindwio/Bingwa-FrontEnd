@@ -80,7 +80,8 @@ export const postPaymentMidtransAction =
       dispatch(startLoading());
       const result = await reduxPostPaymentMidtrans(input, courseId);
       dispatch(setPostPaymentMidtrans(result.data.data));
-      return true;
+
+      return result.data.data;
     } catch (err) {
       if (err.response.status >= 400 && err.response.status <= 500) {
         showErrorToast(err.response.data.message);
